@@ -1,6 +1,6 @@
 {
 	"name": "react-form-controlled",
-	"version": "0.8.0",
+	"version": "0.8.1",
 	"description": "React google analytics with support for react-router",
 	"author": {
 		"name": "Zlatko Fedor",
@@ -38,6 +38,7 @@
 		"build"      : "node ./node_modules/gulp/bin/gulp.js build"
 	},
 	"dependencies": {
+		"lodash": "~3.9.3",
 		"jsen": "~0.4.1",
 		"react-select": "~0.4.9"
 	},
