@@ -42,18 +42,6 @@ var Form = (function (_FormObject) {
 	_inherits(Form, _FormObject);
 
 	_createClass(Form, [{
-		key: 'render',
-		value: function render() {
-			var children = this._registerChildren(this.props.children);
-			return _react2['default'].createElement(
-				'form',
-				{ className: this.props.className || 'form',
-					onSubmit: this.handleSubmit.bind(this),
-					onChange: this.handleChange.bind(this) },
-				children
-			);
-		}
-	}, {
 		key: 'validate',
 		value: function validate(callback) {
 			var schema = this.props.schema;
@@ -116,6 +104,21 @@ var Form = (function (_FormObject) {
 
 				_this.props.onSubmit(_this.props.value);
 			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var children = this._registerChildren(this.props.children);
+			return _react2['default'].createElement(
+				'form',
+				{
+					method: this.props.method,
+					action: this.props.action,
+					className: this.props.className || 'form',
+					onSubmit: this.handleSubmit.bind(this),
+					onChange: this.handleChange.bind(this) },
+				children
+			);
 		}
 	}]);
 

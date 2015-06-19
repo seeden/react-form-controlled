@@ -9,18 +9,6 @@ export default class Form extends FormObject {
 
 		this.validateData = validator(props.schema || {});
     }
-
-    render() {
-    	const children = this._registerChildren(this.props.children);
-    	return (
-    		<form className={this.props.className || 'form'} 
-    			onSubmit={this.handleSubmit.bind(this)} 
-    			onChange={this.handleChange.bind(this)}>
-
-    			{children}
-    		</form>
-    	);
-    }
 	
 	validate(callback) {
 		const schema = this.props.schema;
@@ -78,6 +66,22 @@ export default class Form extends FormObject {
 			this.props.onSubmit(this.props.value);
 		});
     }
+
+
+    render() {
+    	const children = this._registerChildren(this.props.children);
+    	return (
+    		<form 
+    			method={this.props.method}
+    			action={this.props.action}
+    			className={this.props.className || 'form'} 
+    			onSubmit={this.handleSubmit.bind(this)} 
+    			onChange={this.handleChange.bind(this)}>
+
+    			{children}
+    		</form>
+    	);
+    }    
 };
 
 Form.propTypes = {
