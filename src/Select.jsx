@@ -1,5 +1,6 @@
 import React from 'react';
 import Element from './element';
+import _ from 'lodash';
 
 export default class Select extends Element {
 	constructor(props, context) {
@@ -49,6 +50,7 @@ export default class Select extends Element {
 				name={this.props.name}
     			value={this.props.value} 
     			multi={!!this.props.multi} 
+    			disabled={this.props.disabled}
     			onChange={this.handleChange.bind(this)}>
 
     			{this.renderOptions()}

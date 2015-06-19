@@ -28,6 +28,7 @@ export default class Select extends Element {
     			multi={!!this.props.multi} 
     			options={this.props.options}
     			placeholder={this.props.placeholder}
+    			disabled={this.props.disabled}
     			onChange={this.handleChange.bind(this)} />
 		);
 	}

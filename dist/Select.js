@@ -22,6 +22,10 @@ var _element = require('./element');
 
 var _element2 = _interopRequireDefault(_element);
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var Select = (function (_Element) {
 	function Select(props, context) {
 		_classCallCheck(this, Select);
@@ -60,7 +64,7 @@ var Select = (function (_Element) {
 			}
 
 			var propsOptions = this.props.options;
-			if (_.isPlainObject(propsOptions)) {
+			if (_lodash2['default'].isPlainObject(propsOptions)) {
 				Object.keys(propsOptions).forEach(function (option) {
 					var name = propsOptions[option];
 					options.push(_react2['default'].createElement(
@@ -69,7 +73,7 @@ var Select = (function (_Element) {
 						name
 					));
 				});
-			} else if (_.isArray(propsOptions)) {
+			} else if (_lodash2['default'].isArray(propsOptions)) {
 				propsOptions.forEach(function (option) {
 					options.push(_react2['default'].createElement(
 						'option',
@@ -91,6 +95,7 @@ var Select = (function (_Element) {
 					name: this.props.name,
 					value: this.props.value,
 					multi: !!this.props.multi,
+					disabled: this.props.disabled,
 					onChange: this.handleChange.bind(this) },
 				this.renderOptions()
 			);
