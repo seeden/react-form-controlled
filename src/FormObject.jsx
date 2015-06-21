@@ -35,9 +35,12 @@ export default class FormObject extends Element {
             throw new Error('Form element has no name property');
         }
 
+        const currentValue = this.getValue(child.props.name);
+
         return React.cloneElement(child, {
-            value    : this.getValue(child.props.name),
-            onChange : value => this.setValue(child.props.name, value)
+            value        : typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
+            currentValue : currentValue,
+            onChange     : value => this.setValue(child.props.name, value)
         });         
     }
 

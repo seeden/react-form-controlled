@@ -109,9 +109,12 @@ var Form = (function (_FormObject) {
 		key: 'render',
 		value: function render() {
 			var children = this._registerChildren(this.props.children);
+			var autoComplete = typeof this.props.autoComplete !== 'undefined' ? this.props.autoComplete : 'off';
+
 			return _react2['default'].createElement(
 				'form',
 				{
+					autoComplete: autoComplete,
 					method: this.props.method,
 					action: this.props.action,
 					className: this.props.className || 'form',

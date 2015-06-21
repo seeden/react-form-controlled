@@ -55,7 +55,7 @@ var Select = (function (_Element) {
 			var options = [];
 			var value = this.props.value;
 
-			if (this.props.placeholder) {
+			if (typeof this.props.placeholder !== 'undefined') {
 				options.push(_react2['default'].createElement(
 					'option',
 					{ value: this.props.placeholderValue || '' },
@@ -75,10 +75,14 @@ var Select = (function (_Element) {
 				});
 			} else if (_lodash2['default'].isArray(propsOptions)) {
 				propsOptions.forEach(function (option) {
+					var isObject = option && option.key && option.value;
+					var value = isObject ? option.key : option;
+					var text = isObject ? option.value : option;
+
 					options.push(_react2['default'].createElement(
 						'option',
-						{ value: option },
-						option
+						{ value: value },
+						text
 					));
 				});
 			}
@@ -96,6 +100,7 @@ var Select = (function (_Element) {
 					value: this.props.value,
 					multi: !!this.props.multi,
 					disabled: this.props.disabled,
+					required: this.props.required,
 					onChange: this.handleChange.bind(this) },
 				this.renderOptions()
 			);

@@ -70,8 +70,13 @@ export default class Form extends FormObject {
 
     render() {
     	const children = this._registerChildren(this.props.children);
+    	const autoComplete = typeof this.props.autoComplete !== 'undefined' 
+    		? this.props.autoComplete
+    		: 'off';
+
     	return (
     		<form 
+    			autoComplete={autoComplete}
     			method={this.props.method}
     			action={this.props.action}
     			className={this.props.className || 'form'} 

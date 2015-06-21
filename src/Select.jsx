@@ -24,7 +24,7 @@ export default class Select extends Element {
 		const options = [];
 		const value = this.props.value;
 
-		if(this.props.placeholder) {
+		if(typeof this.props.placeholder !== 'undefined') {
 			options.push(<option value={this.props.placeholderValue || ''}>{this.props.placeholder}</option>);
 		}
 
@@ -36,7 +36,11 @@ export default class Select extends Element {
 			});
 		} else if(_.isArray(propsOptions)) {
 			propsOptions.forEach(function(option) {
-				options.push(<option value={option}>{option}</option>);
+				const isObject = option && option.key && option.value;
+				const value = isObject ? option.key : option;
+				const text = isObject ? option.value : option;
+
+				options.push(<option value={value}>{text}</option>);
 			});
 		}
 
@@ -51,6 +55,7 @@ export default class Select extends Element {
     			value={this.props.value} 
     			multi={!!this.props.multi} 
     			disabled={this.props.disabled}
+    			required={this.props.required}
     			onChange={this.handleChange.bind(this)}>
 
     			{this.renderOptions()}

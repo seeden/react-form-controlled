@@ -78,7 +78,7 @@ var Input = (function (_Element) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var checked = this.props.type === 'checkbox' && this.props.value;
+			var checked = this.props.type === 'checkbox' && this.props.value || this.props.type === 'radio' && this.props.value === this.props.currentValue;
 
 			return _react2['default'].createElement('input', {
 				autoComplete: this.props.autoComplete,
@@ -90,6 +90,9 @@ var Input = (function (_Element) {
 				name: this.props.name,
 				id: this.props.id,
 				size: this.props.size,
+				min: this.props.min,
+				max: this.props.max,
+				required: this.props.required,
 				placeholder: this.props.placeholder,
 				value: this.state.value });
 		}

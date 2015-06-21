@@ -41,6 +41,7 @@ var Textarea = (function (_Input) {
 				name: this.props.name,
 				id: this.props.id,
 				rows: this.props.rows,
+				required: this.props.required,
 				placeholder: this.props.placeholder,
 				value: this.state.value });
 		}

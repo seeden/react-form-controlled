@@ -76,8 +76,11 @@ var FormObject = (function (_Element) {
                 throw new Error('Form element has no name property');
             }
 
+            var currentValue = this.getValue(child.props.name);
+
             return _react2['default'].cloneElement(child, {
-                value: this.getValue(child.props.name),
+                value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
+                currentValue: currentValue,
                 onChange: function onChange(value) {
                     return _this.setValue(child.props.name, value);
                 }

@@ -49,7 +49,8 @@ export default class Input extends Element {
     }
 
 	render() {
-		const checked = this.props.type === 'checkbox' && this.props.value;
+		const checked = (this.props.type === 'checkbox' && this.props.value) 
+			|| (this.props.type === 'radio' && this.props.value === this.props.currentValue);
 
 		return (
 			<input 
@@ -62,6 +63,9 @@ export default class Input extends Element {
 				name={this.props.name} 
 				id={this.props.id} 
 				size={this.props.size} 
+				min={this.props.min} 
+				max={this.props.max} 
+				required={this.props.required} 
 				placeholder={this.props.placeholder} 
 				value={this.state.value} />
 		);
