@@ -18,9 +18,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _element = require('./element');
+var _Element2 = require('./Element');
 
-var _element2 = _interopRequireDefault(_element);
+var _Element3 = _interopRequireDefault(_Element2);
 
 var _lodash = require('lodash');
 
@@ -31,84 +31,119 @@ var Select = (function (_Element) {
 		_classCallCheck(this, Select);
 
 		_get(Object.getPrototypeOf(Select.prototype), 'constructor', this).call(this, props, context);
+
+		this.state = this.prepareState(props);
 	}
 
 	_inherits(Select, _Element);
 
 	_createClass(Select, [{
-		key: 'handleChange',
-		value: function handleChange(value, items) {
-			if (!this.props.multi) {
-				this.props.onChange(value);
-				return;
-			}
-
-			value = items.map(function (item) {
-				return item.value;
-			});
-
-			this.props.onChange(value);
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(newProps) {
+			this.setState(this.prepareState(newProps));
 		}
 	}, {
-		key: 'renderOptions',
-		value: function renderOptions() {
-			var options = [];
-			var value = this.props.value;
+		key: 'prepareState',
+		value: function prepareState(props) {
+			var selectOptions = [];
+			var options = props.options;
+			var value = props.value;
+			var placeholder = props.placeholder;
 
-			if (typeof this.props.placeholder !== 'undefined') {
-				options.push(_react2['default'].createElement(
-					'option',
-					{ value: this.props.placeholderValue || '' },
-					this.props.placeholder
-				));
-			}
-
-			var propsOptions = this.props.options;
-			if (_lodash2['default'].isPlainObject(propsOptions)) {
-				Object.keys(propsOptions).forEach(function (option) {
-					var name = propsOptions[option];
-					options.push(_react2['default'].createElement(
-						'option',
-						{ value: option },
-						name
-					));
+			if (_lodash2['default'].isPlainObject(options)) {
+				Object.keys(options).forEach(function (key) {
+					selectOptions.push({
+						value: key,
+						label: options[key]
+					});
 				});
-			} else if (_lodash2['default'].isArray(propsOptions)) {
-				propsOptions.forEach(function (option) {
-					var isObject = option && option.key && option.value;
-					var value = isObject ? option.key : option;
-					var text = isObject ? option.value : option;
+			} else if (_lodash2['default'].isArray(options)) {
+				options.forEach(function (option) {
+					var isObject = _lodash2['default'].isPlainObject(option);
 
-					options.push(_react2['default'].createElement(
-						'option',
-						{ value: value },
-						text
-					));
+					selectOptions.push({
+						value: isObject ? option.value : option,
+						label: isObject ? option.label : option
+					});
 				});
 			}
 
-			return options;
+			var index = placeholder ? '' : void 0;
+			selectOptions.forEach(function (option, pos) {
+				if (option.value === value) {
+					index = pos;
+				}
+			});
+
+			return { options: selectOptions, index: index };
+		}
+	}, {
+		key: 'handleChange',
+		value: function handleChange(e) {
+			var target = e.target || {};
+			var value = target.value;
+
+			e.stopPropagation();
+
+			if (value === '') {
+				value = void 0;
+			}
+
+			if (typeof value === 'undefined' || value === null) {
+				return this.props.onChange(value);
+			}
+			var index = Number(value);
+			var options = this.state.options;
+			var option = options[index] || {};
+
+			this.props.onChange(option.value);
+		}
+	}, {
+		key: 'renderPlaceholder',
+		value: function renderPlaceholder() {
+			var props = this.props;
+
+			if (typeof props.placeholder === 'undefined') {
+				return null;
+			}
+
+			return _react2['default'].createElement(
+				'option',
+				{ value: '' },
+				props.placeholder
+			);
 		}
 	}, {
 		key: 'render',
 		value: function render() {
+			var _state = this.state;
+			var options = _state.options;
+			var index = _state.index;
+
 			return _react2['default'].createElement(
 				'select',
 				{
 					className: this.props.className,
 					name: this.props.name,
-					value: this.props.value,
+					value: index,
 					multi: !!this.props.multi,
 					disabled: this.props.disabled,
 					required: this.props.required,
 					onChange: this.handleChange.bind(this) },
-				this.renderOptions()
+				this.renderPlaceholder(),
+				options.map(function (option, pos) {
+					return _react2['default'].createElement(
+						'option',
+						{ value: pos },
+						option.label
+					);
+				})
 			);
 		}
 	}]);
 
 	return Select;
-})(_element2['default']);
+})(_Element3['default']);
 
 exports['default'] = Select;
 ;

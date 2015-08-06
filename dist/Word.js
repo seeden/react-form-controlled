@@ -18,9 +18,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _input = require('./input');
+var _Input2 = require('./Input');
 
-var _input2 = _interopRequireDefault(_input);
+var _Input3 = _interopRequireDefault(_Input2);
 
 var _diacritics = require('diacritics');
 
@@ -67,11 +67,11 @@ var Word = (function (_Input) {
 	}]);
 
 	return Word;
-})(_input2['default']);
+})(_Input3['default']);
 
 exports['default'] = Word;
 ;
 
 Word.isElement = true;
-Word.propTypes = _input2['default'].propTypes;
+Word.propTypes = _Input3['default'].propTypes;
 module.exports = exports['default'];

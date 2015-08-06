@@ -1,21 +1,24 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
+var babelCompiler = require('babel/register');
 var babel = require('gulp-babel');
 
 gulp.task('test', function () {
-    return gulp.src('./tests/**/*.js')
-    .pipe(babel())
+  return gulp.src('./tests/**/*.js')
     .pipe(mocha({
-    	timeout: 20000
+      compilers: {
+        js: babelCompiler
+      },
+      timeout: 5000
     }));
 });
 
 gulp.task('build', function (callback) {
-	return gulp.src('./src/**/*')
-    	.pipe(babel())
-    	.pipe(gulp.dest("./dist"));
+  return gulp.src('./src/**/*.js')
+    .pipe(babel())
+    .pipe(gulp.dest('./dist'));
 });
 
 gulp.doneCallback = function (err) {
-	process.exit(err ? 1 : 0);
+  process.exit(err ? 1 : 0);
 };

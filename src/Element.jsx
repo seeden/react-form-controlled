@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 
 export default class Element extends Component {
-	constructor(props, context) {
-		super(props, context);
-	}
+  static isElement = true;
+  static propTypes = {
+    name: React.PropTypes.string.isRequired
+  };
 
-	render() {
-		return null;
-	}
-};
+  constructor(props, context) {
+    super(props, context);
+  }
 
-Element.isElement = true;
-Element.propTypes = {
-	name: React.PropTypes.string.isRequired
-};
+  render() {
+    return null;
+  }
+}
+

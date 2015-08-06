@@ -1,41 +1,40 @@
 import ReactSelect from 'react-select';
 import React from 'react';
-import Element from './element';
+import Element from './Element';
 
 export default class Select extends Element {
-	constructor(props, context) {
-		super(props, context);
-	}
+  static isElement = true;
+  static propTypes = {
+    name: React.PropTypes.string.isRequired
+  };
 
-	handleChange(value, items) {
-		if(!this.props.multi) {
-			this.props.onChange(value);
-			return;
-		}
+  constructor(props, context) {
+    super(props, context);
+  }
 
-		value = items.map(function(item) {
-			return item.value;
-		});
+  handleChange(value, items) {
+    if (!this.props.multi) {
+      this.props.onChange(value);
+      return;
+    }
 
-		this.props.onChange(value);
-	}
+    const values = items.map(function(item) {
+      return item.value;
+    });
 
-	render() {
-		return (
-			<ReactSelect 
-				name={this.props.name}
-    			value={this.props.value} 
-    			multi={!!this.props.multi} 
-    			options={this.props.options}
-    			placeholder={this.props.placeholder}
-    			disabled={this.props.disabled}
-    			onChange={this.handleChange.bind(this)} />
-		);
-	}
-};
+    this.props.onChange(values);
+  }
 
-Select.isElement = true;
-Select.propTypes = {
-	name: React.PropTypes.string.isRequired
-};
-
+  render() {
+    return (
+      <ReactSelect
+        name={this.props.name}
+        value={this.props.value}
+        multi={!!this.props.multi}
+        options={this.props.options}
+        placeholder={this.props.placeholder}
+        disabled={this.props.disabled}
+        onChange={this.handleChange.bind(this)} />
+    );
+  }
+}

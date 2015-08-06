@@ -8,8 +8,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _defineProperty(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
@@ -18,9 +16,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _element = require('./element');
+var _Element2 = require('./Element');
 
-var _element2 = _interopRequireDefault(_element);
+var _Element3 = _interopRequireDefault(_Element2);
 
 var _lodash = require('lodash');
 
@@ -50,7 +48,8 @@ var FormObject = (function (_Element) {
     }, {
         key: 'setValue',
         value: function setValue(name, value) {
-            var newState = (0, _nodeExtend2['default'])({}, this.props.value, _defineProperty({}, name, value));
+            var newState = (0, _nodeExtend2['default'])({}, this.props.value);
+            newState[name] = value;
 
             this.props.onChange(newState);
         }
@@ -127,7 +126,7 @@ var FormObject = (function (_Element) {
     }]);
 
     return FormObject;
-})(_element2['default']);
+})(_Element3['default']);
 
 exports['default'] = FormObject;
 ;

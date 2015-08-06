@@ -1,72 +1,103 @@
 import React from 'react';
-import Element from './element';
+import Element from './Element';
 import _ from 'lodash';
 
 export default class Select extends Element {
-	constructor(props, context) {
-		super(props, context);
-	}
+  static isElement = true;
+  static propTypes = {
+    name: React.PropTypes.string.isRequired
+  };
 
-	handleChange(value, items) {
-		if(!this.props.multi) {
-			this.props.onChange(value);
-			return;
-		}
+  constructor(props, context) {
+    super(props, context);
 
-		value = items.map(function(item) {
-			return item.value;
-		});
+    this.state = this.prepareState(props);
+  }
 
-		this.props.onChange(value);
-	}
+  componentWillReceiveProps(newProps) {
+    this.setState(this.prepareState(newProps));
+  }
 
-	renderOptions() {
-		const options = [];
-		const value = this.props.value;
+  prepareState(props) {
+    const selectOptions = [];
+    const { options, value, placeholder } = props;
 
-		if(typeof this.props.placeholder !== 'undefined') {
-			options.push(<option value={this.props.placeholderValue || ''}>{this.props.placeholder}</option>);
-		}
+    if (_.isPlainObject(options)) {
+      Object.keys(options).forEach(function(key) {
+        selectOptions.push({
+          value: key,
+          label: options[key]
+        });
+      });
+    } else if (_.isArray(options)) {
+      options.forEach(function(option) {
+        const isObject = _.isPlainObject(option);
 
-		const propsOptions = this.props.options;
-		if(_.isPlainObject(propsOptions)) {
-			Object.keys(propsOptions).forEach(function(option) {
-				const name = propsOptions[option];
-				options.push(<option value={option}>{name}</option>);
-			});
-		} else if(_.isArray(propsOptions)) {
-			propsOptions.forEach(function(option) {
-				const isObject = option && option.key && option.value;
-				const value = isObject ? option.key : option;
-				const text = isObject ? option.value : option;
+        selectOptions.push({
+          value: isObject ? option.value : option,
+          label: isObject ? option.label : option
+        });
+      });
+    }
 
-				options.push(<option value={value}>{text}</option>);
-			});
-		}
+    let index = placeholder ? '' : void 0;
+    selectOptions.forEach(function(option, pos) {
+      if (option.value === value) {
+        index = pos;
+      }
+    });
 
-		return options;
-	}
+    return { options: selectOptions, index };
+  }
 
-	render() {
-		return (
-			<select 
-				className={this.props.className}
-				name={this.props.name}
-    			value={this.props.value} 
-    			multi={!!this.props.multi} 
-    			disabled={this.props.disabled}
-    			required={this.props.required}
-    			onChange={this.handleChange.bind(this)}>
+  handleChange(e) {
+    const target = e.target || {};
+    let value = target.value;
 
-    			{this.renderOptions()}
+    e.stopPropagation();
 
-    		</select>
-		);
-	}
-};
+    if (value === '') {
+      value = void 0;
+    }
 
-Select.isElement = true;
-Select.propTypes = {
-	name: React.PropTypes.string.isRequired
-};
+    if (typeof value === 'undefined' || value === null) {
+      return this.props.onChange(value);
+    }
+    const index = Number(value);
+    const options = this.state.options;
+    const option = options[index] || {};
 
+    this.props.onChange(option.value);
+  }
+
+  renderPlaceholder() {
+    const props = this.props;
+
+    if (typeof props.placeholder === 'undefined') {
+      return null;
+    }
+
+    return <option value="">{props.placeholder}</option>;
+  }
+
+  render() {
+    const { options, index } = this.state;
+
+    return (
+      <select
+        className={this.props.className}
+        name={this.props.name}
+          value={index}
+          multi={!!this.props.multi}
+          disabled={this.props.disabled}
+          required={this.props.required}
+          onChange={this.handleChange.bind(this)}>
+            {this.renderPlaceholder()}
+
+            {options.map(function(option, pos) {
+              return <option value={pos}>{option.label}</option>;
+            })}
+        </select>
+    );
+  }
+}

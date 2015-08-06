@@ -22,9 +22,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _element = require('./element');
+var _Element2 = require('./Element');
 
-var _element2 = _interopRequireDefault(_element);
+var _Element3 = _interopRequireDefault(_Element2);
 
 var Select = (function (_Element) {
 	function Select(props, context) {
@@ -64,7 +64,7 @@ var Select = (function (_Element) {
 	}]);
 
 	return Select;
-})(_element2['default']);
+})(_Element3['default']);
 
 exports['default'] = Select;
 ;

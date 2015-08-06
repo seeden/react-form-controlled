@@ -1,36 +1,35 @@
-import React from 'react';
-import Input from './input';
+import Input from './Input';
 import { remove as removeDiacritics } from 'diacritics';
 
 function fixValue(value) {
-	if(!value) {
-		return value;
-	}
+  if (!value) {
+    return value;
+  }
 
-	//remove white spaces
-	value = value.replace(/\s/g, '');
+  // remove white spaces
+  const valueChanged = value.replace(/\s/g, '');
 
-	//remove diacritics
-	value = removeDiacritics(value);
+  // remove diacritics
+  valueChanged = removeDiacritics(valueChanged);
 
-	//to lowercase
-	value = value.toLowerCase();	
+  // to lowercase
+  valueChanged = valueChanged.toLowerCase();
 
-	return value;
+  return valueChanged;
 }
 
 export default class Word extends Input {
-	handleChange(e) {
-		const target = e.target || {};
+  static isElement = true;
+  static propTypes = Input.propTypes;
 
-		const fixedValue = fixValue(target.value);
-		if(fixedValue !== target.value) {
-			target.value = fixedValue;
-		}
+  handleChange(e) {
+    const target = e.target || {};
 
-		super.handleChange(e);
-	}
-};
+    const fixedValue = fixValue(target.value);
+    if (fixedValue !== target.value) {
+      target.value = fixedValue;
+    }
 
-Word.isElement = true;
-Word.propTypes = Input.propTypes;
+    super.handleChange(e);
+  }
+}

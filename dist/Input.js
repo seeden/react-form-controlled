@@ -18,9 +18,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _element = require('./element');
+var _Element2 = require('./Element');
 
-var _element2 = _interopRequireDefault(_element);
+var _Element3 = _interopRequireDefault(_Element2);
 
 var DIFF_TIMEOUT = 100;
 
@@ -99,7 +99,7 @@ var Input = (function (_Element) {
 	}]);
 
 	return Input;
-})(_element2['default']);
+})(_Element3['default']);
 
 exports['default'] = Input;
 ;
