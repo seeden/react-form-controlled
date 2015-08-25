@@ -7,7 +7,7 @@ function fixValue(value) {
   }
 
   // remove white spaces
-  const valueChanged = value.replace(/\s/g, '');
+  let valueChanged = value.replace(/\s/g, '');
 
   // remove diacritics
   valueChanged = removeDiacritics(valueChanged);

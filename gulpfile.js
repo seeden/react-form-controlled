@@ -4,7 +4,7 @@ var babelCompiler = require('babel/register');
 var babel = require('gulp-babel');
 
 gulp.task('test', function () {
-  return gulp.src('./tests/**/*.js')
+  return gulp.src('./tests/**/*.{js,jsx}')
     .pipe(mocha({
       compilers: {
         js: babelCompiler
@@ -14,8 +14,10 @@ gulp.task('test', function () {
 });
 
 gulp.task('build', function (callback) {
-  return gulp.src('./src/**/*.js')
-    .pipe(babel())
+  return gulp.src('./src/**/*.{js,jsx}')
+    .pipe(babel({
+      stage: 0
+    }))
     .pipe(gulp.dest('./dist'));
 });
 

@@ -30,9 +30,14 @@ var _FormObject = require('./FormObject');
 
 var _FormObject2 = _interopRequireDefault(_FormObject);
 
+var _Word = require('./Word');
+
+var _Word2 = _interopRequireDefault(_Word);
+
 exports['default'] = _Form2['default'];
 exports.Input = _Input2['default'];
 exports.Select = _Select2['default'];
 exports.Textarea = _Textarea2['default'];
 exports.FormObject = _FormObject2['default'];
 exports.SelectPro = _SelectPro2['default'];
+exports.Word = _Word2['default'];

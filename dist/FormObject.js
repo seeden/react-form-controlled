@@ -1,16 +1,18 @@
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-    value: true
+  value: true
 });
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -29,109 +31,108 @@ var _nodeExtend = require('node.extend');
 var _nodeExtend2 = _interopRequireDefault(_nodeExtend);
 
 var FormObject = (function (_Element) {
-    function FormObject() {
-        _classCallCheck(this, FormObject);
+  _inherits(FormObject, _Element);
 
-        if (_Element != null) {
-            _Element.apply(this, arguments);
-        }
+  function FormObject() {
+    _classCallCheck(this, FormObject);
+
+    _get(Object.getPrototypeOf(FormObject.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(FormObject, [{
+    key: 'getValue',
+    value: function getValue(name) {
+      var value = this.props.value || {};
+      return value[name];
     }
+  }, {
+    key: 'setValue',
+    value: function setValue(name, value) {
+      var newState = (0, _nodeExtend2['default'])({}, this.props.value);
+      newState[name] = value;
 
-    _inherits(FormObject, _Element);
+      this.props.onChange(newState);
+    }
+  }, {
+    key: '_registerChild',
+    value: function _registerChild(child) {
+      var _this = this;
 
-    _createClass(FormObject, [{
-        key: 'getValue',
-        value: function getValue(name) {
-            var value = this.props.value || {};
-            return value[name];
+      if (!child || typeof child === 'string') {
+        return child;
+      }
+
+      if (!_lodash2['default'].isFunction(child.type) || !child.type.isElement) {
+        if (child.props && child.props.children) {
+          var children = this._registerChildren(child.props.children);
+          return _react2['default'].cloneElement(child, {}, children);
         }
-    }, {
-        key: 'setValue',
-        value: function setValue(name, value) {
-            var newState = (0, _nodeExtend2['default'])({}, this.props.value);
-            newState[name] = value;
 
-            this.props.onChange(newState);
+        return child;
+      }
+
+      if (!child.props.name) {
+        throw new Error('Form element has no name property');
+      }
+
+      var currentValue = this.getValue(child.props.name);
+
+      return _react2['default'].cloneElement(child, {
+        value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
+        currentValue: currentValue,
+        onChange: function onChange(value) {
+          return _this.setValue(child.props.name, value);
         }
-    }, {
-        key: '_registerChild',
-        value: function _registerChild(child) {
-            var _this = this;
+      });
+    }
+  }, {
+    key: '_registerChildren',
+    value: function _registerChildren(children) {
+      var _this2 = this;
 
-            if (!child || typeof child === 'string') {
-                return child;
-            }
+      if (!_lodash2['default'].isArray(children)) {
+        return this._registerChild(children);
+      }
 
-            if (!_lodash2['default'].isFunction(child.type) || !child.type.isElement) {
-                if (child.props && child.props.children) {
-                    var children = this._registerChildren(child.props.children);
-                    return _react2['default'].cloneElement(child, {}, children);
-                }
+      return _react2['default'].Children.map(children, function (child) {
+        return _this2._registerChild(child);
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var children = this._registerChildren(this.props.children);
 
-                return child;
-            }
+      return _react2['default'].createElement(
+        'div',
+        { onChange: this.handleChange.bind(this) },
+        children
+      );
+    }
+  }, {
+    key: 'handleChange',
+    value: function handleChange(e) {
+      var target = e.target;
+      if (!target || !target.name) {
+        return;
+      }
 
-            if (!child.props.name) {
-                throw new Error('Form element has no name property');
-            }
+      e.stopPropagation();
 
-            var currentValue = this.getValue(child.props.name);
+      var value = target.type === 'checkbox' ? !!target.checked : target.value;
 
-            return _react2['default'].cloneElement(child, {
-                value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
-                currentValue: currentValue,
-                onChange: function onChange(value) {
-                    return _this.setValue(child.props.name, value);
-                }
-            });
-        }
-    }, {
-        key: '_registerChildren',
-        value: function _registerChildren(children) {
-            var _this2 = this;
+      this.setValue(target.name, value);
+    }
+  }], [{
+    key: 'propTypes',
+    value: {
+      onChange: _react2['default'].PropTypes.func.isRequired
+    },
+    enumerable: true
+  }]);
 
-            if (!_lodash2['default'].isArray(children)) {
-                return this._registerChild(children);
-            }
-
-            return _react2['default'].Children.map(children, function (child) {
-                return _this2._registerChild(child);
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var children = this._registerChildren(this.props.children);
-
-            return _react2['default'].createElement(
-                'div',
-                { onChange: this.handleChange.bind(this) },
-                children
-            );
-        }
-    }, {
-        key: 'handleChange',
-        value: function handleChange(e) {
-            var target = e.target;
-            if (!target || !target.name) {
-                return;
-            }
-
-            e.stopPropagation();
-
-            var value = target.type === 'checkbox' ? !!target.checked : target.value;
-
-            this.setValue(target.name, value);
-        }
-    }]);
-
-    return FormObject;
+  return FormObject;
 })(_Element3['default']);
 
 exports['default'] = FormObject;
-;
-
-FormObject.propTypes = {
-    onChange: _react2['default'].PropTypes.func.isRequired
-};
 module.exports = exports['default'];

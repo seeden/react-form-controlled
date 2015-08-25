@@ -2,6 +2,8 @@ import React from 'react';
 import Element from './Element';
 import _ from 'lodash';
 
+const PLACEHOLDER_VALUE = '';
+
 export default class Select extends Element {
   static isElement = true;
   static propTypes = {
@@ -40,34 +42,56 @@ export default class Select extends Element {
       });
     }
 
-    let index = placeholder ? '' : void 0;
+    const isMultiple = this.isMultiple();
+    const values = [];
+
     selectOptions.forEach(function(option, pos) {
-      if (option.value === value) {
-        index = pos;
+      if (!isMultiple && option.value === value) {
+        values.push(pos);
+      } else if (isMultiple && value && value.length && value.indexOf(option.value) !== -1) {
+        values.push(pos);
       }
     });
 
-    return { options: selectOptions, index };
+    if (!values.length && placeholder) {
+      values.unshift(PLACEHOLDER_VALUE);
+    }
+
+    return {
+      options: selectOptions,
+      values: isMultiple ? values : values[0]
+    };
   }
 
   handleChange(e) {
-    const target = e.target || {};
-    let value = target.value;
-
     e.stopPropagation();
 
-    if (value === '') {
-      value = void 0;
-    }
-
-    if (typeof value === 'undefined' || value === null) {
-      return this.props.onChange(value);
-    }
-    const index = Number(value);
+    const nodes = e.target.options || [];
     const options = this.state.options;
-    const option = options[index] || {};
+    const values = [];
 
-    this.props.onChange(option.value);
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+
+      if (!node.selected) {
+        continue;
+      }
+
+      const optionValue = node.value;
+      if (typeof optionValue === 'undefined' || !optionValue.length) {
+        continue;
+      }
+
+      const index = Number(optionValue);
+      if (!options[index]) {
+        continue;
+      }
+
+      values.push(options[index].value);
+    }
+
+    const isMultiple = this.isMultiple();
+    this.props.onChange(isMultiple ? values : values[0]);
   }
 
   renderPlaceholder() {
@@ -77,27 +101,31 @@ export default class Select extends Element {
       return null;
     }
 
-    return <option value="">{props.placeholder}</option>;
+    return <option value={PLACEHOLDER_VALUE}>{props.placeholder}</option>;
+  }
+
+  isMultiple() {
+    return !!this.props.multi || !!this.props.multiple;
   }
 
   render() {
-    const { options, index } = this.state;
+    const { options, values } = this.state;
 
     return (
       <select
         className={this.props.className}
         name={this.props.name}
-          value={index}
-          multi={!!this.props.multi}
-          disabled={this.props.disabled}
-          required={this.props.required}
-          onChange={this.handleChange.bind(this)}>
-            {this.renderPlaceholder()}
+        value={values}
+        multiple={this.isMultiple()}
+        disabled={this.props.disabled}
+        required={this.props.required}
+        onChange={this.handleChange.bind(this)}>
+          {this.renderPlaceholder()}
 
-            {options.map(function(option, pos) {
-              return <option value={pos}>{option.label}</option>;
-            })}
-        </select>
+          {options.map(function(option, pos) {
+            return <option value={pos}>{option.label}</option>;
+          })}
+      </select>
     );
   }
 }
