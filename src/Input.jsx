@@ -13,7 +13,7 @@ export default class Input extends Element {
     super(props, context);
 
     this.state = {
-      value: props.value
+      value: props.value || '' // fix because null and undefined is uncontrolled
     };
   }
 
@@ -48,7 +48,7 @@ export default class Input extends Element {
       }
 
       this.setState({
-        value: this.props.value
+        value: this.props.value || ''
       });
     }, DIFF_TIMEOUT);
   }

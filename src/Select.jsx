@@ -2,7 +2,7 @@ import React from 'react';
 import Element from './Element';
 import _ from 'lodash';
 
-const PLACEHOLDER_VALUE = '';
+const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
 export default class Select extends Element {
   static isElement = true;

@@ -26,7 +26,7 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var PLACEHOLDER_VALUE = '';
+var PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
 var Select = (function (_Element) {
   _inherits(Select, _Element);

@@ -45,7 +45,7 @@ var Input = (function (_Element) {
     _get(Object.getPrototypeOf(Input.prototype), 'constructor', this).call(this, props, context);
 
     this.state = {
-      value: props.value
+      value: props.value || '' // fix because null and undefined is uncontrolled
     };
   }
 
@@ -83,7 +83,7 @@ var Input = (function (_Element) {
         }
 
         _this.setState({
-          value: _this.props.value
+          value: _this.props.value || ''
         });
       }, DIFF_TIMEOUT);
     }
