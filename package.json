@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.9.16",
+  "version": "0.9.17",
   "description": "React google analytics with support for react-router",
   "author": {
     "name": "Zlatko Fedor",
@@ -56,6 +56,6 @@
     "should": "~7.1.1"
   },
   "peerDependencies": {
-    "react": ">=0.13.3"
+    "react": "0.13.x||0.14.x"
   }
 }
