@@ -7,6 +7,8 @@ function fixUncontrolledValue(value) {
   if (typeof value === 'undefined' || value === null) {
     return '';
   }
+
+  return value;
 }
 
 export default class Input extends Element {

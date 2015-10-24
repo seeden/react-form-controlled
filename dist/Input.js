@@ -28,6 +28,8 @@ function fixUncontrolledValue(value) {
   if (typeof value === 'undefined' || value === null) {
     return '';
   }
+
+  return value;
 }
 
 var Input = (function (_Element) {
