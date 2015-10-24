@@ -24,6 +24,12 @@ var _Element3 = _interopRequireDefault(_Element2);
 
 var DIFF_TIMEOUT = 100;
 
+function fixUncontrolledValue(value) {
+  if (typeof value === 'undefined' || value === null) {
+    return '';
+  }
+}
+
 var Input = (function (_Element) {
   _inherits(Input, _Element);
 
@@ -45,7 +51,7 @@ var Input = (function (_Element) {
     _get(Object.getPrototypeOf(Input.prototype), 'constructor', this).call(this, props, context);
 
     this.state = {
-      value: props.value || '' // fix because null and undefined is uncontrolled
+      value: fixUncontrolledValue(props.value) // fix because null and undefined is uncontrolled
     };
   }
 
@@ -83,7 +89,7 @@ var Input = (function (_Element) {
         }
 
         _this.setState({
-          value: _this.props.value || ''
+          value: fixUncontrolledValue(_this.props.value)
         });
       }, DIFF_TIMEOUT);
     }

@@ -4,6 +4,8 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -26,9 +28,9 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _nodeExtend = require('node.extend');
-
-var _nodeExtend2 = _interopRequireDefault(_nodeExtend);
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 var FormObject = (function (_Element) {
   _inherits(FormObject, _Element);
@@ -48,7 +50,8 @@ var FormObject = (function (_Element) {
   }, {
     key: 'setValue',
     value: function setValue(name, value) {
-      var newState = (0, _nodeExtend2['default'])({}, this.props.value);
+      var newState = _extends({}, this.props.value);
+
       newState[name] = value;
 
       this.props.onChange(newState);
@@ -120,6 +123,10 @@ var FormObject = (function (_Element) {
       e.stopPropagation();
 
       var value = target.type === 'checkbox' ? !!target.checked : target.value;
+
+      if (target.type === 'number' && isNumeric(value)) {
+        value = Number(value);
+      }
 
       this.setValue(target.name, value);
     }

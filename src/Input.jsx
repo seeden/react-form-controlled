@@ -3,6 +3,12 @@ import Element from './Element';
 
 const DIFF_TIMEOUT = 100;
 
+function fixUncontrolledValue(value) {
+  if (typeof value === 'undefined' || value === null) {
+    return '';
+  }
+}
+
 export default class Input extends Element {
   static isElement = true;
   static propTypes = {
@@ -13,7 +19,7 @@ export default class Input extends Element {
     super(props, context);
 
     this.state = {
-      value: props.value || '' // fix because null and undefined is uncontrolled
+      value: fixUncontrolledValue(props.value) // fix because null and undefined is uncontrolled
     };
   }
 
@@ -48,7 +54,7 @@ export default class Input extends Element {
       }
 
       this.setState({
-        value: this.props.value || ''
+        value: fixUncontrolledValue(this.props.value)
       });
     }, DIFF_TIMEOUT);
   }

@@ -1,7 +1,10 @@
 import React from 'react';
 import Element from './Element';
 import _ from 'lodash';
-import extend from 'node.extend';
+
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 export default class FormObject extends Element {
   static propTypes = {
@@ -14,7 +17,10 @@ export default class FormObject extends Element {
   }
 
   setValue(name, value) {
-    const newState = extend({}, this.props.value);
+    const newState = {
+      ...this.props.value
+    };
+
     newState[name] = value;
 
     this.props.onChange(newState);
@@ -75,9 +81,13 @@ export default class FormObject extends Element {
 
     e.stopPropagation();
 
-    const value = target.type === 'checkbox'
+    let value = target.type === 'checkbox'
       ? !!target.checked
       : target.value;
+
+    if (target.type === 'number' && isNumeric(value)) {
+      value = Number(value);
+    }
 
     this.setValue(target.name, value);
   }
