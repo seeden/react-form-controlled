@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.9.18",
+  "version": "0.9.19",
   "description": "React google analytics with support for react-router",
   "author": {
     "name": "Zlatko Fedor",
@@ -22,12 +22,7 @@
     "react-select"
   ],
   "private": false,
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
+  "license": "MIT",
   "main": "./dist/index.js",
   "engines": {
     "node": ">= 0.10.0"
@@ -45,7 +40,7 @@
     "react-select": "^0.8.2"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
+    "babel": "^5.8.29",
     "babel-eslint": "^4.1.3",
     "eslint": "^1.7.3",
     "eslint-loader": "^1.1.0",

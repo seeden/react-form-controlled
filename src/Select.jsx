@@ -123,7 +123,7 @@ export default class Select extends Element {
           {this.renderPlaceholder()}
 
           {options.map(function(option, pos) {
-            return <option value={pos}>{option.label}</option>;
+            return <option value={pos} key={pos}>{option.label}</option>;
           })}
       </select>
     );
