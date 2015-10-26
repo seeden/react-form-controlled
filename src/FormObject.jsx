@@ -17,9 +17,10 @@ export default class FormObject extends Element {
   }
 
   setValue(name, value) {
-    const newState = {
-      ...this.props.value
-    };
+    const currentValue = this.props.value;
+    const newState = _.isArray(currentValue)
+      ? [...this.props.value]
+      : {...this.props.value};
 
     newState[name] = value;
 
