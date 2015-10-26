@@ -74,7 +74,7 @@ var FormObject = (function (_Element) {
         return child;
       }
 
-      if (!child.props.name) {
+      if (!child.props.name && child.props.name !== 0) {
         throw new Error('Form element has no name property');
       }
 
