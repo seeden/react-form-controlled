@@ -14,7 +14,10 @@ function fixUncontrolledValue(value) {
 export default class Input extends Element {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired
+    name: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number
+    ]).isRequired
   };
 
   constructor(props, context) {

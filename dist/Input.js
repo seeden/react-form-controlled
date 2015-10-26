@@ -42,7 +42,7 @@ var Input = (function (_Element) {
   }, {
     key: 'propTypes',
     value: {
-      name: _react2['default'].PropTypes.string.isRequired
+      name: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.number]).isRequired
     },
     enumerable: true
   }]);
