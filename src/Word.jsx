@@ -22,14 +22,14 @@ export default class Word extends Input {
   static isElement = true;
   static propTypes = Input.propTypes;
 
-  handleChange(e) {
-    const target = e.target || {};
+  handleChange(evn) {
+    const target = evn.target || {};
 
     const fixedValue = fixValue(target.value);
     if (fixedValue !== target.value) {
       target.value = fixedValue;
     }
 
-    super.handleChange(e);
+    super.handleChange(evn);
   }
 }

@@ -5,7 +5,7 @@ import Element from './Element';
 export default class Select extends Element {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired
+    name: React.PropTypes.string.isRequired,
   };
 
   constructor(props, context) {
@@ -18,7 +18,7 @@ export default class Select extends Element {
       return;
     }
 
-    const values = items.map(function(item) {
+    const values = items.map(function eachItem(item) {
       return item.value;
     });
 

@@ -16,31 +16,37 @@ export default class Input extends Element {
   static propTypes = {
     name: React.PropTypes.oneOfType([
       React.PropTypes.string,
-      React.PropTypes.number
-    ]).isRequired
+      React.PropTypes.number,
+    ]).isRequired,
   };
 
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      value: fixUncontrolledValue(props.value) // fix because null and undefined is uncontrolled
+      value: fixUncontrolledValue(props.value), // fix because null and undefined is uncontrolled
     };
   }
 
-  handleChange(e) {
-    const target = e.target || {};
+  _clearChangeTimeout() {
+    if (!this.timeoutId) {
+      return;
+    }
+
+    clearTimeout(this.timeoutId);
+    this.timeoutId = null;
+  }
+
+  handleChange(evn) {
+    const target = evn.target || {};
     const value = target.type === 'checkbox'
       ? !!target.checked
       : target.value;
 
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-      this.timeoutId = null;
-    }
+    this._clearChangeTimeout();
 
     this.setState({
-      value: value
+      value: value,
     });
   }
 
@@ -59,9 +65,13 @@ export default class Input extends Element {
       }
 
       this.setState({
-        value: fixUncontrolledValue(this.props.value)
+        value: fixUncontrolledValue(this.props.value),
       });
     }, DIFF_TIMEOUT);
+  }
+
+  componentWillUnmount() {
+    this._clearChangeTimeout();
   }
 
   render() {

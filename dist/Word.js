@@ -48,15 +48,15 @@ var Word = (function (_Input) {
 
   _createClass(Word, [{
     key: 'handleChange',
-    value: function handleChange(e) {
-      var target = e.target || {};
+    value: function handleChange(evn) {
+      var target = evn.target || {};
 
       var fixedValue = fixValue(target.value);
       if (fixedValue !== target.value) {
         target.value = fixedValue;
       }
 
-      _get(Object.getPrototypeOf(Word.prototype), 'handleChange', this).call(this, e);
+      _get(Object.getPrototypeOf(Word.prototype), 'handleChange', this).call(this, evn);
     }
   }], [{
     key: 'isElement',

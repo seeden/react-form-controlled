@@ -26,12 +26,16 @@ var _Element2 = require('./Element');
 
 var _Element3 = _interopRequireDefault(_Element2);
 
-var _lodash = require('lodash');
+var _lodashLangIsArray = require('lodash/lang/isArray');
 
-var _lodash2 = _interopRequireDefault(_lodash);
+var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
 
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+var _lodashLangIsFunction = require('lodash/lang/isFunction');
+
+var _lodashLangIsFunction2 = _interopRequireDefault(_lodashLangIsFunction);
+
+function isNumeric(value) {
+  return !isNaN(parseFloat(value)) && isFinite(value);
 }
 
 var FormObject = (function (_Element) {
@@ -53,7 +57,7 @@ var FormObject = (function (_Element) {
     key: 'setValue',
     value: function setValue(name, value) {
       var currentValue = this.props.value;
-      var newState = _lodash2['default'].isArray(currentValue) ? [].concat(_toConsumableArray(this.props.value)) : _extends({}, this.props.value);
+      var newState = (0, _lodashLangIsArray2['default'])(currentValue) ? [].concat(_toConsumableArray(this.props.value)) : _extends({}, this.props.value);
 
       newState[name] = value;
 
@@ -68,7 +72,7 @@ var FormObject = (function (_Element) {
         return child;
       }
 
-      if (!_lodash2['default'].isFunction(child.type) || !child.type.isElement) {
+      if (!(0, _lodashLangIsFunction2['default'])(child.type) || !child.type.isElement) {
         if (child.props && child.props.children) {
           var children = this._registerChildren(child.props.children);
           return _react2['default'].cloneElement(child, {}, children);
@@ -96,7 +100,7 @@ var FormObject = (function (_Element) {
     value: function _registerChildren(children) {
       var _this2 = this;
 
-      if (!_lodash2['default'].isArray(children)) {
+      if (!(0, _lodashLangIsArray2['default'])(children)) {
         return this._registerChild(children);
       }
 
@@ -117,13 +121,13 @@ var FormObject = (function (_Element) {
     }
   }, {
     key: 'handleChange',
-    value: function handleChange(e) {
-      var target = e.target;
+    value: function handleChange(evn) {
+      var target = evn.target;
       if (!target || !target.name) {
         return;
       }
 
-      e.stopPropagation();
+      evn.stopPropagation();
 
       var value = target.type === 'checkbox' ? !!target.checked : target.value;
 

@@ -5,7 +5,7 @@ import FormObject from './FormObject';
 export default class Form extends FormObject {
   static propTypes = {
     onSubmit: React.PropTypes.func.isRequired,
-    onChange: React.PropTypes.func.isRequired
+    onChange: React.PropTypes.func.isRequired,
   };
 
   constructor(props, context) {
@@ -24,7 +24,7 @@ export default class Form extends FormObject {
     const errors = this.validateData.errors;
 
     this.setState({
-      errors: errors && errors.length ? errors : null
+      errors: errors && errors.length ? errors : null,
     });
 
     callback(null, isValid, errors);
@@ -40,8 +40,8 @@ export default class Form extends FormObject {
     const schemaPath = '#/' + path;
     const ret = [];
 
-    for (let i = 0; i < errors.length; i++) {
-      const error = errors[i];
+    for (let index = 0; index < errors.length; index++) {
+      const error = errors[index];
       if (error.path !== schemaPath) {
         continue;
       }
@@ -59,8 +59,8 @@ export default class Form extends FormObject {
     return !this.hasErrors(path);
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit(evn) {
+    evn.preventDefault();
 
     this.validate((err, valid) => {
       if (!valid) {

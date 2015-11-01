@@ -75,8 +75,8 @@ var Form = (function (_FormObject) {
       var schemaPath = '#/' + path;
       var ret = [];
 
-      for (var i = 0; i < errors.length; i++) {
-        var error = errors[i];
+      for (var index = 0; index < errors.length; index++) {
+        var error = errors[index];
         if (error.path !== schemaPath) {
           continue;
         }
@@ -97,10 +97,10 @@ var Form = (function (_FormObject) {
     }
   }, {
     key: 'handleSubmit',
-    value: function handleSubmit(e) {
+    value: function handleSubmit(evn) {
       var _this = this;
 
-      e.preventDefault();
+      evn.preventDefault();
 
       this.validate(function (err, valid) {
         if (!valid) {

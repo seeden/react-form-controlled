@@ -4,7 +4,7 @@ import Input from './Input';
 export default class Textarea extends Input {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired
+    name: React.PropTypes.string.isRequired,
   };
 
   render() {

@@ -53,20 +53,27 @@ var Input = (function (_Element) {
     _get(Object.getPrototypeOf(Input.prototype), 'constructor', this).call(this, props, context);
 
     this.state = {
-      value: fixUncontrolledValue(props.value) // fix because null and undefined is uncontrolled
-    };
+      value: fixUncontrolledValue(props.value) };
   }
 
   _createClass(Input, [{
+    key: '_clearChangeTimeout',
+    // fix because null and undefined is uncontrolled
+    value: function _clearChangeTimeout() {
+      if (!this.timeoutId) {
+        return;
+      }
+
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
+  }, {
     key: 'handleChange',
-    value: function handleChange(e) {
-      var target = e.target || {};
+    value: function handleChange(evn) {
+      var target = evn.target || {};
       var value = target.type === 'checkbox' ? !!target.checked : target.value;
 
-      if (this.timeoutId) {
-        clearTimeout(this.timeoutId);
-        this.timeoutId = null;
-      }
+      this._clearChangeTimeout();
 
       this.setState({
         value: value
@@ -94,6 +101,11 @@ var Input = (function (_Element) {
           value: fixUncontrolledValue(_this.props.value)
         });
       }, DIFF_TIMEOUT);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this._clearChangeTimeout();
     }
   }, {
     key: 'render',

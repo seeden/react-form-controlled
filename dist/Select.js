@@ -22,9 +22,13 @@ var _Element2 = require('./Element');
 
 var _Element3 = _interopRequireDefault(_Element2);
 
-var _lodash = require('lodash');
+var _lodashLangIsPlainObject = require('lodash/lang/isPlainObject');
 
-var _lodash2 = _interopRequireDefault(_lodash);
+var _lodashLangIsPlainObject2 = _interopRequireDefault(_lodashLangIsPlainObject);
+
+var _lodashLangIsArray = require('lodash/lang/isArray');
+
+var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
 
 var PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
@@ -64,16 +68,16 @@ var Select = (function (_Element) {
       var value = props.value;
       var placeholder = props.placeholder;
 
-      if (_lodash2['default'].isPlainObject(options)) {
-        Object.keys(options).forEach(function (key) {
+      if ((0, _lodashLangIsPlainObject2['default'])(options)) {
+        Object.keys(options).forEach(function eachOption(key) {
           selectOptions.push({
             value: key,
             label: options[key]
           });
         });
-      } else if (_lodash2['default'].isArray(options)) {
-        options.forEach(function (option) {
-          var isObject = _lodash2['default'].isPlainObject(option);
+      } else if ((0, _lodashLangIsArray2['default'])(options)) {
+        options.forEach(function eachOption(option) {
+          var isObject = (0, _lodashLangIsPlainObject2['default'])(option);
 
           selectOptions.push({
             value: isObject ? option.value : option,
@@ -85,7 +89,7 @@ var Select = (function (_Element) {
       var isMultiple = this.isMultiple();
       var values = [];
 
-      selectOptions.forEach(function (option, pos) {
+      selectOptions.forEach(function eachSelectOption(option, pos) {
         if (!isMultiple && option.value === value) {
           values.push(pos);
         } else if (isMultiple && value && value.length && value.indexOf(option.value) !== -1) {
@@ -104,15 +108,15 @@ var Select = (function (_Element) {
     }
   }, {
     key: 'handleChange',
-    value: function handleChange(e) {
-      e.stopPropagation();
+    value: function handleChange(evn) {
+      evn.stopPropagation();
 
-      var nodes = e.target.options || [];
+      var nodes = evn.target.options || [];
       var options = this.state.options;
       var values = [];
 
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
+      for (var index = 0; index < nodes.length; index++) {
+        var node = nodes[index];
 
         if (!node.selected) {
           continue;
@@ -123,12 +127,12 @@ var Select = (function (_Element) {
           continue;
         }
 
-        var index = Number(optionValue);
-        if (!options[index]) {
+        var optionIndex = Number(optionValue);
+        if (!options[optionIndex]) {
           continue;
         }
 
-        values.push(options[index].value);
+        values.push(options[optionIndex].value);
       }
 
       var isMultiple = this.isMultiple();
@@ -172,7 +176,7 @@ var Select = (function (_Element) {
           required: this.props.required,
           onChange: this.handleChange.bind(this) },
         this.renderPlaceholder(),
-        options.map(function (option, pos) {
+        options.map(function eachOption(option, pos) {
           return _react2['default'].createElement(
             'option',
             { value: pos, key: pos },

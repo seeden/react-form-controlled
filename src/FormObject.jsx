@@ -1,14 +1,15 @@
 import React from 'react';
 import Element from './Element';
-import _ from 'lodash';
+import isArray from 'lodash/lang/isArray';
+import isFunction from 'lodash/lang/isFunction';
 
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+function isNumeric(value) {
+  return !isNaN(parseFloat(value)) && isFinite(value);
 }
 
 export default class FormObject extends Element {
   static propTypes = {
-    onChange: React.PropTypes.func.isRequired
+    onChange: React.PropTypes.func.isRequired,
   };
 
   getValue(name) {
@@ -18,7 +19,7 @@ export default class FormObject extends Element {
 
   setValue(name, value) {
     const currentValue = this.props.value;
-    const newState = _.isArray(currentValue)
+    const newState = isArray(currentValue)
       ? [...this.props.value]
       : {...this.props.value};
 
@@ -32,7 +33,7 @@ export default class FormObject extends Element {
       return child;
     }
 
-    if (!_.isFunction(child.type) || !child.type.isElement) {
+    if (!isFunction(child.type) || !child.type.isElement) {
       if (child.props && child.props.children) {
         const children = this._registerChildren(child.props.children);
         return React.cloneElement(child, {}, children);
@@ -50,12 +51,12 @@ export default class FormObject extends Element {
     return React.cloneElement(child, {
       value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
       currentValue: currentValue,
-      onChange: value => this.setValue(child.props.name, value)
+      onChange: value => this.setValue(child.props.name, value),
     });
   }
 
   _registerChildren(children) {
-    if (!_.isArray(children)) {
+    if (!isArray(children)) {
       return this._registerChild(children);
     }
 
@@ -74,13 +75,13 @@ export default class FormObject extends Element {
     );
   }
 
-  handleChange(e) {
-    const target = e.target;
+  handleChange(evn) {
+    const target = evn.target;
     if (!target || !target.name) {
       return;
     }
 
-    e.stopPropagation();
+    evn.stopPropagation();
 
     let value = target.type === 'checkbox'
       ? !!target.checked

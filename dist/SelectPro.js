@@ -55,7 +55,7 @@ var Select = (function (_Element) {
         return;
       }
 
-      var values = items.map(function (item) {
+      var values = items.map(function eachItem(item) {
         return item.value;
       });
 

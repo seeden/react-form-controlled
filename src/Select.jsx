@@ -1,13 +1,14 @@
 import React from 'react';
 import Element from './Element';
-import _ from 'lodash';
+import isPlainObject from 'lodash/lang/isPlainObject';
+import isArray from 'lodash/lang/isArray';
 
 const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
 export default class Select extends Element {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired
+    name: React.PropTypes.string.isRequired,
   };
 
   constructor(props, context) {
@@ -24,20 +25,20 @@ export default class Select extends Element {
     const selectOptions = [];
     const { options, value, placeholder } = props;
 
-    if (_.isPlainObject(options)) {
-      Object.keys(options).forEach(function(key) {
+    if (isPlainObject(options)) {
+      Object.keys(options).forEach(function eachOption(key) {
         selectOptions.push({
           value: key,
-          label: options[key]
+          label: options[key],
         });
       });
-    } else if (_.isArray(options)) {
-      options.forEach(function(option) {
-        const isObject = _.isPlainObject(option);
+    } else if (isArray(options)) {
+      options.forEach(function eachOption(option) {
+        const isObject = isPlainObject(option);
 
         selectOptions.push({
           value: isObject ? option.value : option,
-          label: isObject ? option.label : option
+          label: isObject ? option.label : option,
         });
       });
     }
@@ -45,7 +46,7 @@ export default class Select extends Element {
     const isMultiple = this.isMultiple();
     const values = [];
 
-    selectOptions.forEach(function(option, pos) {
+    selectOptions.forEach(function eachSelectOption(option, pos) {
       if (!isMultiple && option.value === value) {
         values.push(pos);
       } else if (isMultiple && value && value.length && value.indexOf(option.value) !== -1) {
@@ -59,19 +60,19 @@ export default class Select extends Element {
 
     return {
       options: selectOptions,
-      values: isMultiple ? values : values[0]
+      values: isMultiple ? values : values[0],
     };
   }
 
-  handleChange(e) {
-    e.stopPropagation();
+  handleChange(evn) {
+    evn.stopPropagation();
 
-    const nodes = e.target.options || [];
+    const nodes = evn.target.options || [];
     const options = this.state.options;
     const values = [];
 
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+    for (let index = 0; index < nodes.length; index++) {
+      const node = nodes[index];
 
       if (!node.selected) {
         continue;
@@ -82,12 +83,12 @@ export default class Select extends Element {
         continue;
       }
 
-      const index = Number(optionValue);
-      if (!options[index]) {
+      const optionIndex = Number(optionValue);
+      if (!options[optionIndex]) {
         continue;
       }
 
-      values.push(options[index].value);
+      values.push(options[optionIndex].value);
     }
 
     const isMultiple = this.isMultiple();
@@ -122,7 +123,7 @@ export default class Select extends Element {
         onChange={this.handleChange.bind(this)}>
           {this.renderPlaceholder()}
 
-          {options.map(function(option, pos) {
+          {options.map(function eachOption(option, pos) {
             return <option value={pos} key={pos}>{option.label}</option>;
           })}
       </select>
