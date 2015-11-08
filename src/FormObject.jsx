@@ -81,7 +81,13 @@ export default class FormObject extends Element {
       return;
     }
 
-    evn.stopPropagation();
+    // IE < 10 bug catcher
+    try {
+      evn.stopPropagation();
+    } catch (err) {
+      console.log(err.message);
+    }
+
 
     let value = target.type === 'checkbox'
       ? !!target.checked

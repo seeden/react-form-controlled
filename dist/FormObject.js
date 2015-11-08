@@ -127,7 +127,12 @@ var FormObject = (function (_Element) {
         return;
       }
 
-      evn.stopPropagation();
+      // IE < 10 bug catcher
+      try {
+        evn.stopPropagation();
+      } catch (err) {
+        console.log(err.message);
+      }
 
       var value = target.type === 'checkbox' ? !!target.checked : target.value;
 
