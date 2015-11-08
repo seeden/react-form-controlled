@@ -14,10 +14,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _reactSelect = require('react-select');
-
-var _reactSelect2 = _interopRequireDefault(_reactSelect);
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -29,25 +25,18 @@ var _Element3 = _interopRequireDefault(_Element2);
 var Select = (function (_Element) {
   _inherits(Select, _Element);
 
-  _createClass(Select, null, [{
-    key: 'isElement',
-    value: true,
-    enumerable: true
-  }, {
-    key: 'propTypes',
-    value: {
-      name: _react2['default'].PropTypes.string.isRequired
-    },
-    enumerable: true
-  }]);
-
-  function Select(props, context) {
+  function Select() {
     _classCallCheck(this, Select);
 
-    _get(Object.getPrototypeOf(Select.prototype), 'constructor', this).call(this, props, context);
+    _get(Object.getPrototypeOf(Select.prototype), 'constructor', this).apply(this, arguments);
   }
 
   _createClass(Select, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.setState({ isMounted: true });
+    }
+  }, {
     key: 'handleChange',
     value: function handleChange(value, items) {
       if (!this.props.multi) {
@@ -64,7 +53,15 @@ var Select = (function (_Element) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2['default'].createElement(_reactSelect2['default'], {
+      var isMounted = this.state.isMounted;
+
+      if (!isMounted) {
+        return null;
+      }
+
+      var ReactSelect = require('react-select');
+
+      return _react2['default'].createElement(ReactSelect, {
         name: this.props.name,
         value: this.props.value,
         multi: !!this.props.multi,
@@ -73,6 +70,16 @@ var Select = (function (_Element) {
         disabled: this.props.disabled,
         onChange: this.handleChange.bind(this) });
     }
+  }], [{
+    key: 'isElement',
+    value: true,
+    enumerable: true
+  }, {
+    key: 'propTypes',
+    value: {
+      name: _react.PropTypes.string.isRequired
+    },
+    enumerable: true
   }]);
 
   return Select;
