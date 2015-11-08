@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Element from './Element';
 import isPlainObject from 'lodash/lang/isPlainObject';
 import isArray from 'lodash/lang/isArray';
@@ -8,7 +8,9 @@ const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 export default class Select extends Element {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired,
+    ...Element.propTypes,
+    disabled: PropTypes.bool,
+    className: PropTypes.string,
   };
 
   constructor(props, context) {

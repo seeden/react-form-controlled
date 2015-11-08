@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Element from './Element';
 
 const DIFF_TIMEOUT = 100;
@@ -13,11 +13,18 @@ function fixUncontrolledValue(value) {
 
 export default class Input extends Element {
   static isElement = true;
+
   static propTypes = {
-    name: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
-    ]).isRequired,
+    ...Element.propTypes,
+    autoComplete: PropTypes.bool.isRequired,
+    type: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
+    className: PropTypes.string,
+  };
+
+  static defaultProps = {
+    autoComplete: 'off',
+    type: 'text',
   };
 
   constructor(props, context) {

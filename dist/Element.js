@@ -35,7 +35,7 @@ var Element = (function (_Component) {
   }, {
     key: 'propTypes',
     value: {
-      name: _react.PropTypes.string.isRequired
+      name: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]).isRequired
     },
     enumerable: true
   }]);

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Input from './Input';
 
 export default class Textarea extends Input {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired,
+    ...Input.propTypes,
+    disabled: PropTypes.bool,
+    className: PropTypes.string,
   };
 
   render() {
