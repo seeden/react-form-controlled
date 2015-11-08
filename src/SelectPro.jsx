@@ -1,15 +1,14 @@
-import ReactSelect from 'react-select';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Element from './Element';
 
 export default class Select extends Element {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
   };
 
-  constructor(props, context) {
-    super(props, context);
+  componentDidMount() {
+    this.setState({ isMounted: true });
   }
 
   handleChange(value, items) {
@@ -26,6 +25,13 @@ export default class Select extends Element {
   }
 
   render() {
+    const { isMounted } = this.state;
+    if (!isMounted) {
+      return null;
+    }
+
+    const ReactSelect = require('react-select');
+
     return (
       <ReactSelect
         name={this.props.name}

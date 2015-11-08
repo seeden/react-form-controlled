@@ -1,14 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 export default class Element extends Component {
   static isElement = true;
   static propTypes = {
-    name: React.PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
   };
-
-  constructor(props, context) {
-    super(props, context);
-  }
 
   render() {
     return null;
