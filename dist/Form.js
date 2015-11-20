@@ -133,11 +133,27 @@ var Form = (function (_FormObject) {
             _this.props.onError(err);
           }
 
+          //redraw for ErrorAlert
+          _this.setState({
+            error: err
+          });
+
           return;
         }
 
+        _this.setState({
+          error: null
+        });
+
         _this.props.onSubmit(_this.props.value);
       });
+    }
+  }, {
+    key: 'handleChange',
+    value: function handleChange(evn) {
+      this.errors = [];
+
+      this['super'](evn);
     }
   }, {
     key: 'render',

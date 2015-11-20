@@ -91,11 +91,26 @@ export default class Form extends FormObject {
           this.props.onError(err);
         }
 
+        //redraw for ErrorAlert
+        this.setState({
+          error: err,
+        });
+
         return;
       }
 
+      this.setState({
+        error: null,
+      });
+
       this.props.onSubmit(this.props.value);
     });
+  }
+
+  handleChange(evn) {
+    this.errors = [];
+
+    this.super(evn);
   }
 
   render() {
