@@ -110,7 +110,7 @@ export default class Form extends FormObject {
   handleChange(evn) {
     this.errors = [];
 
-    this.super(evn);
+    super.handleChange(evn);
   }
 
   render() {

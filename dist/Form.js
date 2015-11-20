@@ -153,7 +153,7 @@ var Form = (function (_FormObject) {
     value: function handleChange(evn) {
       this.errors = [];
 
-      this['super'](evn);
+      _get(Object.getPrototypeOf(Form.prototype), 'handleChange', this).call(this, evn);
     }
   }, {
     key: 'render',
