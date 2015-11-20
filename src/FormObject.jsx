@@ -52,7 +52,7 @@ export default class FormObject extends Element {
       value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
       currentValue: currentValue,
       form: this.props.form || this,
-      path: this.getPath(child.props.name),
+      path: child.props.path || this.getPath(child.props.name),
       onChange: value => this.setValue(child.props.name, value),
     });
   }

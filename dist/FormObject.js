@@ -91,7 +91,7 @@ var FormObject = (function (_Element) {
         value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
         currentValue: currentValue,
         form: this.props.form || this,
-        path: this.getPath(child.props.name),
+        path: child.props.path || this.getPath(child.props.name),
         onChange: function onChange(value) {
           return _this.setValue(child.props.name, value);
         }
