@@ -21,13 +21,15 @@ export default class Form extends FormObject {
   constructor(props, context) {
     super(props, context);
 
-    this.state = this.state || {};
+    this.errors = []
 
     const ajv = Ajv(props.ajvOptions);
     this.validateData = ajv.compile(props.schema || {});
   }
 
   validate(callback) {
+    this.errors = [];
+
     const schema = this.props.schema;
     if (!schema) {
       return callback(null, true);
@@ -35,17 +37,10 @@ export default class Form extends FormObject {
 
     const isValid = this.validateData(this.props.value);
     if (isValid) {
-      this.setState({
-        errors: null,
-      });
-
       return callback(null, true);
     }
 
-    const errors = this.validateData.errors
-      ? [...this.validateData.errors]
-      : [];
-
+    const errors = this.errors = this.validateData.errors || [];
     errors.forEach((err) => {
       if (!err.dataPath) {
         return;
@@ -54,8 +49,6 @@ export default class Form extends FormObject {
       err.path = err.dataPath.substr(1);
     });
 
-    this.setState({ errors });
-
     const err = new Error(DEFAULT_INVALID_ERROR);
     err.errors = errors;
 
@@ -63,8 +56,7 @@ export default class Form extends FormObject {
   }
 
   getErrors(path) {
-    const errors = this.state.errors || [];
-
+    const errors = this.errors;
     if (!path) {
       return errors;
     }
