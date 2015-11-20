@@ -18,13 +18,15 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _jsen = require('jsen');
+var _ajv = require('ajv');
 
-var _jsen2 = _interopRequireDefault(_jsen);
+var _ajv2 = _interopRequireDefault(_ajv);
 
 var _FormObject2 = require('./FormObject');
 
 var _FormObject3 = _interopRequireDefault(_FormObject2);
+
+var DEFAULT_INVALID_ERROR = 'Form is invalid';
 
 var Form = (function (_FormObject) {
   _inherits(Form, _FormObject);
@@ -34,7 +36,16 @@ var Form = (function (_FormObject) {
     value: {
       onSubmit: _react.PropTypes.func.isRequired,
       onChange: _react.PropTypes.func.isRequired,
-      onError: _react.PropTypes.func
+      onError: _react.PropTypes.func,
+      ajvOptions: _react.PropTypes.object.isRequired
+    },
+    enumerable: true
+  }, {
+    key: 'defaultProps',
+    value: {
+      ajvOptions: {
+        allErrors: true
+      }
     },
     enumerable: true
   }]);
@@ -44,7 +55,8 @@ var Form = (function (_FormObject) {
 
     _get(Object.getPrototypeOf(Form.prototype), 'constructor', this).call(this, props, context);
 
-    this.validateData = (0, _jsen2['default'])(props.schema || {});
+    var ajv = (0, _ajv2['default'])(props.ajvOptions);
+    this.validateData = ajv.compile(props.schema || {});
   }
 
   _createClass(Form, [{
@@ -56,13 +68,29 @@ var Form = (function (_FormObject) {
       }
 
       var isValid = this.validateData(this.props.value);
-      var errors = this.validateData.errors;
+      if (isValid) {
+        this.setState({
+          errors: null
+        });
 
-      this.setState({
-        errors: errors && errors.length ? errors : null
+        return callback(null, true);
+      }
+
+      var errors = this.validateData.errors || [];
+      errors.forEach(function (err) {
+        if (!err.dataPath) {
+          return;
+        }
+
+        err.path = err.dataPath.substr(1);
       });
 
-      callback(null, isValid, errors);
+      this.setState({ errors: errors });
+
+      var err = new Error(DEFAULT_INVALID_ERROR);
+      err.errors = errors;
+
+      callback(err);
     }
   }, {
     key: 'getErrors',
@@ -103,11 +131,12 @@ var Form = (function (_FormObject) {
 
       evn.preventDefault();
 
-      this.validate(function (err, valid) {
-        if (!valid) {
+      this.validate(function (err) {
+        if (err) {
           if (_this.props.onError) {
             _this.props.onError(err);
           }
+
           return;
         }
 
