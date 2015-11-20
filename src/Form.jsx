@@ -64,12 +64,11 @@ export default class Form extends FormObject {
       return errors;
     }
 
-    const schemaPath = '#/' + path;
     const ret = [];
 
     for (let index = 0; index < errors.length; index++) {
       const error = errors[index];
-      if (error.path !== schemaPath) {
+      if (error.path !== path) {
         continue;
       }
 

@@ -101,12 +101,11 @@ var Form = (function (_FormObject) {
         return errors;
       }
 
-      var schemaPath = '#/' + path;
       var ret = [];
 
       for (var index = 0; index < errors.length; index++) {
         var error = errors[index];
-        if (error.path !== schemaPath) {
+        if (error.path !== path) {
           continue;
         }
 
