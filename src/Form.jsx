@@ -21,6 +21,8 @@ export default class Form extends FormObject {
   constructor(props, context) {
     super(props, context);
 
+    this.state = this.state || {};
+
     const ajv = Ajv(props.ajvOptions);
     this.validateData = ajv.compile(props.schema || {});
   }
@@ -40,7 +42,10 @@ export default class Form extends FormObject {
       return callback(null, true);
     }
 
-    const errors = this.validateData.errors || [];
+    const errors = this.validateData.errors
+      ? [...this.validateData.errors]
+      : [];
+
     errors.forEach((err) => {
       if (!err.dataPath) {
         return;
