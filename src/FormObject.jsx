@@ -51,8 +51,20 @@ export default class FormObject extends Element {
     return React.cloneElement(child, {
       value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
       currentValue: currentValue,
+      form: this.props.form || this,
+      path: this.getPath(child.props.name),
       onChange: value => this.setValue(child.props.name, value),
     });
+  }
+
+  getPath(name) {
+    if (!name) {
+      return void 0;
+    }
+
+    const parentPath = this.props.path || '';
+
+    return parentPath ? `${parentPath}.${name}` : name;
   }
 
   _registerChildren(children) {

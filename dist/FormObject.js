@@ -90,10 +90,23 @@ var FormObject = (function (_Element) {
       return _react2['default'].cloneElement(child, {
         value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
         currentValue: currentValue,
+        form: this.props.form || this,
+        path: this.getPath(child.props.name),
         onChange: function onChange(value) {
           return _this.setValue(child.props.name, value);
         }
       });
+    }
+  }, {
+    key: 'getPath',
+    value: function getPath(name) {
+      if (!name) {
+        return void 0;
+      }
+
+      var parentPath = this.props.path || '';
+
+      return parentPath ? parentPath + '.' + name : name;
     }
   }, {
     key: '_registerChildren',
