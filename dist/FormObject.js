@@ -145,7 +145,7 @@ var FormObject = (function (_Element) {
   }], [{
     key: 'propTypes',
     value: {
-      onChange: _react2['default'].PropTypes.func.isRequired
+      onChange: _react.PropTypes.func.isRequired
     },
     enumerable: true
   }]);

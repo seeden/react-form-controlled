@@ -16,7 +16,7 @@ export default class Input extends Element {
 
   static propTypes = {
     ...Element.propTypes,
-    autoComplete: PropTypes.bool.isRequired,
+    autoComplete: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     className: PropTypes.string,

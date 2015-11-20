@@ -44,7 +44,7 @@ var Input = (function (_Element) {
   }, {
     key: 'propTypes',
     value: _extends({}, _Element3['default'].propTypes, {
-      autoComplete: _react.PropTypes.bool.isRequired,
+      autoComplete: _react.PropTypes.string.isRequired,
       type: _react.PropTypes.string.isRequired,
       disabled: _react.PropTypes.bool,
       className: _react.PropTypes.string

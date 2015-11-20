@@ -32,8 +32,9 @@ var Form = (function (_FormObject) {
   _createClass(Form, null, [{
     key: 'propTypes',
     value: {
-      onSubmit: _react2['default'].PropTypes.func.isRequired,
-      onChange: _react2['default'].PropTypes.func.isRequired
+      onSubmit: _react.PropTypes.func.isRequired,
+      onChange: _react.PropTypes.func.isRequired,
+      onError: _react.PropTypes.func
     },
     enumerable: true
   }]);
@@ -104,6 +105,9 @@ var Form = (function (_FormObject) {
 
       this.validate(function (err, valid) {
         if (!valid) {
+          if (_this.props.onError) {
+            _this.props.onError(err);
+          }
           return;
         }
 

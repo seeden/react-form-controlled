@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import validator from 'jsen';
 import FormObject from './FormObject';
 
 export default class Form extends FormObject {
   static propTypes = {
-    onSubmit: React.PropTypes.func.isRequired,
-    onChange: React.PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onError: PropTypes.func,
   };
 
   constructor(props, context) {
@@ -64,6 +65,9 @@ export default class Form extends FormObject {
 
     this.validate((err, valid) => {
       if (!valid) {
+        if (this.props.onError) {
+          this.props.onError(err);
+        }
         return;
       }
 

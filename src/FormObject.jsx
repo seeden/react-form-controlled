@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Element from './Element';
 import isArray from 'lodash/lang/isArray';
 import isFunction from 'lodash/lang/isFunction';
@@ -9,7 +9,7 @@ function isNumeric(value) {
 
 export default class FormObject extends Element {
   static propTypes = {
-    onChange: React.PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
   };
 
   getValue(name) {
