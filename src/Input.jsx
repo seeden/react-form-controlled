@@ -53,7 +53,7 @@ export default class Input extends Element {
     this._clearChangeTimeout();
 
     this.setState({
-      value: value,
+      value,
     });
   }
 
@@ -98,6 +98,7 @@ export default class Input extends Element {
         size={this.props.size}
         min={this.props.min}
         max={this.props.max}
+        step={this.props.step}
         required={this.props.required}
         placeholder={this.props.placeholder}
         value={this.state.value} />
