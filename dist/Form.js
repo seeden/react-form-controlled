@@ -44,7 +44,8 @@ var Form = (function (_FormObject) {
     key: 'defaultProps',
     value: {
       ajvOptions: {
-        allErrors: true
+        allErrors: true,
+        errorDataPath: 'property'
       }
     },
     enumerable: true

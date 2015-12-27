@@ -15,6 +15,7 @@ export default class Form extends FormObject {
   static defaultProps = {
     ajvOptions: {
       allErrors: true,
+      errorDataPath: 'property',
     }
   };
 
