@@ -150,7 +150,11 @@ var FormObject = (function (_Element) {
       var value = target.type === 'checkbox' ? !!target.checked : target.value;
 
       if (target.type === 'number' && isNumeric(value)) {
-        value = Number(value);
+        // fix decimal numbers
+        var numberValue = Number(value);
+        if (numberValue.toString() === value) {
+          value = numberValue;
+        }
       }
 
       this.setValue(target.name, value);

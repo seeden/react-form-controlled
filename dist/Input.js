@@ -136,6 +136,7 @@ var Input = (function (_Element) {
         size: this.props.size,
         min: this.props.min,
         max: this.props.max,
+        step: this.props.step,
         required: this.props.required,
         placeholder: this.props.placeholder,
         value: this.state.value });

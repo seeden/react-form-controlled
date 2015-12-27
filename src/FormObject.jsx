@@ -106,7 +106,11 @@ export default class FormObject extends Element {
       : target.value;
 
     if (target.type === 'number' && isNumeric(value)) {
-      value = Number(value);
+      // fix decimal numbers
+      const numberValue = Number(value);
+      if (numberValue.toString() === value) {
+        value = numberValue;
+      }
     }
 
     this.setValue(target.name, value);
