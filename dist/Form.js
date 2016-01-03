@@ -45,7 +45,7 @@ var Form = (function (_FormObject) {
     value: {
       ajvOptions: {
         allErrors: true,
-        errorDataPath: 'property'
+        verbose: true
       }
     },
     enumerable: true
@@ -79,11 +79,11 @@ var Form = (function (_FormObject) {
 
       var errors = this.errors = this.validateData.errors || [];
       errors.forEach(function (err) {
-        if (!err.dataPath) {
+        if (!err.data) {
           return;
         }
 
-        err.path = err.dataPath.substr(1);
+        err.path = err.data.substr(1);
       });
 
       var err = new Error(DEFAULT_INVALID_ERROR);
@@ -134,7 +134,7 @@ var Form = (function (_FormObject) {
             _this.props.onError(err);
           }
 
-          //redraw for ErrorAlert
+          // redraw for ErrorAlert
           _this.setState({
             error: err
           });

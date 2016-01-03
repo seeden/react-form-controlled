@@ -15,14 +15,14 @@ export default class Form extends FormObject {
   static defaultProps = {
     ajvOptions: {
       allErrors: true,
-      errorDataPath: 'property',
-    }
+      verbose: true,
+    },
   };
 
   constructor(props, context) {
     super(props, context);
 
-    this.errors = []
+    this.errors = [];
 
     const ajv = Ajv(props.ajvOptions);
     this.validateData = ajv.compile(props.schema || {});
@@ -43,11 +43,11 @@ export default class Form extends FormObject {
 
     const errors = this.errors = this.validateData.errors || [];
     errors.forEach((err) => {
-      if (!err.dataPath) {
+      if (!err.data) {
         return;
       }
 
-      err.path = err.dataPath.substr(1);
+      err.path = err.data.substr(1);
     });
 
     const err = new Error(DEFAULT_INVALID_ERROR);
@@ -92,7 +92,7 @@ export default class Form extends FormObject {
           this.props.onError(err);
         }
 
-        //redraw for ErrorAlert
+        // redraw for ErrorAlert
         this.setState({
           error: err,
         });
