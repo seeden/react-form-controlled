@@ -28,6 +28,13 @@ var _FormObject3 = _interopRequireDefault(_FormObject2);
 
 var DEFAULT_INVALID_ERROR = 'Form is invalid';
 
+function errorToProperty(err) {
+  switch (err.keyword) {
+    case 'required':
+      return err.missingProperty;
+  }
+}
+
 var Form = (function (_FormObject) {
   _inherits(Form, _FormObject);
 
@@ -79,11 +86,10 @@ var Form = (function (_FormObject) {
 
       var errors = this.errors = this.validateData.errors || [];
       errors.forEach(function (err) {
-        if (!err.data) {
-          return;
-        }
+        var prop = errorToProperty(err);
+        var path = err.dataPath ? err.dataPath.substr(1) : null;
 
-        err.path = err.data.substr(1);
+        err.path = path ? path + '.' + prop : prop;
       });
 
       var err = new Error(DEFAULT_INVALID_ERROR);

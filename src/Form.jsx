@@ -4,6 +4,13 @@ import FormObject from './FormObject';
 
 const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
+function errorToProperty(err) {
+  switch (err.keyword) {
+    case 'required':
+      return err.missingProperty;
+  }
+}
+
 export default class Form extends FormObject {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
@@ -43,11 +50,12 @@ export default class Form extends FormObject {
 
     const errors = this.errors = this.validateData.errors || [];
     errors.forEach((err) => {
-      if (!err.data) {
-        return;
-      }
+      const prop = errorToProperty(err);
+      const path = err.dataPath ? err.dataPath.substr(1) : null;
 
-      err.path = err.data.substr(1);
+      err.path = path
+        ? `${path}.${prop}`
+        : prop;
     });
 
     const err = new Error(DEFAULT_INVALID_ERROR);
