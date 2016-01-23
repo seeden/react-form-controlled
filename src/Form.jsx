@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Ajv from 'ajv';
-import FormObject from './FormObject';
+import Fieldset from './Fieldset';
 
 const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
@@ -11,12 +11,13 @@ function errorToProperty(err) {
   }
 }
 
-export default class Form extends FormObject {
+export default class Form extends Fieldset {
   static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
     onError: PropTypes.func,
     ajvOptions: PropTypes.object.isRequired,
+    replace: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -24,6 +25,9 @@ export default class Form extends FormObject {
       allErrors: true,
       verbose: true,
     },
+    onChange: () => {},
+    onSubmit: () => {},
+    replace: true,
   };
 
   constructor(props, context) {
@@ -33,6 +37,10 @@ export default class Form extends FormObject {
 
     const ajv = Ajv(props.ajvOptions);
     this.validateData = ajv.compile(props.schema || {});
+  }
+
+  getFormProps() {
+    return this.props;
   }
 
   validate(callback) {
@@ -112,7 +120,9 @@ export default class Form extends FormObject {
         error: null,
       });
 
-      this.props.onSubmit(this.props.value);
+      if (this.props.onSubmit) {
+        this.props.onSubmit(this.props.value);
+      }
     });
   }
 

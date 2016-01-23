@@ -4,11 +4,7 @@ import Element from './Element';
 const DIFF_TIMEOUT = 100;
 
 function fixUncontrolledValue(value) {
-  if (typeof value === 'undefined' || value === null) {
-    return '';
-  }
-
-  return value;
+  return (typeof value === 'undefined' || value === null) ? '' : value;
 }
 
 export default class Input extends Element {
@@ -52,9 +48,7 @@ export default class Input extends Element {
 
     this._clearChangeTimeout();
 
-    this.setState({
-      value,
-    });
+    this.setState({ value });
   }
 
   componentWillReceiveProps(newProps) {
@@ -82,25 +76,17 @@ export default class Input extends Element {
   }
 
   render() {
-    const checked = (this.props.type === 'checkbox' && this.props.value)
-      || (this.props.type === 'radio' && this.props.value === this.props.currentValue);
+    const { type, originalProps, value, currentValue, path, name } = this.props;
+    const checked = (type === 'checkbox' && value)
+      || (type === 'radio' && value === currentValue);
 
     return (
       <input
-        autoComplete={this.props.autoComplete}
+        {...originalProps}
+        name={path}
+        data-property={name}
         onChange={this.handleChange.bind(this)}
-        type={this.props.type}
-        disabled={this.props.disabled}
         checked={checked ? checked : void 0}
-        className={this.props.className}
-        name={this.props.name}
-        id={this.props.id}
-        size={this.props.size}
-        min={this.props.min}
-        max={this.props.max}
-        step={this.props.step}
-        required={this.props.required}
-        placeholder={this.props.placeholder}
         value={this.state.value} />
     );
   }

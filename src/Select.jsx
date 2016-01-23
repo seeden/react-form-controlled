@@ -7,6 +7,7 @@ const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
 export default class Select extends Element {
   static isElement = true;
+
   static propTypes = {
     ...Element.propTypes,
     disabled: PropTypes.bool,
@@ -28,14 +29,14 @@ export default class Select extends Element {
     const { options, value, placeholder } = props;
 
     if (isPlainObject(options)) {
-      Object.keys(options).forEach(function eachOption(key) {
+      Object.keys(options).forEach((key) => {
         selectOptions.push({
           value: key,
           label: options[key],
         });
       });
     } else if (isArray(options)) {
-      options.forEach(function eachOption(option) {
+      options.forEach((option) => {
         const isObject = isPlainObject(option);
 
         selectOptions.push({
@@ -48,7 +49,7 @@ export default class Select extends Element {
     const isMultiple = this.isMultiple();
     const values = [];
 
-    selectOptions.forEach(function eachSelectOption(option, pos) {
+    selectOptions.forEach((option, pos) => {
       if (!isMultiple && option.value === value) {
         values.push(pos);
       } else if (isMultiple && value && value.length && value.indexOf(option.value) !== -1) {
@@ -98,13 +99,15 @@ export default class Select extends Element {
   }
 
   renderPlaceholder() {
-    const props = this.props;
+    const { placeholder } = this.props;
 
-    if (typeof props.placeholder === 'undefined') {
+    if (typeof placeholder === 'undefined') {
       return null;
     }
 
-    return <option value={PLACEHOLDER_VALUE}>{props.placeholder}</option>;
+    return (
+      <option value={PLACEHOLDER_VALUE}>{placeholder}</option>
+    );
   }
 
   isMultiple() {
@@ -113,20 +116,24 @@ export default class Select extends Element {
 
   render() {
     const { options, values } = this.state;
+    const { path, name, className, disabled, required } = this.props;
 
     return (
       <select
-        className={this.props.className}
-        name={this.props.name}
+        name={path}
+        data-property={name}
         value={values}
+        className={className}
+        disabled={disabled}
+        required={required}
         multiple={this.isMultiple()}
-        disabled={this.props.disabled}
-        required={this.props.required}
         onChange={this.handleChange.bind(this)}>
           {this.renderPlaceholder()}
 
-          {options.map(function eachOption(option, pos) {
-            return <option value={pos} key={pos}>{option.label}</option>;
+          {options.map((option, pos) => {
+            return (
+              <option value={pos} key={pos}>{option.label}</option>
+            );
           })}
       </select>
     );

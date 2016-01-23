@@ -2,19 +2,28 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 import isArray from 'lodash/lang/isArray';
 import isFunction from 'lodash/lang/isFunction';
+import set from 'lodash/object/set';
+import get from 'lodash/object/get';
+
+import Input from './Input';
+import Select from './Select';
+import Textarea from './Textarea';
 
 function isNumeric(value) {
   return !isNaN(parseFloat(value)) && isFinite(value);
 }
 
-export default class FormObject extends Element {
+export default class Fieldset extends Element {
+  static isElement = true;
+
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
+    ...Element.propTypes,
+    onChange: PropTypes.func,
   };
 
   getValue(name) {
     const value = this.props.value || {};
-    return value[name];
+    return get(value, name);
   }
 
   setValue(name, value) {
@@ -23,14 +32,32 @@ export default class FormObject extends Element {
       ? [...this.props.value]
       : {...this.props.value};
 
-    newState[name] = value;
+    set(newState, name, value);
 
     this.props.onChange(newState);
   }
 
+  getFormProps() {
+    return this.props.form.props;
+  }
+
   _registerChild(child) {
+    const { replace } = this.getFormProps();
+
     if (!child || typeof child === 'string') {
       return child;
+    }
+
+    if (replace) {
+      if (child.type === 'input') {
+        return this._registerChild(<Input {...child.props} />);
+      } else if (child.type === 'select') {
+        return this._registerChild(<Select {...child.props} />);
+      } else if (child.type === 'textarea') {
+        return this._registerChild(<Textarea {...child.props} />);
+      } else if (child.type === 'fieldset' && child.props.name) {
+        return this._registerChild(<Fieldset {...child.props} />);
+      }
     }
 
     if (!isFunction(child.type) || !child.type.isElement) {
@@ -49,11 +76,12 @@ export default class FormObject extends Element {
     const currentValue = this.getValue(child.props.name);
 
     return React.cloneElement(child, {
+      originalProps: child.props,
       value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
       currentValue: currentValue,
       form: this.props.form || this,
       path: child.props.path || this.getPath(child.props.name),
-      onChange: value => this.setValue(child.props.name, value),
+      onChange: (value) => this.setValue(child.props.name, value),
     });
   }
 
@@ -81,15 +109,20 @@ export default class FormObject extends Element {
     const children = this._registerChildren(this.props.children);
 
     return (
-      <div onChange={this.handleChange.bind(this)}>
+      <fieldset onChange={this.handleChange.bind(this)}>
         {children}
-      </div>
+      </fieldset>
     );
   }
 
   handleChange(evn) {
     const target = evn.target;
-    if (!target || !target.name) {
+    if (!target) {
+      return;
+    }
+
+    const propertyName = target.getAttribute('data-property');
+    if (!propertyName) {
       return;
     }
 
@@ -99,7 +132,6 @@ export default class FormObject extends Element {
     } catch (err) {
       console.log(err.message);
     }
-
 
     let value = target.type === 'checkbox'
       ? !!target.checked
@@ -113,6 +145,6 @@ export default class FormObject extends Element {
       }
     }
 
-    this.setValue(target.name, value);
+    this.setValue(propertyName, value);
   }
 }

@@ -1,15 +1,12 @@
 import React, { PropTypes } from 'react';
 import Element from './Element';
 
-export default class Select extends Element {
+export default class SelectPro extends Element {
   static isElement = true;
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-  };
 
-  componentDidMount() {
-    this.setState({ isMounted: true });
-  }
+  static propTypes = {
+    ...Element.propTypes,
+  };
 
   handleChange(value, items) {
     if (!this.props.multi) {
@@ -17,30 +14,20 @@ export default class Select extends Element {
       return;
     }
 
-    const values = items.map(function eachItem(item) {
-      return item.value;
-    });
-
+    const values = items.map((item) => item.value);
     this.props.onChange(values);
   }
 
-  render() {
-    const { isMounted } = this.state;
-    if (!isMounted) {
-      return null;
-    }
+  getReactSelect() {
+    const creator = require('react-select');
+    return creator.default ? creator.default : creator;
+  }
 
-    const ReactSelect = require('react-select');
+  render() {
+    const ReactSelect = this.getReactSelect();
 
     return (
-      <ReactSelect
-        name={this.props.name}
-        value={this.props.value}
-        multi={!!this.props.multi}
-        options={this.props.options}
-        placeholder={this.props.placeholder}
-        disabled={this.props.disabled}
-        onChange={this.handleChange.bind(this)} />
+      <ReactSelect {...this.props} onChange={this.handleChange.bind(this)} />
     );
   }
 }

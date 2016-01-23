@@ -1,18 +1,12 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -22,9 +16,17 @@ var _ajv = require('ajv');
 
 var _ajv2 = _interopRequireDefault(_ajv);
 
-var _FormObject2 = require('./FormObject');
+var _Fieldset2 = require('./Fieldset');
 
-var _FormObject3 = _interopRequireDefault(_FormObject2);
+var _Fieldset3 = _interopRequireDefault(_Fieldset2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var DEFAULT_INVALID_ERROR = 'Form is invalid';
 
@@ -35,41 +37,27 @@ function errorToProperty(err) {
   }
 }
 
-var Form = (function (_FormObject) {
-  _inherits(Form, _FormObject);
-
-  _createClass(Form, null, [{
-    key: 'propTypes',
-    value: {
-      onSubmit: _react.PropTypes.func.isRequired,
-      onChange: _react.PropTypes.func.isRequired,
-      onError: _react.PropTypes.func,
-      ajvOptions: _react.PropTypes.object.isRequired
-    },
-    enumerable: true
-  }, {
-    key: 'defaultProps',
-    value: {
-      ajvOptions: {
-        allErrors: true,
-        verbose: true
-      }
-    },
-    enumerable: true
-  }]);
+var Form = function (_Fieldset) {
+  _inherits(Form, _Fieldset);
 
   function Form(props, context) {
     _classCallCheck(this, Form);
 
-    _get(Object.getPrototypeOf(Form.prototype), 'constructor', this).call(this, props, context);
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Form).call(this, props, context));
 
-    this.errors = [];
+    _this.errors = [];
 
-    var ajv = (0, _ajv2['default'])(props.ajvOptions);
-    this.validateData = ajv.compile(props.schema || {});
+    var ajv = (0, _ajv2.default)(props.ajvOptions);
+    _this.validateData = ajv.compile(props.schema || {});
+    return _this;
   }
 
   _createClass(Form, [{
+    key: 'getFormProps',
+    value: function getFormProps() {
+      return this.props;
+    }
+  }, {
     key: 'validate',
     value: function validate(callback) {
       this.errors = [];
@@ -130,29 +118,31 @@ var Form = (function (_FormObject) {
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(evn) {
-      var _this = this;
+      var _this2 = this;
 
       evn.preventDefault();
 
       this.validate(function (err) {
         if (err) {
-          if (_this.props.onError) {
-            _this.props.onError(err);
+          if (_this2.props.onError) {
+            _this2.props.onError(err);
           }
 
           // redraw for ErrorAlert
-          _this.setState({
+          _this2.setState({
             error: err
           });
 
           return;
         }
 
-        _this.setState({
+        _this2.setState({
           error: null
         });
 
-        _this.props.onSubmit(_this.props.value);
+        if (_this2.props.onSubmit) {
+          _this2.props.onSubmit(_this2.props.value);
+        }
       });
     }
   }, {
@@ -168,7 +158,7 @@ var Form = (function (_FormObject) {
       var children = this._registerChildren(this.props.children);
       var autoComplete = typeof this.props.autoComplete !== 'undefined' ? this.props.autoComplete : 'off';
 
-      return _react2['default'].createElement(
+      return _react2.default.createElement(
         'form',
         {
           autoComplete: autoComplete,
@@ -183,7 +173,22 @@ var Form = (function (_FormObject) {
   }]);
 
   return Form;
-})(_FormObject3['default']);
+}(_Fieldset3.default);
 
-exports['default'] = Form;
-module.exports = exports['default'];
+Form.propTypes = {
+  onChange: _react.PropTypes.func.isRequired,
+  onSubmit: _react.PropTypes.func.isRequired,
+  onError: _react.PropTypes.func,
+  ajvOptions: _react.PropTypes.object.isRequired,
+  replace: _react.PropTypes.bool.isRequired
+};
+Form.defaultProps = {
+  ajvOptions: {
+    allErrors: true,
+    verbose: true
+  },
+  onChange: function onChange() {},
+  onSubmit: function onSubmit() {},
+  replace: true
+};
+exports.default = Form;

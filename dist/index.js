@@ -1,10 +1,9 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.Word = exports.SelectPro = exports.Fieldset = exports.ErrorAlert = exports.Textarea = exports.Select = exports.Input = undefined;
 
 var _Form = require('./Form');
 
@@ -30,19 +29,21 @@ var _ErrorAlert = require('./ErrorAlert');
 
 var _ErrorAlert2 = _interopRequireDefault(_ErrorAlert);
 
-var _FormObject = require('./FormObject');
+var _Fieldset = require('./Fieldset');
 
-var _FormObject2 = _interopRequireDefault(_FormObject);
+var _Fieldset2 = _interopRequireDefault(_Fieldset);
 
 var _Word = require('./Word');
 
 var _Word2 = _interopRequireDefault(_Word);
 
-exports['default'] = _Form2['default'];
-exports.Input = _Input2['default'];
-exports.Select = _Select2['default'];
-exports.Textarea = _Textarea2['default'];
-exports.ErrorAlert = _ErrorAlert2['default'];
-exports.FormObject = _FormObject2['default'];
-exports.SelectPro = _SelectPro2['default'];
-exports.Word = _Word2['default'];
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _Form2.default;
+exports.Input = _Input2.default;
+exports.Select = _Select2.default;
+exports.Textarea = _Textarea2.default;
+exports.ErrorAlert = _ErrorAlert2.default;
+exports.Fieldset = _Fieldset2.default;
+exports.SelectPro = _SelectPro2.default;
+exports.Word = _Word2.default;

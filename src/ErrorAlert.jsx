@@ -6,14 +6,16 @@ export default class ErrorAlert extends Element {
 
   static propTypes = {
     ...Element.propTypes,
+    className: PropTypes.string,
+    processError: PropTypes.func,
   };
 
-  constructor(props, context) {
-    super(props, context);
-  }
+  static defaultProps = {
+    className: 'alert alert-danger',
+  };
 
   render() {
-    const { path, form } = this.props;
+    const { path, form, className, processError } = this.props;
     if (!path || !form) {
       return null;
     }
@@ -23,12 +25,9 @@ export default class ErrorAlert extends Element {
       return null;
     }
 
-    const error = errors[0];
-    const message = this.props.processError ? this.props.processError(error) : error.message;
-
     return (
-      <div className="alert alert-danger" role="alert">
-        {this.props.children || message}
+      <div className={className} role="alert">
+        {this.props.children || errors.map((error) => processError ? processError(error) : error.message)}
       </div>
     );
   }

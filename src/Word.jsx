@@ -20,7 +20,9 @@ function fixValue(value) {
 
 export default class Word extends Input {
   static isElement = true;
-  static propTypes = Input.propTypes;
+  static propTypes = {
+    ...Input.propTypes,
+  };
 
   handleChange(evn) {
     const target = evn.target || {};

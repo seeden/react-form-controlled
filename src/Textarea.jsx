@@ -3,6 +3,7 @@ import Input from './Input';
 
 export default class Textarea extends Input {
   static isElement = true;
+
   static propTypes = {
     ...Input.propTypes,
     disabled: PropTypes.bool,
@@ -10,16 +11,14 @@ export default class Textarea extends Input {
   };
 
   render() {
+    const { originalProps, path, name } = this.props;
+
     return (
       <textarea
+        {...originalProps}
+        name={path}
+        data-property={name}
         onChange={this.handleChange.bind(this)}
-        disabled={this.props.disabled}
-        className={this.props.className}
-        name={this.props.name}
-        id={this.props.id}
-        rows={this.props.rows}
-        required={this.props.required}
-        placeholder={this.props.placeholder}
         value={this.state.value} />
     );
   }
