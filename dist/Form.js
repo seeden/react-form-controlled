@@ -34,6 +34,8 @@ function errorToProperty(err) {
   switch (err.keyword) {
     case 'required':
       return err.params.missingProperty;
+    default:
+      return void 0;
   }
 }
 

@@ -19,6 +19,11 @@ export default class Fieldset extends Element {
   static propTypes = {
     ...Element.propTypes,
     onChange: PropTypes.func,
+    map: PropTypes.bool.isRequired,
+  };
+
+  static defaultProps = {
+    map: true,
   };
 
   getValue(name) {
@@ -37,8 +42,51 @@ export default class Fieldset extends Element {
     this.props.onChange(newState);
   }
 
+  getPath(name) {
+    if (!name) {
+      return void 0;
+    }
+
+    const parentPath = this.props.path || '';
+
+    return parentPath ? `${parentPath}.${name}` : name;
+  }
+
   getFormProps() {
     return this.props.form.props;
+  }
+
+  handleChange(evn) {
+    const target = evn.target;
+    if (!target) {
+      return;
+    }
+
+    const propertyName = target.getAttribute('data-property');
+    if (!propertyName) {
+      return;
+    }
+
+    // IE < 10 bug catcher
+    try {
+      evn.stopPropagation();
+    } catch (err) {
+      console.log(err.message);
+    }
+
+    let value = target.type === 'checkbox'
+      ? !!target.checked
+      : target.value;
+
+    if (target.type === 'number' && isNumeric(value)) {
+      // fix decimal numbers
+      const numberValue = Number(value);
+      if (numberValue.toString() === value) {
+        value = numberValue;
+      }
+    }
+
+    this.setValue(propertyName, value);
   }
 
   _registerChild(child) {
@@ -85,17 +133,19 @@ export default class Fieldset extends Element {
     });
   }
 
-  getPath(name) {
-    if (!name) {
-      return void 0;
+  _registerChildren(children, topLevel) {
+    const { value, map } = this.props;
+
+    if (topLevel && map && isArray(value)) {
+      return value.map((value, index) => {
+        return this._registerChildren((
+          <Fieldset name={index} key={index}>
+            {children}
+          </Fieldset>
+        ));
+      });
     }
 
-    const parentPath = this.props.path || '';
-
-    return parentPath ? `${parentPath}.${name}` : name;
-  }
-
-  _registerChildren(children) {
     if (!isArray(children)) {
       return this._registerChild(children);
     }
@@ -106,45 +156,12 @@ export default class Fieldset extends Element {
   }
 
   render() {
-    const children = this._registerChildren(this.props.children);
+    const children = this._registerChildren(this.props.children, true);
 
     return (
       <fieldset onChange={this.handleChange.bind(this)}>
         {children}
       </fieldset>
     );
-  }
-
-  handleChange(evn) {
-    const target = evn.target;
-    if (!target) {
-      return;
-    }
-
-    const propertyName = target.getAttribute('data-property');
-    if (!propertyName) {
-      return;
-    }
-
-    // IE < 10 bug catcher
-    try {
-      evn.stopPropagation();
-    } catch (err) {
-      console.log(err.message);
-    }
-
-    let value = target.type === 'checkbox'
-      ? !!target.checked
-      : target.value;
-
-    if (target.type === 'number' && isNumeric(value)) {
-      // fix decimal numbers
-      const numberValue = Number(value);
-      if (numberValue.toString() === value) {
-        value = numberValue;
-      }
-    }
-
-    this.setValue(propertyName, value);
   }
 }

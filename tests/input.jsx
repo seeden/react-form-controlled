@@ -293,7 +293,7 @@ describe('Fieldset', () => {
 
     const node = renderJSX(
       <Form value={value} onChange={onChange}>
-        <Fieldset name="data">
+        <Fieldset name="data" map={false}>
           <Fieldset name="0">
             <Input name="inputValue" />
           </Fieldset>
@@ -401,6 +401,42 @@ describe('Fieldset', () => {
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
     ele.getAttribute('data-property').should.equal('data[0].inputValue');
+    ele.value.should.equal('123');
+
+    TestUtils.Simulate.change(ele, { target: {
+      value: '222',
+      getAttribute: (name) => ele.getAttribute(name)
+    }});
+
+    ele.value.should.equal('222');
+  });
+
+  it('should be able to simplify array object', (done) => {
+    const value = {
+      data: [{
+        inputValue: 123,
+      }, {
+        inputValue: 222,
+      }]
+    };
+
+    function onChange(state) {
+      state.data[0].inputValue.should.equal('222');
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value} onChange={onChange}>
+        <Fieldset name="data">
+          <Input name="inputValue" />
+        </Fieldset>
+      </Form>
+    );
+
+    findDOMNode(node).nodeName.should.equal('FORM');
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {

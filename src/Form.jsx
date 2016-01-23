@@ -6,8 +6,10 @@ const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
 function errorToProperty(err) {
   switch (err.keyword) {
-    case 'required':
-      return err.params.missingProperty;
+  case 'required':
+    return err.params.missingProperty;
+  default:
+    return void 0;
   }
 }
 
