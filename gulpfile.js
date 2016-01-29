@@ -14,7 +14,7 @@ gulp.task('test', jsxCoverage.createTask({
 
   threshold: 50,                                   // fail the task when coverage lower than this
                                                    // default is no threshold
-  thresholdType: 'lines',                      // one of 'lines', 'statements', 'functions', 'banches'
+  thresholdType: 'lines',                         // one of 'lines', 'statements', 'functions', 'banches'
                                                    // default is 'lines'
   transpile: {                                     // this is default whitelist/blacklist for transpilers
     babel: {
