@@ -2,7 +2,22 @@
 
 This is a React controlled form components. More about controlled components [here](https://facebook.github.io/react/docs/forms.html#why-controlled-components). The main idea is to create a simple forms as possible. Look on the next example.
 
-# What?
+# Features
+
+- Build on standards
+- You are able to use forms without special components
+- Controlled behavior
+- Support for arrays/lists and indexes
+- Support for standard html elements like an input, select, textarea and fieldset (arrays)
+- Custom components
+- Validation
+- Support for isomorphic application
+
+# Support us
+
+Star this project on [GitHub][github-url].
+
+# Usage
 
 ```js
 import React, { Component } from 'react';
@@ -46,11 +61,11 @@ export default class Component extends Component {
 }
 ```
 
-# Where is the input value?
+## Where is the input value?
 
 Value is automatically added as prop to the inputs. When you will change it it will reload whole form (controlled form, but this is the work for React).
 
-# Arrays
+## Arrays
 
 ```js
 import React, { Component } from 'react';
@@ -64,7 +79,7 @@ export default class Component extends Component {
       users: [{
         firstName: 'Zlatko'
       }, {
-        name: 'Livia'
+        firstName: 'Livia'
       }]
     };
   }
@@ -74,7 +89,7 @@ export default class Component extends Component {
   }
 
   handleSubmit(state) {
-    alert(`Hi ${state.firstName} ${state.lastName}`);
+    alert(`Hi ${state.users[0].firstName}`);
   }
 
   render() {
@@ -95,7 +110,7 @@ export default class Component extends Component {
 }
 ```
 
-# Complex objects
+## Complex objects
 
 If you want to use complex names you can use dot or array notation.
 
@@ -114,7 +129,7 @@ export default class Component extends Component {
           followers: 10,
         },
       }, {
-        name: 'Livia',
+        firstName: 'Livia',
         stats: {
           followers: 22,
         },
@@ -127,7 +142,7 @@ export default class Component extends Component {
   }
 
   handleSubmit(state) {
-    alert(`Hi ${state.firstName} ${state.lastName}`);
+    alert(`Hi ${state.users[0].firstName}`);
   }
 
   render() {
@@ -168,7 +183,7 @@ export default class Component extends Component {
           followers: 10,
         },
       }, {
-        name: 'Livia',
+        firstName: 'Livia',
         stats: {
           followers: 22,
         },
@@ -181,7 +196,7 @@ export default class Component extends Component {
   }
 
   handleSubmit(state) {
-    alert(`Hi ${state.firstName} ${state.lastName}`);
+    alert(`Hi ${state.users[0].firstName}`);
   }
 
   render() {
@@ -198,6 +213,57 @@ export default class Component extends Component {
               <input type="text" name="followers" placeholder="Followers" />
             </label>
           </fieldset>
+        </fieldset>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+
+## Indexes
+
+If you are using arrays with fieldset you want to use indexes.
+Index component has one parameter named value.
+It is an function and it is optional. You can format your index value with it.
+Default behavior is: 1. 2. 3. etc...
+
+```js
+import React, { Component } from 'react';
+import Form, { Index } from 'react-form-controlled';
+
+export default class Component extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      users: [{
+        firstName: 'Zlatko',
+      }, {
+        firstName: 'Livia',
+      }]
+    };
+  }
+
+  handleChange(state) {
+    this.setState(state);
+  }
+
+  handleSubmit(state) {
+    alert(`Hi ${state.users[0].firstName}`);
+  }
+
+  render() {
+    const formData = this.state;
+
+    return (
+      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+        <fieldset name="users">
+          <label>
+            <Index value={(index) => `${index})`} />
+            <input type="text" name="firstName" placeholder="First name" />
+          </label>
         </fieldset>
 
         <button type="submit">Submit</button>
@@ -231,11 +297,16 @@ const isValid = from.isValid('firstName'); //false
 const errors = form.getErrors(); //[{path: 'firstName', error: '...'}]
 ```
 
-# Prons
+# Support us
 
-It will render a valid html form on the server(isomprhic application) which you can use without javascript as well on the client.
+Star this project on [GitHub][github-url].
+
+## Try our other React components
+
+ - Translate your great project [react-translate-maker](https://github.com/CherrySoftware/react-translate-maker)
+ - Google Analytics [react-g-analytics](https://github.com/seeden/react-g-analytics)
+ - Google AdSense via Google Publisher Tag [react-google-publisher-tag](https://github.com/seeden/react-google-publisher-tag)
 
 ## Credits
 
 [Zlatko Fedor](http://github.com/seeden)
-

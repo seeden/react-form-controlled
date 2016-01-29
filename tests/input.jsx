@@ -1,6 +1,6 @@
 import React from 'react';
 import should from 'should';
-import Form, { Input, Textarea, Word, Select, Fieldset } from '../dist';
+import Form, { Input, Textarea, Word, Select, Fieldset, Index } from '../dist';
 import { renderJSX } from '../utils/tester';
 import { findDOMNode } from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
@@ -445,5 +445,30 @@ describe('Fieldset', () => {
     }});
 
     ele.value.should.equal('222');
+  });
+
+
+  it('should be able to simplify array object with index', () => {
+    const value = {
+      data: [{
+        inputValue: 123,
+      }, {
+        inputValue: 222,
+      }]
+    };
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data">
+          <Index />
+          <Input name="inputValue" />
+        </Fieldset>
+      </Form>
+    );
+
+    findDOMNode(node).nodeName.should.equal('FORM');
+
+    const ele = findDOMNode(node).querySelector('span');
+    ele.innerHTML.should.equal('1.');
   });
 });

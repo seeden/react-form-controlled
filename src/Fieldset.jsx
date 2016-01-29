@@ -1,9 +1,10 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, cloneElement } from 'react';
 import Element from './Element';
 import isArray from 'lodash/lang/isArray';
 import isFunction from 'lodash/lang/isFunction';
 import set from 'lodash/object/set';
 import get from 'lodash/object/get';
+import traverse from './utils/traverse';
 
 import Input from './Input';
 import Select from './Select';
@@ -89,69 +90,58 @@ export default class Fieldset extends Element {
     this.setValue(propertyName, value);
   }
 
-  _registerChild(child) {
-    const { replace } = this.getFormProps();
-
-    if (!child || typeof child === 'string') {
-      return child;
-    }
-
-    if (replace) {
-      if (child.type === 'input') {
-        return this._registerChild(<Input {...child.props} />);
-      } else if (child.type === 'select') {
-        return this._registerChild(<Select {...child.props} />);
-      } else if (child.type === 'textarea') {
-        return this._registerChild(<Textarea {...child.props} />);
-      } else if (child.type === 'fieldset' && child.props.name) {
-        return this._registerChild(<Fieldset {...child.props} />);
-      }
-    }
-
-    if (!isFunction(child.type) || !child.type.isElement) {
-      if (child.props && child.props.children) {
-        const children = this._registerChildren(child.props.children);
-        return React.cloneElement(child, {}, children);
-      }
-
-      return child;
-    }
-
-    if (!child.props.name && child.props.name !== 0) {
-      throw new Error('Form element has no name property');
-    }
-
-    const currentValue = this.getValue(child.props.name);
-
-    return React.cloneElement(child, {
-      originalProps: child.props,
-      value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
-      currentValue: currentValue,
-      form: this.props.form || this,
-      path: child.props.path || this.getPath(child.props.name),
-      onChange: (value) => this.setValue(child.props.name, value),
-    });
-  }
-
   _registerChildren(children, topLevel) {
     const { value, map } = this.props;
 
     if (topLevel && map && isArray(value)) {
       return value.map((value, index) => {
         return this._registerChildren((
-          <Fieldset name={index} key={index}>
+          <Fieldset name={index} key={index} index={index}>
             {children}
           </Fieldset>
         ));
       });
     }
 
-    if (!isArray(children)) {
-      return this._registerChild(children);
-    }
+    return traverse(children, (child) => {
+      if (!isFunction(child.type) || !child.type.isElement) {
+        return void 0;
+      }
 
-    return React.Children.map(children, child => {
-      return this._registerChild(child);
+      if (!child.props.name && child.props.name !== 0) {
+        return cloneElement(child, {
+          originalProps: child.props,
+          form: this.props.form || this,
+          fieldset: this,
+        });
+      }
+
+      const currentValue = this.getValue(child.props.name);
+
+      return cloneElement(child, {
+        originalProps: child.props,
+        value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
+        currentValue,
+        form: this.props.form || this,
+        fieldset: this,
+        path: this.getPath(child.props.name),
+        onChange: (value) => this.setValue(child.props.name, value),
+      });
+    }, (child) => {
+      const { replace } = this.getFormProps();
+      if (!replace) {
+        return void 0;
+      }
+
+      if (child.type === 'input') {
+        return <Input {...child.props} />;
+      } else if (child.type === 'select') {
+        return <Select {...child.props} />;
+      } else if (child.type === 'textarea') {
+        return <Textarea {...child.props} />;
+      } else if (child.type === 'fieldset' && child.props.name) {
+        return <Fieldset {...child.props} />;
+      }
     });
   }
 
@@ -159,7 +149,7 @@ export default class Fieldset extends Element {
     const children = this._registerChildren(this.props.children, true);
 
     return (
-      <fieldset onChange={this.handleChange.bind(this)}>
+      <fieldset onChange={this.handleChange.bind(this)} name={this.props.name}>
         {children}
       </fieldset>
     );

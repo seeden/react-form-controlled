@@ -135,7 +135,7 @@ export default class Form extends Fieldset {
   }
 
   render() {
-    const children = this._registerChildren(this.props.children);
+    const children = this._registerChildren(this.props.children, true);
     const autoComplete = typeof this.props.autoComplete !== 'undefined'
       ? this.props.autoComplete
       : 'off';
