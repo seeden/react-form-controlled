@@ -31,6 +31,7 @@
     "prepublish": "npm run build",
     "test": "babel-node ./node_modules/gulp/bin/gulp.js test",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
+    "coveralls": "babel-node ./node_modules/gulp/bin/gulp.js coveralls",
     "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ."
   },
   "dependencies": {

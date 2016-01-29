@@ -1,6 +1,18 @@
 # React controlled form
 
-This is a React controlled form components. More about controlled components [here](https://facebook.github.io/react/docs/forms.html#why-controlled-components). The main idea is to create a simple forms as possible. Look on the next example.
+This is a React controlled form components. More about controlled components [here](https://facebook.github.io/react/docs/forms.html#why-controlled-components). The main idea is to create a simple forms as possible.
+
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
+
+[npm-image]: https://img.shields.io/npm/v/react-form-controlled.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/react-form-controlled
+[travis-image]: https://img.shields.io/travis/seeden/react-form-controlled/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/seeden/react-form-controlled
+[coveralls-image]: https://img.shields.io/coveralls/seeden/react-form-controlled/master.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/seeden/react-form-controlled?branch=master
+[github-url]: https://github.com/seeden/react-form-controlled
 
 # Features
 

@@ -12,7 +12,7 @@ gulp.task('test', jsxCoverage.createTask({
     exclude: /node_modules|test[0-9]/            // do not instrument these files
   },
 
-  threshold: 80,                                   // fail the task when coverage lower than this
+  threshold: 50,                                   // fail the task when coverage lower than this
                                                    // default is no threshold
   thresholdType: 'lines',                      // one of 'lines', 'statements', 'functions', 'banches'
                                                    // default is 'lines'
