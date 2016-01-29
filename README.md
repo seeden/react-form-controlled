@@ -35,7 +35,7 @@ Star this project on [GitHub][github-url].
 import React, { Component } from 'react';
 import Form from 'react-form-controlled';
 
-export default class Component extends Component {
+export default class Example extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -83,7 +83,7 @@ Value is automatically added as prop to the inputs. When you will change it it w
 import React, { Component } from 'react';
 import Form from 'react-form-controlled';
 
-export default class Component extends Component {
+export default class Example extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -130,7 +130,7 @@ If you want to use complex names you can use dot or array notation.
 import React, { Component } from 'react';
 import Form from 'react-form-controlled';
 
-export default class Component extends Component {
+export default class Example extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -184,7 +184,7 @@ or you can use one more fieldset
 import React, { Component } from 'react';
 import Form from 'react-form-controlled';
 
-export default class Component extends Component {
+export default class Example extends Component {
   constructor(props, context) {
     super(props, context);
 
