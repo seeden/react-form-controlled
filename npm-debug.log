@@ -1,37 +1,47 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/local/bin/iojs', '/usr/local/bin/npm', 'run', 'test' ]
-2 info using npm@2.13.3
-3 info using node@v3.1.0
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'test' ]
+2 info using npm@3.3.12
+3 info using node@v5.5.0
 4 verbose run-script [ 'pretest', 'test', 'posttest' ]
-5 info pretest react-form-controlled@0.10.0
-6 info test react-form-controlled@0.10.0
-7 verbose unsafe-perm in lifecycle true
-8 info react-form-controlled@0.10.0 Failed to exec test script
-9 verbose stack Error: react-form-controlled@0.10.0 test: `babel-node ./node_modules/gulp/bin/gulp.js test`
-9 verbose stack Exit status 1
-9 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:214:16)
-9 verbose stack     at emitTwo (events.js:87:13)
-9 verbose stack     at EventEmitter.emit (events.js:172:7)
-9 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:24:14)
-9 verbose stack     at emitTwo (events.js:87:13)
-9 verbose stack     at ChildProcess.emit (events.js:172:7)
-9 verbose stack     at maybeClose (internal/child_process.js:764:16)
-9 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
-10 verbose pkgid react-form-controlled@0.10.0
-11 verbose cwd /Users/seeden/Documents/git/react-form-controlled
-12 error Darwin 15.2.0
-13 error argv "/usr/local/bin/iojs" "/usr/local/bin/npm" "run" "test"
-14 error node v3.1.0
-15 error npm  v2.13.3
-16 error code ELIFECYCLE
-17 error react-form-controlled@0.10.0 test: `babel-node ./node_modules/gulp/bin/gulp.js test`
-17 error Exit status 1
-18 error Failed at the react-form-controlled@0.10.0 test script 'babel-node ./node_modules/gulp/bin/gulp.js test'.
-18 error This is most likely a problem with the react-form-controlled package,
-18 error not with npm itself.
-18 error Tell the author that this fails on your system:
-18 error     babel-node ./node_modules/gulp/bin/gulp.js test
-18 error You can get their info via:
-18 error     npm owner ls react-form-controlled
-18 error There is likely additional logging output above.
-19 verbose exit [ 1, true ]
+5 info lifecycle react-form-controlled@0.10.1~pretest: react-form-controlled@0.10.1
+6 silly lifecycle react-form-controlled@0.10.1~pretest: no script for pretest, continuing
+7 info lifecycle react-form-controlled@0.10.1~test: react-form-controlled@0.10.1
+8 verbose lifecycle react-form-controlled@0.10.1~test: unsafe-perm in lifecycle true
+9 verbose lifecycle react-form-controlled@0.10.1~test: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;D:\zlatik\git\react-form-controlled\node_modules\.bin;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter\Driver;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Lenovo\Bluetooth Software\;C:\Program Files\Lenovo\Bluetooth Software\syswow64;C:\Program Files (x86)\Bitvise SSH Client;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files\TortoiseGit\bin;C:\Program Files\nodejs\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\Microsoft Windows Performance Toolkit\;C:\Windows\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Users\Zlatik\AppData\Roaming\npm;C:\Users\Zlatik\AppData\Local\atom\bin
+10 verbose lifecycle react-form-controlled@0.10.1~test: CWD: D:\zlatik\git\react-form-controlled
+11 silly lifecycle react-form-controlled@0.10.1~test: Args: [ '/d /s /c',
+11 silly lifecycle   'babel-node ./node_modules/gulp/bin/gulp.js test' ]
+12 silly lifecycle react-form-controlled@0.10.1~test: Returned: code: 1  signal: null
+13 info lifecycle react-form-controlled@0.10.1~test: Failed to exec test script
+14 verbose stack Error: react-form-controlled@0.10.1 test: `babel-node ./node_modules/gulp/bin/gulp.js test`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:232:16)
+14 verbose stack     at emitTwo (events.js:100:13)
+14 verbose stack     at EventEmitter.emit (events.js:185:7)
+14 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:24:14)
+14 verbose stack     at emitTwo (events.js:100:13)
+14 verbose stack     at ChildProcess.emit (events.js:185:7)
+14 verbose stack     at maybeClose (internal/child_process.js:821:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+15 verbose pkgid react-form-controlled@0.10.1
+16 verbose cwd D:\zlatik\git\react-form-controlled
+17 error Windows_NT 6.1.7601
+18 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "test"
+19 error node v5.5.0
+20 error npm  v3.3.12
+21 error code ELIFECYCLE
+22 error react-form-controlled@0.10.1 test: `babel-node ./node_modules/gulp/bin/gulp.js test`
+22 error Exit status 1
+23 error Failed at the react-form-controlled@0.10.1 test script 'babel-node ./node_modules/gulp/bin/gulp.js test'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the react-form-controlled package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     babel-node ./node_modules/gulp/bin/gulp.js test
+23 error You can get their info via:
+23 error     npm owner ls react-form-controlled
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]
