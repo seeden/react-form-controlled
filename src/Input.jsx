@@ -58,9 +58,9 @@ export default class Input extends Element {
     }
 
     // wait for it
+    this._clearChangeTimeout();
     this.timeoutId = setTimeout(() => {
       this.timeoutId = null;
-
       if (this.state.value === this.props.value) {
         return;
       }
