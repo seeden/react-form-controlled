@@ -86,13 +86,14 @@ describe('Input', () => {
 
     function onChange(state) {
       state.inputValue.should.equal('222');
-      onChangeInputCalled.should.equal(true);
-      done();
+      onChangeInputCalled = true;
+
     }
 
     function onChangeInput(value) {
       value.should.equal('222');
-      onChangeInputCalled = true;
+      onChangeInputCalled.should.equal(true);
+      done();
     }
 
     const node = renderJSX(

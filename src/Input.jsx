@@ -66,11 +66,11 @@ export default class Input extends Element {
 
     const { originalProps, onChange } = this.props;
 
+    onChange(value, this);
+
     if (typeof originalProps.onChange === 'function') {
       originalProps.onChange(value);
     }
-
-    onChange(value, this);
   }
 
   componentWillReceiveProps(newProps) {

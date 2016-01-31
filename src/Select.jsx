@@ -100,11 +100,11 @@ export default class Select extends Element {
 
     const { originalProps, onChange } = this.props;
 
+    onChange(finallValue, this);
+
     if (typeof originalProps.onChange === 'function') {
       originalProps.onChange(finallValue);
     }
-
-    onChange(finallValue, this);
   }
 
   renderPlaceholder() {
