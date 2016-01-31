@@ -9,7 +9,6 @@ import traverse from './utils/traverse';
 import Input from './Input';
 import Select from './Select';
 import Textarea from './Textarea';
-import Index from './Index';
 
 export default class Fieldset extends Element {
   static isElement = true;
