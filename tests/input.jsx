@@ -90,8 +90,8 @@ describe('Input', () => {
 
     }
 
-    function onChangeInput(value) {
-      value.should.equal('222');
+    function onChangeInput(evn) {
+      evn.target.value.should.equal('222');
       onChangeInputCalled.should.equal(true);
       done();
     }

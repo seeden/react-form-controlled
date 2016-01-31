@@ -69,7 +69,7 @@ export default class Input extends Element {
     onChange(value, this);
 
     if (typeof originalProps.onChange === 'function') {
-      originalProps.onChange(value);
+      originalProps.onChange(evn);
     }
   }
 
