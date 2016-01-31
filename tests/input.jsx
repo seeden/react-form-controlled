@@ -76,6 +76,42 @@ describe('Input', () => {
 
     ele.value.should.equal('222');
   });
+
+  it('should be able to use onChange event', (done) => {
+    const value = {
+      inputValue: 123,
+    };
+
+    let onChangeInputCalled = false;
+
+    function onChange(state) {
+      state.inputValue.should.equal('222');
+      onChangeInputCalled.should.equal(true);
+      done();
+    }
+
+    function onChangeInput(value) {
+      value.should.equal('222');
+      onChangeInputCalled = true;
+    }
+
+    const node = renderJSX(
+      <Form value={value} onChange={onChange}>
+        <input name="inputValue" onChange={onChangeInput} />
+      </Form>
+    );
+
+    findDOMNode(node).nodeName.should.equal('FORM');
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('123');
+
+    TestUtils.Simulate.change(ele, { target: {
+      value: '222',
+      getAttribute: (name) => ele.getAttribute(name)
+    }});
+
+    ele.value.should.equal('222');
+  });
 });
 
 describe('Textarea', () => {

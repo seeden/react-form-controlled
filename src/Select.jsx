@@ -96,7 +96,15 @@ export default class Select extends Element {
     }
 
     const isMultiple = this.isMultiple();
-    this.props.onChange(isMultiple ? values : values[0], this);
+    const finallValue = isMultiple ? values : values[0];
+
+    const { originalProps, onChange } = this.props;
+
+    if (typeof originalProps.onChange === 'function') {
+      originalProps.onChange(finallValue);
+    }
+
+    onChange(finallValue, this);
   }
 
   renderPlaceholder() {

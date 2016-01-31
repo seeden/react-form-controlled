@@ -64,7 +64,13 @@ export default class Input extends Element {
     this._clearChangeTimeout();
     this.setState({ value });
 
-    this.props.onChange(value, this);
+    const { originalProps, onChange } = this.props;
+
+    if (typeof originalProps.onChange === 'function') {
+      originalProps.onChange(value);
+    }
+
+    onChange(value, this);
   }
 
   componentWillReceiveProps(newProps) {
