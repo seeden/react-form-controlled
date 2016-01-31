@@ -6,17 +6,19 @@ export default class FieldsetIndex extends Element {
 
   static propTypes = {
     ...Element.propTypes,
-    name: PropTypes.string,
+    format: PropTypes.func,
   };
 
+  static omg = 123;
+
   render() {
-    const { fieldset, value, className } = this.props;
+    const { format, className, fieldset } = this.props;
     const index = fieldset.props.index;
 
-    if (typeof value === 'function') {
-      return <span className={className}>{value(index)}</span>;
+    if (typeof format === 'function') {
+      return <span className={className}>{format(index)}</span>;
     }
 
-    return <span className={className}>{value ? value : `${index + 1}.`}</span>;
+    return <span className={className}>{`${index + 1}.`}</span>;
   }
 }

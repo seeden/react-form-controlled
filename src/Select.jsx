@@ -18,6 +18,7 @@ export default class Select extends Element {
     super(props, context);
 
     this.state = this.prepareState(props);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -95,7 +96,7 @@ export default class Select extends Element {
     }
 
     const isMultiple = this.isMultiple();
-    this.props.onChange(isMultiple ? values : values[0]);
+    this.props.onChange(isMultiple ? values : values[0], this);
   }
 
   renderPlaceholder() {
@@ -116,18 +117,17 @@ export default class Select extends Element {
 
   render() {
     const { options, values } = this.state;
-    const { path, name, className, disabled, required } = this.props;
+    const { name, className, disabled, required } = this.props;
 
     return (
       <select
-        name={path}
-        data-property={name}
+        name={name}
         value={values}
         className={className}
         disabled={disabled}
         required={required}
         multiple={this.isMultiple()}
-        onChange={this.handleChange.bind(this)}>
+        onChange={this.handleChange}>
           {this.renderPlaceholder()}
 
           {options.map((option, pos) => {

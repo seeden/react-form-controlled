@@ -39,7 +39,6 @@ describe('Input', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -68,7 +67,6 @@ describe('Input', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -99,7 +97,6 @@ describe('Textarea', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('textarea');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -128,7 +125,6 @@ describe('Textarea', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('textarea');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -159,7 +155,6 @@ describe('Word', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -235,7 +230,6 @@ describe('Fieldset', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -268,7 +262,6 @@ describe('Fieldset', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -303,7 +296,6 @@ describe('Fieldset', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -336,7 +328,6 @@ describe('Fieldset', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -369,7 +360,6 @@ describe('Fieldset', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -400,7 +390,6 @@ describe('Fieldset', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('data[0].inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -436,7 +425,6 @@ describe('Fieldset', () => {
     findDOMNode(node).nodeName.should.equal('FORM');
 
     const ele = findDOMNode(node).querySelector('input');
-    ele.getAttribute('data-property').should.equal('inputValue');
     ele.value.should.equal('123');
 
     TestUtils.Simulate.change(ele, { target: {
@@ -470,5 +458,57 @@ describe('Fieldset', () => {
 
     const ele = findDOMNode(node).querySelector('span');
     ele.innerHTML.should.equal('1.');
+  });
+
+  it('should be able to get original path for event onChange', (done) => {
+    const value = {
+      data: [{
+        inputValue: 123,
+      }, {
+        inputValue: 222,
+      }]
+    };
+
+    function onChange(state, component) {
+      component.getPath().should.equal('data.0.inputValue');
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value} onChange={onChange}>
+        <Fieldset name="data">
+          <Input name="inputValue" />
+        </Fieldset>
+      </Form>
+    );
+
+    findDOMNode(node).nodeName.should.equal('FORM');
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('123');
+
+    TestUtils.Simulate.change(ele, { target: {
+      value: '222',
+      getAttribute: (name) => ele.getAttribute(name)
+    }});
+
+    ele.value.should.equal('222');
+  });
+
+  it('should be able to use simple array', () => {
+    const value = {
+      data: [123, 222],
+    };
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data">
+          <Input />
+        </Fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('123');
   });
 });

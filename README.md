@@ -122,6 +122,47 @@ export default class Example extends Component {
 }
 ```
 
+## Simple arrays
+
+If you are using fieldset with simple array do not enter the name attribute.
+
+```js
+import React, { Component } from 'react';
+import Form from 'react-form-controlled';
+
+export default class Example extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      items: [123, 222]
+    };
+  }
+
+  handleChange(state) {
+    this.setState(state);
+  }
+
+  handleSubmit(state) {
+    alert(`Hi ${state.users[0].firstName}`);
+  }
+
+  render() {
+    const formData = this.state;
+
+    return (
+      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+        <fieldset name="items">
+          <input type="text" />
+        </fieldset>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+
 ## Complex objects
 
 If you want to use complex names you can use dot or array notation.
@@ -237,8 +278,8 @@ export default class Example extends Component {
 ## Indexes
 
 If you are using arrays with fieldset you want to use indexes.
-Index component has one parameter named value.
-It is an function and it is optional. You can format your index value with it.
+Index component has one parameter named format.
+It is a function and it is optional. You can format your index value with it.
 Default behavior is: 1. 2. 3. etc...
 
 ```js
@@ -273,10 +314,64 @@ export default class Component extends Component {
       <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
         <fieldset name="users">
           <label>
-            <Index value={(index) => `${index})`} />
+            <Index format={(index) => `${index})`} />
             <input type="text" name="firstName" placeholder="First name" />
           </label>
         </fieldset>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+
+## Combination with other components
+
+If you want to disable autoreplace of the standard components like an input, select, textarea etc...
+You can disable this behavior with the form parameter replace={false}.
+This feature is great if you want to use this library with other 3rd libraries.
+You will be able to use Input, Select, Textarea and Fieldset.
+
+```js
+import Form, { Input, Select, Textarea, Fieldset } from from 'react-form-controlled';
+
+export default class Component extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      users: [{
+        firstName: 'Zlatko',
+      }, {
+        firstName: 'Livia',
+      }]
+    };
+  }
+
+  handleChange(state) {
+    this.setState(state);
+  }
+
+  handleSubmit(state) {
+    alert(`Hi ${state.users[0].firstName}`);
+  }
+
+  render() {
+    const formData = this.state;
+
+    return (
+      <Form
+        value={formData}
+        replace={false}
+        onChange={this.handleChange.bind(this)}
+        onSubmit={this.handleSubmit.bind(this)}>
+        <Fieldset name="users">
+          <label>
+            <Index format={(index) => `${index})`} />
+            <Input type="text" name="firstName" placeholder="First name" />
+          </label>
+        </Fieldset>
 
         <button type="submit">Submit</button>
       </Form>

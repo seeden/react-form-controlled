@@ -7,9 +7,14 @@ export default class Element extends Component {
     name: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
-    ]).isRequired,
+    ]),
     originalProps: PropTypes.object,
+    className: PropTypes.string,
   };
+
+  getPath() {
+    return this.props.path;
+  }
 
   render() {
     return null;

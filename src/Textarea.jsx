@@ -11,14 +11,13 @@ export default class Textarea extends Input {
   };
 
   render() {
-    const { originalProps, path, name } = this.props;
+    const { originalProps, name } = this.props;
 
     return (
       <textarea
         {...originalProps}
-        name={path}
-        data-property={name}
-        onChange={this.handleChange.bind(this)}
+        name={name}
+        onChange={this.handleChange}
         value={this.state.value} />
     );
   }

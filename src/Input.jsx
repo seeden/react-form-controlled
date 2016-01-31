@@ -7,6 +7,10 @@ function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
 }
 
+function isNumeric(value) {
+  return !isNaN(parseFloat(value)) && isFinite(value);
+}
+
 export default class Input extends Element {
   static isElement = true;
 
@@ -29,6 +33,8 @@ export default class Input extends Element {
     this.state = {
       value: fixUncontrolledValue(props.value), // fix because null and undefined is uncontrolled
     };
+
+    this.handleChange = this.handleChange.bind(this);
   }
 
   _clearChangeTimeout() {
@@ -42,13 +48,23 @@ export default class Input extends Element {
 
   handleChange(evn) {
     const target = evn.target || {};
-    const value = target.type === 'checkbox'
+
+    let value = target.type === 'checkbox'
       ? !!target.checked
       : target.value;
 
-    this._clearChangeTimeout();
+    if (target.type === 'number' && isNumeric(value)) {
+      // fix decimal numbers
+      const numberValue = Number(value);
+      if (numberValue.toString() === value) {
+        value = numberValue;
+      }
+    }
 
+    this._clearChangeTimeout();
     this.setState({ value });
+
+    this.props.onChange(value, this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -76,16 +92,15 @@ export default class Input extends Element {
   }
 
   render() {
-    const { type, originalProps, value, currentValue, path, name } = this.props;
+    const { type, originalProps, value, currentValue, name } = this.props;
     const checked = (type === 'checkbox' && value)
       || (type === 'radio' && value === currentValue);
 
     return (
       <input
         {...originalProps}
-        name={path}
-        data-property={name}
-        onChange={this.handleChange.bind(this)}
+        name={name}
+        onChange={this.handleChange}
         checked={checked ? checked : void 0}
         value={this.state.value} />
     );

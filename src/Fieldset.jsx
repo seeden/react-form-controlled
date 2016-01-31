@@ -9,10 +9,7 @@ import traverse from './utils/traverse';
 import Input from './Input';
 import Select from './Select';
 import Textarea from './Textarea';
-
-function isNumeric(value) {
-  return !isNaN(parseFloat(value)) && isFinite(value);
-}
+import Index from './Index';
 
 export default class Fieldset extends Element {
   static isElement = true;
@@ -21,6 +18,7 @@ export default class Fieldset extends Element {
     ...Element.propTypes,
     onChange: PropTypes.func,
     map: PropTypes.bool.isRequired,
+    index: PropTypes.number,
   };
 
   static defaultProps = {
@@ -28,11 +26,16 @@ export default class Fieldset extends Element {
   };
 
   getValue(name) {
-    const value = this.props.value || {};
+    const { value = {} } = this.props;
+
+    if (typeof name === 'undefined' || name === null) {
+      return value;
+    }
+
     return get(value, name);
   }
 
-  setValue(name, value) {
+  setValue(name, value, component) {
     const currentValue = this.props.value;
     const newState = isArray(currentValue)
       ? [...this.props.value]
@@ -40,11 +43,11 @@ export default class Fieldset extends Element {
 
     set(newState, name, value);
 
-    this.props.onChange(newState);
+    this.props.onChange(newState, component);
   }
 
-  getPath(name) {
-    if (!name) {
+  buildPath(name) {
+    if (typeof name === 'undefined' || name === null) {
       return void 0;
     }
 
@@ -57,44 +60,11 @@ export default class Fieldset extends Element {
     return this.props.form.props;
   }
 
-  handleChange(evn) {
-    const target = evn.target;
-    if (!target) {
-      return;
-    }
-
-    const propertyName = target.getAttribute('data-property');
-    if (!propertyName) {
-      return;
-    }
-
-    // IE < 10 bug catcher
-    try {
-      evn.stopPropagation();
-    } catch (err) {
-      console.log(err.message);
-    }
-
-    let value = target.type === 'checkbox'
-      ? !!target.checked
-      : target.value;
-
-    if (target.type === 'number' && isNumeric(value)) {
-      // fix decimal numbers
-      const numberValue = Number(value);
-      if (numberValue.toString() === value) {
-        value = numberValue;
-      }
-    }
-
-    this.setValue(propertyName, value);
-  }
-
   _registerChildren(children, topLevel) {
     const { value, map } = this.props;
 
     if (topLevel && map && isArray(value)) {
-      return value.map((value, index) => {
+      return value.map((currentValue, index) => {
         return this._registerChildren((
           <Fieldset name={index} key={index} index={index}>
             {children}
@@ -108,15 +78,8 @@ export default class Fieldset extends Element {
         return void 0;
       }
 
-      if (!child.props.name && child.props.name !== 0) {
-        return cloneElement(child, {
-          originalProps: child.props,
-          form: this.props.form || this,
-          fieldset: this,
-        });
-      }
-
       const currentValue = this.getValue(child.props.name);
+      const currentPath = this.buildPath(child.props.name);
 
       return cloneElement(child, {
         originalProps: child.props,
@@ -124,8 +87,8 @@ export default class Fieldset extends Element {
         currentValue,
         form: this.props.form || this,
         fieldset: this,
-        path: this.getPath(child.props.name),
-        onChange: (value) => this.setValue(child.props.name, value),
+        path: currentPath,
+        onChange: (value, component) => this.setValue(child.props.name, value, component),
       });
     }, (child) => {
       const { replace } = this.getFormProps();
@@ -149,7 +112,7 @@ export default class Fieldset extends Element {
     const children = this._registerChildren(this.props.children, true);
 
     return (
-      <fieldset onChange={this.handleChange.bind(this)} name={this.props.name}>
+      <fieldset name={this.props.name}>
         {children}
       </fieldset>
     );

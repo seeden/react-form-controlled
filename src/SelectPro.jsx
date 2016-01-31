@@ -8,14 +8,20 @@ export default class SelectPro extends Element {
     ...Element.propTypes,
   };
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
   handleChange(value, items) {
     if (!this.props.multi) {
-      this.props.onChange(value);
+      this.props.onChange(value, this);
       return;
     }
 
     const values = items.map((item) => item.value);
-    this.props.onChange(values);
+    this.props.onChange(values, this);
   }
 
   getReactSelect() {
@@ -27,7 +33,7 @@ export default class SelectPro extends Element {
     const ReactSelect = this.getReactSelect();
 
     return (
-      <ReactSelect {...this.props} onChange={this.handleChange.bind(this)} />
+      <ReactSelect {...this.props} onChange={this.handleChange} />
     );
   }
 }
