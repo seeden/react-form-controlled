@@ -59,6 +59,18 @@ export default class Fieldset extends Element {
   };
 
   resolveByPath(path, callback) {
+    if (typeof path === 'undefined' || path === null || path === '') {
+      if (typeof this.props.index !== 'undefined') {
+        if (!this.props.parent) {
+          return callback(new Error('Parent is undefined'));
+        }
+
+        return this.props.parent.resolveByPath(this.props.index, callback);
+      }
+
+      return callback(new Error('Path is undefined'));
+    }
+
     if (path && path[0] === '.') {
       const { parent, index } = this.props;
       if (!parent) {
@@ -67,7 +79,7 @@ export default class Fieldset extends Element {
 
       const hasIndex = typeof index !== 'undefined';
       const realParent = hasIndex ? parent.props.parent : parent;
-      if (!realParent) {
+      if (!parent) {
         return callback(new Error('Parent is undefined'));
       }
 
@@ -78,22 +90,25 @@ export default class Fieldset extends Element {
   }
 
   getValue(path, valueIndex) {
+    if (typeof path === 'undefined' || path === null || path === '') {
+     return valueIndex ? this.props.index : this.props.value;
+    }
+
     return this.resolveByPath(path, (err, current, subPath) => {
       if (err) {
         return void 0;
       }
 
-      const { value = {},  index } = current.props;
-
-      if (typeof subPath === 'undefined' || subPath === null || subPath === '') {
-        return valueIndex ? index : value;
-      }
-
+      const { value = {} } = current.props;
       return get(value, subPath);
     });
   }
 
-  setValue(path, value, component) {
+  setValue(path, value, component) {/*
+    if (typeof path === 'undefined' && typeof this.props.index !== 'undefined') {
+      return this.props.parent.setValue(this.props.index, value, component);
+    }*/
+
     return this.resolveByPath(path, (err, current, subPath) => {
       if (err) {
         return;

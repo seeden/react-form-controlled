@@ -596,7 +596,7 @@ describe('Fieldset', () => {
   });
 
   it('should be able to get parent value', (done) => {
-    const value = {
+    let value = {
       test: '111',
       data: [{
         options: [1, 2, 3],
@@ -604,15 +604,33 @@ describe('Fieldset', () => {
       }],
     };
 
+    let count = 0;
+
     function onChange(state) {
-      state.data[0].selected.should.equal('222');
-      done();
+      count++;
+
+      if (count === 1) {
+        state.data[0].selected.should.equal('222');
+
+        const textarea = findDOMNode(node).querySelector('textarea');
+        textarea.value.should.equal('1');
+
+        TestUtils.Simulate.change(textarea, { target: {
+          value: '33333',
+          getAttribute: (name) => textarea.getAttribute(name)
+        }});
+      } else if (count === 2) {
+        state.data[0].options[0].should.equal('33333');
+        done();
+      }
+
     }
 
     const node = renderJSX(
       <Form value={value} onChange={onChange}>
         <fieldset name="data">
           <fieldset name="options">
+            <textarea />
             <input type="radio" name=".selected" />
           </fieldset>
         </fieldset>
@@ -622,10 +640,12 @@ describe('Fieldset', () => {
     const ele = findDOMNode(node).querySelector('input');
     ele.value.should.equal('2');
 
+
     TestUtils.Simulate.change(ele, { target: {
       value: '222',
       getAttribute: (name) => ele.getAttribute(name)
     }});
+
   });
 
   it('should be able to get index value', () => {
