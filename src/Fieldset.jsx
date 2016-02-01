@@ -58,47 +58,66 @@ export default class Fieldset extends Element {
     map: true,
   };
 
-  getValue(name, valueIndex) {
-    const { value = {}, parent, index } = this.props;
+  getValue(path, valueIndex) {
+    return this.getParentByPath(path, (err, parent, subPath) => {
+      if (err) {
+        return console.log(err.message);
+      }
 
-    if (typeof name === 'undefined' || name === null || name === '') {
-      return valueIndex ? index : value;
-    }
+      const { value = {},  index } = parent.props;
 
-    if (name[0] === '.') {
+      if (typeof subPath === 'undefined' || subPath === null || subPath === '') {
+        return valueIndex ? index : value;
+      }
+
+      return get(value, subPath);
+    });
+  }
+
+  getParentByPath(path, callback) {
+    if (path && path[0] === '.') {
+      const { parent, index } = this.props;
       const hasIndex = typeof index !== 'undefined';
       const realParent = hasIndex ? parent.props.parent : parent;
 
-      return realParent.getValue(name.substr(1), valueIndex);
+      return realParent.getParentByPath(path.substr(1), callback);
     }
 
-    return get(value, name);
+    return callback(null, this, path);
   }
 
-  setValue(name, value, component) {
-    const currentValue = this.props.value;
-    const newState = isArray(currentValue)
-      ? [...this.props.value]
-      : {...this.props.value};
+  setValue(path, value, component) {
+    return this.getParentByPath(path, (err, parent, subPath) => {
+      if (err) {
+        return console.log(err.message);
+      }
 
-    set(newState, name, value);
+      const currentValue = parent.props.value;
+      const newState = isArray(currentValue)
+        ? [...currentValue]
+        : {...currentValue};
 
-    this.props.onChange(newState, component);
+
+      set(newState, subPath, value);
+
+      parent.props.onChange(newState, component);
+    });
   }
 
-  buildPath(name) {
-    if (typeof name === 'undefined' || name === null) {
-      return void 0;
-    }
+  buildPath(path) {
+    return this.getParentByPath(path, (err, parent, subPath) => {
+      if (err) {
+        return console.log(err.message);
+      }
 
-    if (name[0] === '.') {
-      const { parent } = this.props;
-      return parent.buildPath(name.substr(1));
-    }
+      if (typeof subPath === 'undefined' || subPath === null) {
+        return void 0;
+      }
 
-    const parentPath = this.props.path || '';
+      const parentPath = parent.props.path;
 
-    return parentPath ? `${parentPath}.${name}` : name;
+      return parentPath ? `${parentPath}.${subPath}` : subPath;
+    });
   }
 
   getFormProps() {
