@@ -12,8 +12,8 @@ export default class FieldsetIndex extends Element {
   static omg = 123;
 
   render() {
-    const { format, className, fieldset } = this.props;
-    const index = fieldset.props.index;
+    const { format, className, parent } = this.props;
+    const index = parent.props.index;
 
     if (typeof format === 'function') {
       return <span className={className}>{format(index)}</span>;

@@ -594,4 +594,52 @@ describe('Fieldset', () => {
     const ele = findDOMNode(node).querySelector('button');
     TestUtils.Simulate.click(ele);
   });
+
+  it('should be able to get parent value', () => {
+    const value = {
+      test: '111',
+      data: [123, 222],
+    };
+
+    function onClick(index, evn, id) {
+      index.should.equal(0);
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data">
+          <Input name=".test" />
+          <button onClick={onClick} addIndex/>
+        </Fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('111');
+  });
+
+  it('should be able to get index value', () => {
+    const value = {
+      test: '111',
+      data: [123, 222],
+    };
+
+    function onClick(index, evn, id) {
+      index.should.equal(0);
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data">
+          <Input type="number" valueIndex />
+          <button onClick={onClick} addIndex/>
+        </Fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('0');
+  });
 });

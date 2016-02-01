@@ -50,19 +50,26 @@ export default class Fieldset extends Element {
     onChange: PropTypes.func,
     map: PropTypes.bool.isRequired,
     index: PropTypes.number,
-    addIndex: PropTypes.bool.isRequired,
+    addIndex: PropTypes.bool,
+    valueIndex: PropTypes.bool,
   };
 
   static defaultProps = {
     map: true,
-    addIndex: false,
   };
 
-  getValue(name) {
-    const { value = {} } = this.props;
+  getValue(name, valueIndex) {
+    const { value = {}, parent, index } = this.props;
 
-    if (typeof name === 'undefined' || name === null) {
-      return value;
+    if (typeof name === 'undefined' || name === null || name === '') {
+      return valueIndex ? index : value;
+    }
+
+    if (name[0] === '.') {
+      const hasIndex = typeof index !== 'undefined';
+      const realParent = hasIndex ? parent.props.parent : parent;
+
+      return realParent.getValue(name.substr(1), valueIndex);
     }
 
     return get(value, name);
@@ -113,17 +120,19 @@ export default class Fieldset extends Element {
         return void 0;
       }
 
-      const currentValue = this.getValue(child.props.name);
-      const currentPath = this.buildPath(child.props.name);
+      const { name, valueIndex } = child.props;
+
+      const currentValue = this.getValue(name, valueIndex);
+      const currentPath = this.buildPath(name);
 
       return cloneElement(child, {
         originalProps: child.props,
         value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
         currentValue,
         form: this.props.form || this,
-        fieldset: this,
+        parent: this,
         path: currentPath,
-        onChange: (value, component) => this.setValue(child.props.name, value, component),
+        onChange: (value, component) => this.setValue(name, value, component),
       });
     }, (child) => {
       const { replace } = this.getFormProps();
