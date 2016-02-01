@@ -595,28 +595,37 @@ describe('Fieldset', () => {
     TestUtils.Simulate.click(ele);
   });
 
-  it('should be able to get parent value', () => {
+  it('should be able to get parent value', (done) => {
     const value = {
       test: '111',
-      data: [123, 222],
+      data: [{
+        options: [1, 2, 3],
+        selected: 2
+      }],
     };
 
-    function onClick(index, evn, id) {
-      index.should.equal(0);
+    function onChange(state) {
+      state.data[0].selected.should.equal('222');
       done();
     }
 
     const node = renderJSX(
-      <Form value={value}>
-        <Fieldset name="data">
-          <Input name=".test" />
-          <button onClick={onClick} addIndex/>
-        </Fieldset>
+      <Form value={value} onChange={onChange}>
+        <fieldset name="data">
+          <fieldset name="options">
+            <input type="radio" name=".selected" />
+          </fieldset>
+        </fieldset>
       </Form>
     );
 
     const ele = findDOMNode(node).querySelector('input');
-    ele.value.should.equal('111');
+    ele.value.should.equal('2');
+
+    TestUtils.Simulate.change(ele, { target: {
+      value: '222',
+      getAttribute: (name) => ele.getAttribute(name)
+    }});
   });
 
   it('should be able to get index value', () => {

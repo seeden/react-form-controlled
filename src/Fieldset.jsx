@@ -58,13 +58,32 @@ export default class Fieldset extends Element {
     map: true,
   };
 
-  getValue(path, valueIndex) {
-    return this.getParentByPath(path, (err, parent, subPath) => {
-      if (err) {
-        return console.log(err.message);
+  resolveByPath(path, callback) {
+    if (path && path[0] === '.') {
+      const { parent, index } = this.props;
+      if (!parent) {
+        return callback(new Error('Parent is undefined'));
       }
 
-      const { value = {},  index } = parent.props;
+      const hasIndex = typeof index !== 'undefined';
+      const realParent = hasIndex ? parent.props.parent : parent;
+      if (!realParent) {
+        return callback(new Error('Parent is undefined'));
+      }
+
+      return realParent.resolveByPath(path.substr(1), callback);
+    }
+
+    return callback(null, this, path);
+  }
+
+  getValue(path, valueIndex) {
+    return this.resolveByPath(path, (err, current, subPath) => {
+      if (err) {
+        return void 0;
+      }
+
+      const { value = {},  index } = current.props;
 
       if (typeof subPath === 'undefined' || subPath === null || subPath === '') {
         return valueIndex ? index : value;
@@ -74,25 +93,13 @@ export default class Fieldset extends Element {
     });
   }
 
-  getParentByPath(path, callback) {
-    if (path && path[0] === '.') {
-      const { parent, index } = this.props;
-      const hasIndex = typeof index !== 'undefined';
-      const realParent = hasIndex ? parent.props.parent : parent;
-
-      return realParent.getParentByPath(path.substr(1), callback);
-    }
-
-    return callback(null, this, path);
-  }
-
   setValue(path, value, component) {
-    return this.getParentByPath(path, (err, parent, subPath) => {
+    return this.resolveByPath(path, (err, current, subPath) => {
       if (err) {
-        return console.log(err.message);
+        return;
       }
 
-      const currentValue = parent.props.value;
+      const currentValue = current.props.value;
       const newState = isArray(currentValue)
         ? [...currentValue]
         : {...currentValue};
@@ -100,23 +107,22 @@ export default class Fieldset extends Element {
 
       set(newState, subPath, value);
 
-      parent.props.onChange(newState, component);
+      current.props.onChange(newState, component);
     });
   }
 
   buildPath(path) {
-    return this.getParentByPath(path, (err, parent, subPath) => {
+    return this.resolveByPath(path, (err, current, subPath) => {
       if (err) {
-        return console.log(err.message);
+        return void 0;
       }
 
       if (typeof subPath === 'undefined' || subPath === null) {
         return void 0;
       }
 
-      const parentPath = parent.props.path;
-
-      return parentPath ? `${parentPath}.${subPath}` : subPath;
+      const currentPath = current.props.path;
+      return currentPath ? `${currentPath}.${subPath}` : subPath;
     });
   }
 
