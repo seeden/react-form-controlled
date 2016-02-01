@@ -50,12 +50,12 @@ export default class Fieldset extends Element {
     onChange: PropTypes.func,
     map: PropTypes.bool.isRequired,
     index: PropTypes.number,
-    extend: PropTypes.bool.isRequired,
+    addIndex: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     map: true,
-    extend: false,
+    addIndex: false,
   };
 
   getValue(name) {
@@ -94,12 +94,12 @@ export default class Fieldset extends Element {
   }
 
   _registerChildren(children, topLevel) {
-    const { value, map, index, extend } = this.props;
+    const { value, map, index, addIndex } = this.props;
 
     if (topLevel && map && isArray(value)) {
       return value.map((currentValue, index) => {
         return this._registerChildren((
-          <Fieldset name={index} key={index} index={index} extend={extend}>
+          <Fieldset name={index} key={index} index={index} addIndex={addIndex}>
             {children}
           </Fieldset>
         ));
@@ -126,8 +126,8 @@ export default class Fieldset extends Element {
         onChange: (value, component) => this.setValue(child.props.name, value, component),
       });
     }, (child) => {
-      const { replace, extend: formExtend } = this.getFormProps();
-      if (hasIndex && extend && formExtend) {
+      const { replace } = this.getFormProps();
+      if (hasIndex && (addIndex || child.props.addIndex)) {
         const updatedChild = extendCallbacks(child, index);
         if (updatedChild !== child) {
           return updatedChild;

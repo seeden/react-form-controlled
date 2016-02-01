@@ -549,7 +549,7 @@ describe('Fieldset', () => {
     ele.value.should.equal('123');
   });
 
-  it('should be able to use onClick with index', (done) => {
+  it('should be able to use addIndex', (done) => {
     const value = {
       data: [123, 222],
     };
@@ -561,9 +561,32 @@ describe('Fieldset', () => {
 
     const node = renderJSX(
       <Form value={value}>
-        <Fieldset name="data" extend={true}>
+        <Fieldset name="data" addIndex>
           <Input />
           <button onClick={onClick} />
+        </Fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('button');
+    TestUtils.Simulate.click(ele);
+  });
+
+  it('should be able to use addIndex on child', (done) => {
+    const value = {
+      data: [123, 222],
+    };
+
+    function onClick(index, evn, id) {
+      index.should.equal(0);
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data">
+          <Input />
+          <button onClick={onClick} addIndex/>
         </Fieldset>
       </Form>
     );

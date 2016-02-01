@@ -20,7 +20,6 @@ export default class Form extends Fieldset {
     onError: PropTypes.func,
     ajvOptions: PropTypes.object.isRequired,
     replace: PropTypes.bool.isRequired,
-    extend: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -31,7 +30,6 @@ export default class Form extends Fieldset {
     onChange: () => {},
     onSubmit: () => {},
     replace: true,
-    extend: true,
   };
 
   constructor(props, context) {
