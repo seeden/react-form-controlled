@@ -91,6 +91,11 @@ export default class Fieldset extends Element {
       return void 0;
     }
 
+    if (name[0] === '.') {
+      const { parent } = this.props;
+      return parent.buildPath(name.substr(1));
+    }
+
     const parentPath = this.props.path || '';
 
     return parentPath ? `${parentPath}.${name}` : name;
@@ -161,10 +166,10 @@ export default class Fieldset extends Element {
 
   render() {
     const children = this._registerChildren(this.props.children, true);
-    const { name, className } = this.props;
+    const { className } = this.props;
 
     return (
-      <fieldset name={name} className={className}>
+      <fieldset className={className}>
         {children}
       </fieldset>
     );

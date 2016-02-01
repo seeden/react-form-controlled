@@ -11,12 +11,12 @@ export default class Textarea extends Input {
   };
 
   render() {
-    const { originalProps, name } = this.props;
+    const { originalProps, path } = this.props;
 
     return (
       <textarea
         {...originalProps}
-        name={name}
+        name={path}
         onChange={this.handleChange}
         value={this.state.value} />
     );

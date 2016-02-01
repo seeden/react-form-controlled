@@ -123,11 +123,11 @@ export default class Select extends Element {
 
   render() {
     const { options, values } = this.state;
-    const { name, className, disabled, required } = this.props;
+    const { path, className, disabled, required } = this.props;
 
     return (
       <select
-        name={name}
+        name={path}
         value={values}
         className={className}
         disabled={disabled}

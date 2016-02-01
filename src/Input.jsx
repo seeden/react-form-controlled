@@ -98,14 +98,14 @@ export default class Input extends Element {
   }
 
   render() {
-    const { type, originalProps, value, currentValue, name } = this.props;
+    const { type, originalProps, value, currentValue, path } = this.props;
     const checked = (type === 'checkbox' && value)
       || (type === 'radio' && value === currentValue);
 
     return (
       <input
         {...originalProps}
-        name={name}
+        name={path}
         onChange={this.handleChange}
         checked={checked ? checked : void 0}
         value={this.state.value} />
