@@ -554,7 +554,7 @@ describe('Fieldset', () => {
       data: [123, 222],
     };
 
-    function onClick(evn, id, index) {
+    function onClick(index, evn, id) {
       index.should.equal(0);
       done();
     }

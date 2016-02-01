@@ -27,7 +27,7 @@ function extendCallbacks(child, index) {
 
     extendedCount++;
 
-    const newFn = (...args) => fn(...args, index);
+    const newFn = (...args) => fn(index, ...args);
     newFn._extended = true;
 
     newProps[key] = newFn;
