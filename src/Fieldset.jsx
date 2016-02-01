@@ -152,9 +152,10 @@ export default class Fieldset extends Element {
 
   render() {
     const children = this._registerChildren(this.props.children, true);
+    const { name, className } = this.props;
 
     return (
-      <fieldset name={this.props.name}>
+      <fieldset name={name} className={className}>
         {children}
       </fieldset>
     );
