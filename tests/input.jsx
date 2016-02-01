@@ -548,4 +548,27 @@ describe('Fieldset', () => {
     const ele = findDOMNode(node).querySelector('input');
     ele.value.should.equal('123');
   });
+
+  it('should be able to use onClick with index', (done) => {
+    const value = {
+      data: [123, 222],
+    };
+
+    function onClick(evn, id, index) {
+      index.should.equal(0);
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data" extend={true}>
+          <Input />
+          <button onClick={onClick} />
+        </Fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('button');
+    TestUtils.Simulate.click(ele);
+  });
 });
