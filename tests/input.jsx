@@ -561,9 +561,9 @@ describe('Fieldset', () => {
 
     const node = renderJSX(
       <Form value={value}>
-        <Fieldset name="data" addIndex>
+        <Fieldset name="data">
           <Input />
-          <button onClick={onClick} />
+          <button onClick={onClick} addIndex/>
         </Fieldset>
       </Form>
     );

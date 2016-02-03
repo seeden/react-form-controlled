@@ -10,33 +10,67 @@ import Input from './Input';
 import Select from './Select';
 import Textarea from './Textarea';
 
-function extendCallbacks(child, index) {
-  const props = child.props;
-
-  if (typeof index === 'undefined' || props['data-extended']) {
+function extendChild(child, parent) {
+  const { index } = parent.props;
+  if (typeof index === 'undefined') {
     return child;
   }
 
+  const { addIndex, remove, up, down, onClick } = child.props;
   const newProps = {};
-  let extendedCount = 0;
+  let changed = false;
 
-  forOwn(props, (fn, key) => {
-    if (typeof fn !== 'function' || fn._extended) {
-      return;
-    }
 
-    extendedCount++;
+  if (addIndex) {
+    newProps.addIndex = null;
+    changed = true;
 
-    const newFn = (...args) => fn(index, ...args);
-    newFn._extended = true;
+    forOwn(child.props, (fn, key) => {
+      if (typeof fn === 'function') {
+        newProps[key] = (...args) => fn(index, ...args);
+      }
+    });
+  }
 
-    newProps[key] = newFn;
-  });
+  const onClickBefore = newProps.onClick || onClick;
 
-  if (extendedCount) {
-    newProps['data-extended'] = true;
-    const newChild = cloneElement(child, newProps);
-    return newChild;
+  if (remove) {
+    newProps.remove = null;
+    changed = true;
+
+    newProps.onClick = () => {
+      parent.remove(index);
+
+      if (onClickBefore) {
+        onClickBefore();
+      }
+    };
+  } else if (up) {
+    newProps.up = null;
+    changed = true;
+
+    newProps.onClick = () => {
+      parent.up(index);
+
+      if (onClickBefore) {
+        onClickBefore();
+      }
+    };
+  } else if (down) {
+    newProps.down = null;
+    changed = true;
+
+    newProps.onClick = () => {
+      parent.down(index);
+
+      if (onClickBefore) {
+        onClickBefore();
+      }
+    };
+  }
+
+  if (changed) {
+    return cloneElement(child, newProps);
   }
 
   return child;
@@ -50,7 +84,6 @@ export default class Fieldset extends Element {
     onChange: PropTypes.func,
     map: PropTypes.bool.isRequired,
     index: PropTypes.number,
-    addIndex: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -69,8 +102,7 @@ export default class Fieldset extends Element {
       || props.className !== nextProps.className
       || props.value !== nextProps.value
       || props.map !== nextProps.map
-      || props.index !== nextProps.index
-      || props.addIndex !== nextProps.addIndex);
+      || props.index !== nextProps.index);
   }
 
   remove(index) {
@@ -212,19 +244,17 @@ export default class Fieldset extends Element {
   _registerChildren(children, topLevel) {
     this.smartUpdate = true;
 
-    const { value, map, index, addIndex } = this.props;
+    const { value, map, index } = this.props;
 
     if (topLevel && map && isArray(value)) {
       return value.map((val, index) => {
         return this._registerChildren((
-          <Fieldset name={index} key={index} index={index} addIndex={addIndex}>
+          <Fieldset name={index} key={index} index={index}>
             {children}
           </Fieldset>
         ));
       });
     }
-
-    const hasIndex = typeof index !== 'undefined';
 
     return traverse(children, (child) => {
       if (!isFunction(child.type) || !child.type.isElement) {
@@ -247,32 +277,12 @@ export default class Fieldset extends Element {
         onChange: (value, component) => this.setValue(name, value, component),
       });
     }, (child) => {
-      const { replace } = this.getFormProps();
-
-      if (hasIndex) {
-        if (child.props.remove) {
-          return cloneElement(child, {
-            remove: null,
-            onClick: () => this.remove(index),
-          });
-        } else if (child.props.up) {
-          return cloneElement(child, {
-            up: null,
-            onClick: () => this.up(index),
-          });
-        } else if (child.props.down) {
-          return cloneElement(child, {
-            down: null,
-            onClick: () => this.down(index),
-          });
-        } else if (addIndex || child.props.addIndex) {
-          const updatedChild = extendCallbacks(child, index);
-          if (updatedChild !== child) {
-            return updatedChild;
-          }
-        }
+      const updatedChild = extendChild(child, this);
+      if (updatedChild !== child) {
+        return updatedChild;
       }
 
+      const { replace } = this.getFormProps();
       if (!replace) {
         return void 0;
       }
