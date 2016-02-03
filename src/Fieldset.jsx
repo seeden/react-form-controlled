@@ -51,23 +51,26 @@ export default class Fieldset extends Element {
     map: PropTypes.bool.isRequired,
     index: PropTypes.number,
     addIndex: PropTypes.bool,
-    valueIndex: PropTypes.bool,
   };
 
   static defaultProps = {
     map: true,
   };
 
+  constructor(props, context) {
+    super(props, context);
+  }
+
   shouldComponentUpdate(nextProps) {
     const props = this.props;
 
-    return (props.name !== nextProps.name
+    return (!this.smartUpdate
+      || props.name !== nextProps.name
       || props.className !== nextProps.className
       || props.value !== nextProps.value
       || props.map !== nextProps.map
       || props.index !== nextProps.index
-      || props.addIndex !== nextProps.addIndex
-      || props.valueIndex !== nextProps.valueIndex);
+      || props.addIndex !== nextProps.addIndex);
   }
 
   resolveByPath(path, callback) {
@@ -150,7 +153,25 @@ export default class Fieldset extends Element {
     return this.props.form.props;
   }
 
+  disableSmartUpdate(name) {
+    if (!name || name[0] !== '.') {
+      return;
+    }
+
+    this.smartUpdate = false;
+
+    const { parent, index } = this.props;
+    if (!parent) {
+      return;
+    }
+
+    const hasIndex = typeof index !== 'undefined';
+    parent.disableSmartUpdate(hasIndex ? name : name.substr(1));
+  }
+
   _registerChildren(children, topLevel) {
+    this.smartUpdate = true;
+
     const { value, map, index, addIndex } = this.props;
 
     if (topLevel && map && isArray(value)) {
@@ -172,6 +193,9 @@ export default class Fieldset extends Element {
 
       const { name, valueIndex } = child.props;
       const currentPath = this.buildPath(name);
+      const parent = this.props.parent || this;
+
+      this.disableSmartUpdate(name);
 
       return cloneElement(child, {
         originalProps: child.props,
