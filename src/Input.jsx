@@ -49,11 +49,13 @@ export default class Input extends Element {
   handleChange(evn) {
     const target = evn.target || {};
 
-    let value = target.type === 'checkbox'
-      ? !!target.checked
-      : target.value;
+    let value = target.value;
 
-    if (target.type === 'number' && isNumeric(value)) {
+    if (target.type === 'checkbox') {
+      value = !!target.checked;
+    } else if (target.type === 'radio' && target.checked) {
+      value = this.props.originalValue;
+    } else if (target.type === 'number' && isNumeric(value)) {
       // fix decimal numbers
       const numberValue = Number(value);
       if (numberValue.toString() === value) {
