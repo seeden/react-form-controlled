@@ -20,7 +20,6 @@ function extendChild(child, parent) {
   const newProps = {};
   let changed = false;
 
-
   if (addIndex) {
     newProps.addIndex = null;
     changed = true;
