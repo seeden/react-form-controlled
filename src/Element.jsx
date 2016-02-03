@@ -12,10 +12,6 @@ export default class Element extends Component {
     className: PropTypes.string,
   };
 
-  getPath() {
-    return this.props.path;
-  }
-
   render() {
     return null;
   }

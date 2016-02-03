@@ -507,7 +507,7 @@ describe('Fieldset', () => {
     };
 
     function onChange(state, component) {
-      component.getPath().should.equal('data.0.inputValue');
+      component.props.path.should.equal('data.0.inputValue');
       done();
     }
 

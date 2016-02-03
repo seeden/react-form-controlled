@@ -73,6 +73,46 @@ export default class Fieldset extends Element {
       || props.addIndex !== nextProps.addIndex);
   }
 
+  remove(index) {
+    const hasIndex = typeof this.props.index !== 'undefined';
+    if (hasIndex) {
+      return this.props.parent.remove(index);
+    }
+
+    const value = this.props.value;
+    if (!isArray(value) || index < 0 || value.length <= index) {
+      return false;
+    }
+
+    this.props.onChange([
+      ...value.slice(0, index),
+      ...value.slice(index + 1),
+    ], this);
+  }
+
+  up(index) {
+    const hasIndex = typeof this.props.index !== 'undefined';
+    if (hasIndex) {
+      return this.props.parent.up(index);
+    }
+
+    const value = this.props.value;
+    if (!isArray(value) || index <= 0 || value.length <= index) {
+      return false;
+    }
+
+    this.props.onChange([
+      ...value.slice(0, index - 1),
+      value[index],
+      value[index - 1],
+      ...value.slice(index + 1),
+    ], this);
+  }
+
+  down(index) {
+    return this.up(index + 1);
+  }
+
   resolveByPath(path, callback) {
     if (typeof path === 'undefined' || path === null || path === '') {
       if (typeof this.props.index !== 'undefined') {
@@ -208,10 +248,28 @@ export default class Fieldset extends Element {
       });
     }, (child) => {
       const { replace } = this.getFormProps();
-      if (hasIndex && (addIndex || child.props.addIndex)) {
-        const updatedChild = extendCallbacks(child, index);
-        if (updatedChild !== child) {
-          return updatedChild;
+
+      if (hasIndex) {
+        if (child.props.remove) {
+          return cloneElement(child, {
+            remove: null,
+            onClick: () => this.remove(index),
+          });
+        } else if (child.props.up) {
+          return cloneElement(child, {
+            up: null,
+            onClick: () => this.up(index),
+          });
+        } else if (child.props.down) {
+          return cloneElement(child, {
+            down: null,
+            onClick: () => this.down(index),
+          });
+        } else if (addIndex || child.props.addIndex) {
+          const updatedChild = extendCallbacks(child, index);
+          if (updatedChild !== child) {
+            return updatedChild;
+          }
         }
       }
 
