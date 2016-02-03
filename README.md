@@ -17,13 +17,15 @@ This is a React controlled form components. More about controlled components [he
 # Features
 
 - Build on standards
-- You are able to use forms without special components
 - Controlled behavior
+- Support for isomorphic application
+- Good speed on big forms ([pure](https://facebook.github.io/react/docs/pure-render-mixin.html) components)
+- You are able to use forms without special components
 - Support for arrays/lists and indexes
 - Support for standard html elements like an input, select, textarea and fieldset (arrays)
 - Custom components
 - Validation
-- Support for isomorphic application
+
 
 # Support us
 
