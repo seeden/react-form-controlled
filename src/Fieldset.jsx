@@ -58,6 +58,18 @@ export default class Fieldset extends Element {
     map: true,
   };
 
+  shouldComponentUpdate(nextProps) {
+    const props = this.props;
+
+    return ( props.name !== nextProps.name
+      || props.className !== nextProps.className
+      || props.value !== nextProps.value
+      || props.map !== nextProps.map
+      || props.index !== nextProps.index
+      || props.addIndex !== nextProps.addIndex
+      || props.valueIndex !== nextProps.valueIndex);
+  }
+
   resolveByPath(path, callback) {
     if (typeof path === 'undefined' || path === null || path === '') {
       if (typeof this.props.index !== 'undefined') {

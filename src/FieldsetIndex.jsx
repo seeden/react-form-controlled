@@ -9,8 +9,6 @@ export default class FieldsetIndex extends Element {
     format: PropTypes.func,
   };
 
-  static omg = 123;
-
   render() {
     const { format, className, parent } = this.props;
     const index = parent.props.index;
