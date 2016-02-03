@@ -61,7 +61,7 @@ export default class Fieldset extends Element {
   shouldComponentUpdate(nextProps) {
     const props = this.props;
 
-    return ( props.name !== nextProps.name
+    return (props.name !== nextProps.name
       || props.className !== nextProps.className
       || props.value !== nextProps.value
       || props.map !== nextProps.map
@@ -101,9 +101,9 @@ export default class Fieldset extends Element {
     return callback(null, this, path);
   }
 
-  getValue(path, valueIndex) {
+  getValue(path) {
     if (typeof path === 'undefined' || path === null || path === '') {
-     return valueIndex ? this.props.index : this.props.value;
+      this.props.value;
     }
 
     return this.resolveByPath(path, (err, current, subPath) => {
@@ -116,21 +116,14 @@ export default class Fieldset extends Element {
     });
   }
 
-  setValue(path, value, component) {/*
-    if (typeof path === 'undefined' && typeof this.props.index !== 'undefined') {
-      return this.props.parent.setValue(this.props.index, value, component);
-    }*/
-
+  setValue(path, value, component) {
     return this.resolveByPath(path, (err, current, subPath) => {
       if (err) {
         return;
       }
 
-      const currentValue = current.props.value;
-      const newState = isArray(currentValue)
-        ? [...currentValue]
-        : {...currentValue};
-
+      const val = current.props.value;
+      const newState = isArray(val) ? [...val] : {...val};
 
       set(newState, subPath, value);
 
@@ -161,7 +154,7 @@ export default class Fieldset extends Element {
     const { value, map, index, addIndex } = this.props;
 
     if (topLevel && map && isArray(value)) {
-      return value.map((currentValue, index) => {
+      return value.map((val, index) => {
         return this._registerChildren((
           <Fieldset name={index} key={index} index={index} addIndex={addIndex}>
             {children}
@@ -178,14 +171,12 @@ export default class Fieldset extends Element {
       }
 
       const { name, valueIndex } = child.props;
-
-      const currentValue = this.getValue(name, valueIndex);
       const currentPath = this.buildPath(name);
 
       return cloneElement(child, {
         originalProps: child.props,
-        value: typeof child.props.value !== 'undefined' ? child.props.value : currentValue,
-        currentValue,
+        value: this.getValue(name),
+        originalValue: valueIndex ? this.props.index : child.props.value,
         form: this.props.form || this,
         parent: this,
         path: currentPath,

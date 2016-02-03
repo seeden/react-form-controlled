@@ -650,7 +650,7 @@ describe('Fieldset', () => {
 
   it('should be able to get index value', () => {
     const value = {
-      test: '111',
+      test: 0,
       data: [123, 222],
     };
 
@@ -662,13 +662,13 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input type="number" valueIndex />
+          <Input type="radio" name=".test" valueIndex/>
           <button onClick={onClick} addIndex/>
         </Fieldset>
       </Form>
     );
 
     const ele = findDOMNode(node).querySelector('input');
-    ele.value.should.equal('0');
+    ele.checked.should.equal(true);
   });
 });

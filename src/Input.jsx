@@ -98,9 +98,9 @@ export default class Input extends Element {
   }
 
   render() {
-    const { type, originalProps, value, currentValue, path } = this.props;
+    const { type, originalProps, value, originalValue, path } = this.props;
     const checked = (type === 'checkbox' && value)
-      || (type === 'radio' && value === currentValue);
+      || (type === 'radio' && value === originalValue);
 
     return (
       <input

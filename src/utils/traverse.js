@@ -26,6 +26,11 @@ export default function traverse(child, processCallback, replaceCallback) {
 
   if (child.props && child.props.children) {
     const children = traverse(child.props.children, processCallback, replaceCallback);
+    // speed up
+    if (children === child.props.children) {
+      return child;
+    }
+
     return cloneElement(child, {}, children);
   }
 
