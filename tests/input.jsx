@@ -690,4 +690,28 @@ describe('Fieldset', () => {
     const ele = findDOMNode(node).querySelector('button');
     TestUtils.Simulate.click(ele);
   });
+
+  it('should be able to get indexes', (done) => {
+    const value = {
+      test: 0,
+      data: [123, 222],
+    };
+
+    function onClick(names, evn, id) {
+      names[0].should.equal(0);
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data">
+
+          <button onClick={onClick} provideIndexes/>
+        </Fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('button');
+    TestUtils.Simulate.click(ele);
+  });
 });

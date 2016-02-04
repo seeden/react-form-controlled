@@ -16,14 +16,15 @@ function extendChild(child, parent) {
     return child;
   }
 
-  const { provideIndex, providePath, provideNames, remove, up, down, onClick } = child.props;
+  const { provideIndex, providePath, provideNames, provideIndexes, remove, up, down, onClick } = child.props;
   const newProps = {};
   let changed = false;
 
-  if (provideIndex || providePath || provideNames) {
+  if (provideIndex || providePath || provideNames || provideIndexes) {
     newProps.provideIndex = null;
     newProps.providePath = null;
     newProps.provideNames = null;
+    newProps.provideIndexes = null;
 
     changed = true;
 
@@ -45,6 +46,11 @@ function extendChild(child, parent) {
         const currentFn = child.props[key];
         newProps[key] = (...args) => currentFn(parent.props.names, ...args);
       }
+
+      if (provideIndexes) {
+        const currentFn = child.props[key];
+        newProps[key] = (...args) => currentFn(parent.props.indexes, ...args);
+      }
     });
   }
 
@@ -58,7 +64,7 @@ function extendChild(child, parent) {
       parent.remove(index);
 
       if (onClickBefore) {
-        onClickBefore();
+        setTimeout(onClickBefore, 0);
       }
     };
   } else if (up) {
@@ -69,7 +75,7 @@ function extendChild(child, parent) {
       parent.up(index);
 
       if (onClickBefore) {
-        onClickBefore();
+        setTimeout(onClickBefore, 0);
       }
     };
   } else if (down) {
@@ -80,7 +86,7 @@ function extendChild(child, parent) {
       parent.down(index);
 
       if (onClickBefore) {
-        onClickBefore();
+        setTimeout(onClickBefore, 0);
       }
     };
   }
@@ -272,6 +278,8 @@ export default class Fieldset extends Element {
       });
     }
 
+    let indexes = this.props.indexes || [];
+
     return traverse(children, (child) => {
       if (!isFunction(child.type) || !child.type.isElement) {
         return void 0;
@@ -282,6 +290,10 @@ export default class Fieldset extends Element {
 
       this.disableSmartUpdate(name);
 
+      if (typeof child.props.index !== 'undefined') {
+        indexes = [...indexes, child.props.index];
+      }
+
       return cloneElement(child, {
         originalProps: child.props,
         value: this.getValue(name),
@@ -290,6 +302,7 @@ export default class Fieldset extends Element {
         parent: this,
         path: currentPath,
         names: this.props.names ? [...this.props.names, name] : [name],
+        indexes,
         onChange: (value, component) => this.setValue(name, value, component),
       });
     }, (child) => {
