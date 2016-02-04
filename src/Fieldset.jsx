@@ -16,17 +16,34 @@ function extendChild(child, parent) {
     return child;
   }
 
-  const { addIndex, remove, up, down, onClick } = child.props;
+  const { provideIndex, providePath, provideNames, remove, up, down, onClick } = child.props;
   const newProps = {};
   let changed = false;
 
-  if (addIndex) {
-    newProps.addIndex = null;
+  if (provideIndex || providePath || provideNames) {
+    newProps.provideIndex = null;
+    newProps.providePath = null;
+    newProps.provideNames = null;
+
     changed = true;
 
     forOwn(child.props, (fn, key) => {
-      if (typeof fn === 'function') {
+      if (typeof fn !== 'function') {
+        return;
+      }
+
+      if (provideIndex) {
         newProps[key] = (...args) => fn(index, ...args);
+      }
+
+      if (providePath) {
+        const currentFn = child.props[key];
+        newProps[key] = (...args) => currentFn(parent.props.path, ...args);
+      }
+
+      if (provideNames) {
+        const currentFn = child.props[key];
+        newProps[key] = (...args) => currentFn(parent.props.names, ...args);
       }
     });
   }
@@ -177,7 +194,7 @@ export default class Fieldset extends Element {
 
   getValue(path) {
     if (typeof path === 'undefined' || path === null || path === '') {
-      this.props.value;
+      return this.props.value;
     }
 
     return this.resolveByPath(path, (err, current, subPath) => {
@@ -262,7 +279,6 @@ export default class Fieldset extends Element {
 
       const { name, valueIndex } = child.props;
       const currentPath = this.buildPath(name);
-      const parent = this.props.parent || this;
 
       this.disableSmartUpdate(name);
 
@@ -273,6 +289,7 @@ export default class Fieldset extends Element {
         form: this.props.form || this,
         parent: this,
         path: currentPath,
+        names: this.props.names ? [...this.props.names, name] : [name],
         onChange: (value, component) => this.setValue(name, value, component),
       });
     }, (child) => {

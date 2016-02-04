@@ -549,7 +549,7 @@ describe('Fieldset', () => {
     ele.value.should.equal('123');
   });
 
-  it('should be able to use addIndex', (done) => {
+  it('should be able to use provideIndex', (done) => {
     const value = {
       data: [123, 222],
     };
@@ -563,7 +563,7 @@ describe('Fieldset', () => {
       <Form value={value}>
         <Fieldset name="data">
           <Input />
-          <button onClick={onClick} addIndex/>
+          <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
     );
@@ -572,7 +572,7 @@ describe('Fieldset', () => {
     TestUtils.Simulate.click(ele);
   });
 
-  it('should be able to use addIndex on child', (done) => {
+  it('should be able to use provideIndex on child', (done) => {
     const value = {
       data: [123, 222],
     };
@@ -586,7 +586,7 @@ describe('Fieldset', () => {
       <Form value={value}>
         <Fieldset name="data">
           <Input />
-          <button onClick={onClick} addIndex/>
+          <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
     );
@@ -654,21 +654,40 @@ describe('Fieldset', () => {
       data: [123, 222],
     };
 
-    function onClick(index, evn, id) {
-      index.should.equal(0);
-      done();
-    }
-
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
           <Input type="radio" name=".test" valueIndex/>
-          <button onClick={onClick} addIndex/>
         </Fieldset>
       </Form>
     );
 
     const ele = findDOMNode(node).querySelector('input');
     ele.checked.should.equal(true);
+  });
+
+  it('should be able to get names', (done) => {
+    const value = {
+      test: 0,
+      data: [123, 222],
+    };
+
+    function onClick(names, evn, id) {
+      names[0].should.equal('data');
+      names[1].should.equal(0);
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value}>
+        <Fieldset name="data">
+
+          <button onClick={onClick} provideNames/>
+        </Fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('button');
+    TestUtils.Simulate.click(ele);
   });
 });
