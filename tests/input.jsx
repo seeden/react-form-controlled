@@ -1,6 +1,6 @@
 import React from 'react';
 import should from 'should';
-import Form, { Input, Textarea, Word, Select, Fieldset, Index } from '../dist';
+import Form, { Input, Textarea, Word, Select, Fieldset, Index, If } from '../dist';
 import { renderJSX } from '../utils/tester';
 import { findDOMNode } from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
@@ -203,49 +203,8 @@ describe('Word', () => {
   });
 });
 
-
-/*
-describe('Select', () => {
-  const options = [{
-    label: 'Test',
-    value: 123,
-  }, {
-    label: 'Test2',
-    value: 222,
-  }];
-
-  it('should be able to create select', (done) => {
-    const value = {
-      inputValue: 123,
-    };
-
-    function onChange(state) {
-      console.log(state);
-      state.inputValue.should.equal(222);
-      done();
-    }
-
-    const node = renderJSX(
-      <Form value={value} onChange={onChange}>
-        <Select name="inputValue" options={options}/>
-      </Form>
-    );
-
-    findDOMNode(node).nodeName.should.equal('FORM');
-    const ele = findDOMNode(node).querySelector('select');
-
-    TestUtils.Simulate.change(ele, { target: {
-      value: '1',
-      options: ele.options,
-      getAttribute: (name) => ele.getAttribute(name)
-    }});
-  });
-});
-
-*/
-
 describe('Fieldset', () => {
-  it('should be able to create object', (done) => {
+ it('should be able to create object', (done) => {
     const value = {
       data: {
         inputValue: 123,
@@ -540,7 +499,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input />
+          <Input name="" />
         </Fieldset>
       </Form>
     );
@@ -562,7 +521,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input />
+          <Input name="." />
           <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
@@ -585,7 +544,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input />
+          <Input name="." />
           <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
@@ -623,14 +582,13 @@ describe('Fieldset', () => {
         state.data[0].options[0].should.equal('33333');
         done();
       }
-
     }
 
     const node = renderJSX(
       <Form value={value} onChange={onChange}>
         <fieldset name="data">
           <fieldset name="options">
-            <textarea />
+            <textarea name="."/>
             <input type="radio" name=".selected" />
           </fieldset>
         </fieldset>
@@ -645,7 +603,6 @@ describe('Fieldset', () => {
       value: '222',
       getAttribute: (name) => ele.getAttribute(name)
     }});
-
   });
 
   it('should be able to get index value', () => {
@@ -664,31 +621,6 @@ describe('Fieldset', () => {
 
     const ele = findDOMNode(node).querySelector('input');
     ele.checked.should.equal(true);
-  });
-
-  it('should be able to get names', (done) => {
-    const value = {
-      test: 0,
-      data: [123, 222],
-    };
-
-    function onClick(names, evn, id) {
-      names[0].should.equal('data');
-      names[1].should.equal(0);
-      done();
-    }
-
-    const node = renderJSX(
-      <Form value={value}>
-        <Fieldset name="data">
-
-          <button onClick={onClick} provideNames/>
-        </Fieldset>
-      </Form>
-    );
-
-    const ele = findDOMNode(node).querySelector('button');
-    TestUtils.Simulate.click(ele);
   });
 
   it('should be able to get indexes', (done) => {
@@ -713,5 +645,29 @@ describe('Fieldset', () => {
 
     const ele = findDOMNode(node).querySelector('button');
     TestUtils.Simulate.click(ele);
+  });
+
+  it('should be able to use if', () => {
+    const value = {
+      data: [{
+        selected: true,
+        options: [1],
+      }],
+    };
+
+    const node = renderJSX(
+      <Form value={value}>
+        <fieldset name="data">
+          <fieldset name="options">
+            <If name=".selected" cond={(value) => value === true}>
+              <textarea name=".selected" />
+            </If>
+          </fieldset>
+        </fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('textarea');
+    ele.value.should.equal('true');
   });
 });

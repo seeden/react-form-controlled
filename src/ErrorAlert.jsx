@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 
 export default class ErrorAlert extends Element {
-  static isElement = true;
+  static isElement = Element.isElement;
 
   static propTypes = {
     ...Element.propTypes,

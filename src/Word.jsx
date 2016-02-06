@@ -19,7 +19,8 @@ function fixValue(value) {
 }
 
 export default class Word extends Input {
-  static isElement = true;
+  static isElement = Input.isElement;
+
   static propTypes = {
     ...Input.propTypes,
   };

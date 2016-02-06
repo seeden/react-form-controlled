@@ -2,7 +2,7 @@ import React from 'react';
 import Element from './Element';
 
 export default class SelectPro extends Element {
-  static isElement = true;
+  static isElement = Element.isElement;
 
   static propTypes = {
     ...Element.propTypes,

@@ -6,7 +6,7 @@ import isArray from 'lodash/lang/isArray';
 const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
 export default class Select extends Element {
-  static isElement = true;
+  static isElement = Element.isElement;
 
   static propTypes = {
     ...Element.propTypes,

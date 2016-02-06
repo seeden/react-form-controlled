@@ -4,108 +4,25 @@ import isArray from 'lodash/lang/isArray';
 import isFunction from 'lodash/lang/isFunction';
 import set from 'lodash/object/set';
 import get from 'lodash/object/get';
-import forOwn from 'lodash/object/forOwn';
 import traverse from './utils/traverse';
 import Input from './Input';
 import Select from './Select';
 import Textarea from './Textarea';
+import extendChild from './utils/extendChild';
 
-function extendChild(child, parent) {
-  const { index } = parent.props;
-  if (typeof index === 'undefined') {
-    return child;
-  }
-
-  const { provideIndex, providePath, provideNames, provideIndexes, remove, up, down, onClick } = child.props;
-  const newProps = {};
-  let changed = false;
-
-  if (provideIndex || providePath || provideNames || provideIndexes) {
-    newProps.provideIndex = null;
-    newProps.providePath = null;
-    newProps.provideNames = null;
-    newProps.provideIndexes = null;
-
-    changed = true;
-
-    forOwn(child.props, (fn, key) => {
-      if (typeof fn !== 'function') {
-        return;
-      }
-
-      if (provideIndex) {
-        newProps[key] = (...args) => fn(index, ...args);
-      }
-
-      if (providePath) {
-        const currentFn = child.props[key];
-        newProps[key] = (...args) => currentFn(parent.props.path, ...args);
-      }
-
-      if (provideNames) {
-        const currentFn = child.props[key];
-        newProps[key] = (...args) => currentFn(parent.props.names, ...args);
-      }
-
-      if (provideIndexes) {
-        const currentFn = child.props[key];
-        newProps[key] = (...args) => currentFn(parent.props.indexes, ...args);
-      }
-    });
-  }
-
-  const onClickBefore = newProps.onClick || onClick;
-
-  if (remove) {
-    newProps.remove = null;
-    changed = true;
-
-    newProps.onClick = () => {
-      parent.remove(index);
-
-      if (onClickBefore) {
-        setTimeout(onClickBefore, 0);
-      }
-    };
-  } else if (up) {
-    newProps.up = null;
-    changed = true;
-
-    newProps.onClick = () => {
-      parent.up(index);
-
-      if (onClickBefore) {
-        setTimeout(onClickBefore, 0);
-      }
-    };
-  } else if (down) {
-    newProps.down = null;
-    changed = true;
-
-    newProps.onClick = () => {
-      parent.down(index);
-
-      if (onClickBefore) {
-        setTimeout(onClickBefore, 0);
-      }
-    };
-  }
-
-  if (changed) {
-    return cloneElement(child, newProps);
-  }
-
-  return child;
+function isEmpty(value) {
+  return typeof value === 'undefined' || value === null || value === '';
 }
 
 export default class Fieldset extends Element {
-  static isElement = true;
+  static isElement = Element.isElement;
 
   static propTypes = {
     ...Element.propTypes,
     onChange: PropTypes.func,
     map: PropTypes.bool.isRequired,
     index: PropTypes.number,
+    children: PropTypes.node,
   };
 
   static defaultProps = {
@@ -168,38 +85,32 @@ export default class Fieldset extends Element {
   }
 
   resolveByPath(path, callback) {
-    if (typeof path === 'undefined' || path === null || path === '') {
-      if (typeof this.props.index !== 'undefined') {
-        if (!this.props.parent) {
-          return callback(new Error('Parent is undefined'));
-        }
-
-        return this.props.parent.resolveByPath(this.props.index, callback);
-      }
-
-      return callback(new Error('Path is undefined'));
-    }
-
     if (path && path[0] === '.') {
       const { parent, index } = this.props;
       if (!parent) {
         return callback(new Error('Parent is undefined'));
       }
 
-      const hasIndex = typeof index !== 'undefined';
-      const realParent = hasIndex ? parent.props.parent : parent;
-      if (!parent) {
+      const isIndex = typeof index !== 'undefined';
+      const realParent = isIndex ? parent.props.parent : parent;
+
+      let subPath = path.substr(1);
+      if (isEmpty(subPath)) {
+        subPath = `${parent.props.name}.${index}`;
+      }
+
+      if (!realParent) {
         return callback(new Error('Parent is undefined'));
       }
 
-      return realParent.resolveByPath(path.substr(1), callback);
+      return realParent.resolveByPath(subPath, callback);
     }
 
     return callback(null, this, path);
   }
 
   getValue(path) {
-    if (typeof path === 'undefined' || path === null || path === '') {
+    if (isEmpty(path)) {
       return this.props.value;
     }
 
@@ -208,8 +119,9 @@ export default class Fieldset extends Element {
         return void 0;
       }
 
-      const { value = {} } = current.props;
-      return get(value, subPath);
+      const { value } = current.props;
+
+      return !isEmpty(subPath) ? get(value, subPath) : value;
     });
   }
 
@@ -234,7 +146,7 @@ export default class Fieldset extends Element {
         return void 0;
       }
 
-      if (typeof subPath === 'undefined' || subPath === null) {
+      if (isEmpty(subPath)) {
         return void 0;
       }
 
@@ -285,7 +197,7 @@ export default class Fieldset extends Element {
         return void 0;
       }
 
-      const { name, valueIndex } = child.props;
+      const { name, valueIndex, skipArray, childTransform } = child.props;
       const currentPath = this.buildPath(name);
 
       this.disableSmartUpdate(name);
@@ -294,17 +206,21 @@ export default class Fieldset extends Element {
         indexes = [...indexes, child.props.index];
       }
 
-      return cloneElement(child, {
+      const newProps = {
         originalProps: child.props,
         value: this.getValue(name),
         originalValue: valueIndex ? this.props.index : child.props.value,
         form: this.props.form || this,
         parent: this,
         path: currentPath,
-        names: this.props.names ? [...this.props.names, name] : [name],
         indexes,
         onChange: (value, component) => this.setValue(name, value, component),
-      });
+      };
+
+      return childTransform
+        ? cloneElement(child, newProps, this._registerChildren(child.props.children))
+        : cloneElement(child, newProps);
+
     }, (child) => {
       const updatedChild = extendChild(child, this);
       if (updatedChild !== child) {
@@ -333,7 +249,7 @@ export default class Fieldset extends Element {
     const { className } = this.props;
 
     return (
-      <fieldset className={className}>
+      <fieldset className={className} path={this.props.path}>
         {children}
       </fieldset>
     );

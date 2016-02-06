@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Input from './Input';
 
 export default class Textarea extends Input {
-  static isElement = true;
+  static isElement = Input.isElement;
 
   static propTypes = {
     ...Input.propTypes,

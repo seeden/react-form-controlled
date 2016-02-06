@@ -2,11 +2,15 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 
 export default class FieldsetIndex extends Element {
-  static isElement = true;
+  static isElement = Element.isElement;
 
   static propTypes = {
     ...Element.propTypes,
     format: PropTypes.func,
+  };
+
+  static defaultProps = {
+    name: '.',
   };
 
   render() {

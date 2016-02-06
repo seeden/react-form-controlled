@@ -12,7 +12,7 @@ function isNumeric(value) {
 }
 
 export default class Input extends Element {
-  static isElement = true;
+  static isElement = Element.isElement;
 
   static propTypes = {
     ...Element.propTypes,

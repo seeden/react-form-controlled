@@ -14,6 +14,8 @@ function errorToProperty(err) {
 }
 
 export default class Form extends Fieldset {
+  static isElement = Fieldset.isElement;
+
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
