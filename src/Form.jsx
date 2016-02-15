@@ -133,12 +133,12 @@ export default class Form extends Fieldset {
     });
   }
 
-  handleChange(evn) {
+  handleChange() {
     this.errors = [];
   }
 
   render() {
-    const children = this._registerChildren(this.props.children, true);
+    const children = this.registerChildren(this.props.children);
     const autoComplete = typeof this.props.autoComplete !== 'undefined'
       ? this.props.autoComplete
       : 'off';

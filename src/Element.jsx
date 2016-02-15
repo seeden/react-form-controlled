@@ -1,8 +1,6 @@
 import { Component, PropTypes } from 'react';
 
 export default class Element extends Component {
-  static isElement = true;
-
   static propTypes = {
     name: PropTypes.oneOfType([
       PropTypes.string,
@@ -10,7 +8,10 @@ export default class Element extends Component {
     ]).isRequired,
     originalProps: PropTypes.object,
     className: PropTypes.string,
+    style: PropTypes.object,
   };
+
+  static isElement = true;
 
   render() {
     return null;

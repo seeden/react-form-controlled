@@ -1,4 +1,4 @@
-import React, { PropTypes, cloneElement } from 'react';
+import React, { PropTypes, cloneElement, createElement } from 'react';
 import Element from './Element';
 import isArray from 'lodash/lang/isArray';
 import isFunction from 'lodash/lang/isFunction';
@@ -23,10 +23,12 @@ export default class Fieldset extends Element {
     map: PropTypes.bool.isRequired,
     index: PropTypes.number,
     children: PropTypes.node,
+    tagName: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
     map: true,
+    tagName: 'fieldset',
   };
 
   constructor(props, context) {
@@ -175,16 +177,23 @@ export default class Fieldset extends Element {
     parent.disableSmartUpdate(hasIndex ? name : name.substr(1));
   }
 
-  _registerChildren(children, topLevel) {
+  registerChildren(children, topLevel) {
     this.smartUpdate = true;
 
-    const { value, map, index } = this.props;
+    const { value, map } = this.props;
 
     if (topLevel && map && isArray(value)) {
-      return value.map((val, index) => {
-        return this._registerChildren((
-          <Fieldset name={index} key={index} index={index}>
-            {children}
+      const { tagName, childTagName } = this.props;
+      const childTag = tagName === 'tbody' ? 'tr' : childTagName;
+
+      const subChildren = childTag === 'tr' && children && children.type === 'tr'
+        ? children.props.children
+        : children;
+
+      return value.map((val, itemIndex) => {
+        return this.registerChildren((
+          <Fieldset name={itemIndex} key={itemIndex} index={itemIndex} tagName={childTag}>
+            {subChildren}
           </Fieldset>
         ));
       });
@@ -197,7 +206,7 @@ export default class Fieldset extends Element {
         return void 0;
       }
 
-      const { name, valueIndex, skipArray, childTransform } = child.props;
+      const { name, valueIndex, childTransform } = child.props;
       const currentPath = this.buildPath(name);
 
       this.disableSmartUpdate(name);
@@ -214,13 +223,12 @@ export default class Fieldset extends Element {
         parent: this,
         path: currentPath,
         indexes,
-        onChange: (value, component) => this.setValue(name, value, component),
+        onChange: (newValue, component) => this.setValue(name, newValue, component),
       };
 
       return childTransform
-        ? cloneElement(child, newProps, this._registerChildren(child.props.children))
+        ? cloneElement(child, newProps, this.registerChildren(child.props.children))
         : cloneElement(child, newProps);
-
     }, (child) => {
       const updatedChild = extendChild(child, this);
       if (updatedChild !== child) {
@@ -228,7 +236,7 @@ export default class Fieldset extends Element {
       }
 
       const { replace } = this.getFormProps();
-      if (!replace) {
+      if (!replace || child.props.replace === false) {
         return void 0;
       }
 
@@ -240,18 +248,20 @@ export default class Fieldset extends Element {
         return <Textarea {...child.props} />;
       } else if (child.type === 'fieldset' && child.props.name) {
         return <Fieldset {...child.props} />;
+      } else if (child.type === 'tbody' && child.props.name) {
+        return <Fieldset tagName="tbody" {...child.props} />;
       }
     });
   }
 
   render() {
-    const children = this._registerChildren(this.props.children, true);
-    const { className } = this.props;
+    const children = this.registerChildren(this.props.children, true);
+    const { tagName, className, style, path } = this.props;
 
-    return (
-      <fieldset className={className} path={this.props.path}>
-        {children}
-      </fieldset>
-    );
+    return createElement(tagName, {
+      className,
+      style,
+      path,
+    }, children);
   }
 }

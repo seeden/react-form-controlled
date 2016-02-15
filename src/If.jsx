@@ -1,4 +1,4 @@
-import React, { PropTypes, Children } from 'react';
+import { PropTypes, Children } from 'react';
 import Element from './Element';
 
 export default class If extends Element {

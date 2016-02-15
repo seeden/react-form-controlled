@@ -1,6 +1,6 @@
 import React from 'react';
 import should from 'should';
-import Form, { Input, Textarea, Word, Select, Fieldset, Index, If } from '../dist';
+import Form, { Input, Textarea, Word, Select, Fieldset, Index, If, Tbody } from '../dist';
 import { renderJSX } from '../utils/tester';
 import { findDOMNode } from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
@@ -12,8 +12,8 @@ describe('Form', () => {
     };
 
     const node = renderJSX(
-      <Form value={value}>
-      </Form>
+      <Form value={value} />
+
     );
 
     findDOMNode(node).nodeName.should.equal('FORM');
@@ -208,7 +208,7 @@ describe('Fieldset', () => {
     const value = {
       data: {
         inputValue: 123,
-      }
+      },
     };
 
     function onChange(state) {
@@ -240,7 +240,7 @@ describe('Fieldset', () => {
     const value = {
       data: {
         inputValue: 123,
-      }
+      },
     };
 
     function onChange(state) {
@@ -272,7 +272,7 @@ describe('Fieldset', () => {
     const value = {
       data: [{
         inputValue: 123,
-      }]
+      }],
     };
 
     function onChange(state) {
@@ -306,7 +306,7 @@ describe('Fieldset', () => {
     const value = {
       data: [{
         inputValue: 123,
-      }]
+      }],
     };
 
     function onChange(state) {
@@ -338,7 +338,7 @@ describe('Fieldset', () => {
     const value = {
       data: [{
         inputValue: 123,
-      }]
+      }],
     };
 
     function onChange(state) {
@@ -370,7 +370,7 @@ describe('Fieldset', () => {
     const value = {
       data: [{
         inputValue: 123,
-      }]
+      }],
     };
 
     function onChange(state) {
@@ -402,7 +402,7 @@ describe('Fieldset', () => {
         inputValue: 123,
       }, {
         inputValue: 222,
-      }]
+      }],
     };
 
     function onChange(state) {
@@ -438,7 +438,7 @@ describe('Fieldset', () => {
         inputValue: 123,
       }, {
         inputValue: 222,
-      }]
+      }],
     };
 
     const node = renderJSX(
@@ -462,7 +462,7 @@ describe('Fieldset', () => {
         inputValue: 123,
       }, {
         inputValue: 222,
-      }]
+      }],
     };
 
     function onChange(state, component) {
@@ -559,7 +559,7 @@ describe('Fieldset', () => {
       test: '111',
       data: [{
         options: [1, 2, 3],
-        selected: 2
+        selected: 2,
       }],
     };
 
@@ -655,11 +655,15 @@ describe('Fieldset', () => {
       }],
     };
 
+    function checkValue(value) {
+      return value === true;
+    }
+
     const node = renderJSX(
       <Form value={value}>
         <fieldset name="data">
           <fieldset name="options">
-            <If name=".selected" cond={(value) => value === true}>
+            <If name=".selected" cond={(value) => checkValue(value)}>
               <textarea name=".selected" />
             </If>
           </fieldset>
@@ -669,5 +673,58 @@ describe('Fieldset', () => {
 
     const ele = findDOMNode(node).querySelector('textarea');
     ele.value.should.equal('true');
+  });
+
+  it('should be able to use if', () => {
+    const value = {
+      data: [{
+        selected: false,
+        options: [1],
+      }],
+    };
+
+    function checkValue(value) {
+      return value === true;
+    }
+
+    const node = renderJSX(
+      <Form value={value}>
+        <fieldset name="data">
+          <fieldset name="options">
+            <If name=".selected" cond={(value) => checkValue(value)}>
+              <textarea name=".selected" />
+            </If>
+          </fieldset>
+        </fieldset>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('textarea');
+    should(ele).equal(null);
+  });
+});
+
+describe('Tbody', () => {
+ it('should be able to create object', () => {
+    const value = {
+      rows: [123, 456],
+    };
+
+    const node = renderJSX(
+      <Form value={value}>
+        <table>
+          <tbody name="rows">
+            <tr>
+              <td>
+                <Input name="." />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('123');
   });
 });

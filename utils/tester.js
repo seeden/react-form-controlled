@@ -13,7 +13,7 @@ function renderComponent(react, props) {
   return TestUtils.findRenderedComponentWithType(rendered, react);
 }
 
-export function renderJSX(jsx, context, node) {
+export function renderJSX(jsx, context) {
   return renderComponent(React.createClass({
     displayName: 'TestJSX',
     render: () => jsx,

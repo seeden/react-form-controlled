@@ -1,6 +1,6 @@
 # React controlled form
 
-This is a React controlled form components. More about controlled components [here](https://facebook.github.io/react/docs/forms.html#why-controlled-components). The main idea is to create a simple forms as possible.
+This is a React controlled form components. More about controlled components [here](https://facebook.github.io/react/docs/forms.html#why-controlled-components). The main idea is to create a simple forms as possible based on immutable data structures and controlled state.
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -17,12 +17,13 @@ This is a React controlled form components. More about controlled components [he
 # Features
 
 - Build on standards
+- Immutable data
 - Controlled behavior
 - Support for isomorphic application
 - Good speed on big forms ([pure](https://facebook.github.io/react/docs/pure-render-mixin.html) components)
 - You are able to use forms without special components
 - Support for arrays/lists and indexes
-- Support for standard html elements like an input, select, textarea and fieldset (arrays)
+- Standard html elements like an input, select, textarea and fieldset (arrays)
 - Custom components
 - Validation
 
@@ -327,6 +328,17 @@ export default class Component extends Component {
   }
 }
 ```
+
+## Parent values
+
+You can use value from parent with dot notation ".options"
+
+```js
+```
+
+## So far so good (more complex form)
+
+Try to image simple quiz with questions and answers. Y
 
 ## Combination with other components
 

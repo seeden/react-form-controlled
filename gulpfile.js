@@ -9,7 +9,7 @@ gulp.task('test', jsxCoverage.createTask({
   istanbul: {                                      // will pass to istanbul or isparta
     preserveComments: true,                      // required for istanbul 0.4.0+
     coverageVariable: '__MY_TEST_COVERAGE__',
-    exclude: /node_modules|test[0-9]/            // do not instrument these files
+    exclude: /node_modules|test[0-9]/,            // do not instrument these files
   },
 
   threshold: 50,                                   // fail the task when coverage lower than this
@@ -20,15 +20,15 @@ gulp.task('test', jsxCoverage.createTask({
     babel: {
       include: /\.jsx?$/,
       exclude: /node_modules/,
-      omitExt: false                           // if you wanna omit file ext when require(), put an array
+      omitExt: false,                           // if you wanna omit file ext when require(), put an array
     },                                           // of file exts here. Ex: ['.jsx', '.es6'] (NOT RECOMMENDED)                                         // of file exts here. Ex: ['.cjsx'] (NOT RECOMMENDED)
   },
   coverage: {
     reporters: ['text-summary', 'json', 'lcov'], // list of istanbul reporters
-    directory: 'coverage'                        // will pass to istanbul reporters
+    directory: 'coverage',                        // will pass to istanbul reporters
   },
   mocha: {                                         // will pass to mocha
-    reporter: 'spec'
+    reporter: 'spec',
   },
 }));
 
