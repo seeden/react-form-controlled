@@ -68,5 +68,6 @@
   },
   "peerDependencies": {
     "react": "0.14.x"
-  }
+  },
+  "typings": "react-form-controlled.d.ts",
 }
