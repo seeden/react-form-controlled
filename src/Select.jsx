@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Element from './Element';
-import isPlainObject from 'lodash/lang/isPlainObject';
-import isArray from 'lodash/lang/isArray';
+import isPlainObject from 'lodash/isPlainObject';
+import isArray from 'lodash/isArray';
 
 const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 

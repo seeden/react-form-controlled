@@ -1,9 +1,9 @@
 import React, { PropTypes, cloneElement, createElement } from 'react';
 import Element from './Element';
-import isArray from 'lodash/lang/isArray';
-import isFunction from 'lodash/lang/isFunction';
-import set from 'lodash/object/set';
-import get from 'lodash/object/get';
+import isArray from 'lodash/isArray';
+import isFunction from 'lodash/isFunction';
+import set from 'lodash/set';
+import get from 'lodash/get';
 import traverse from './utils/traverse';
 import Input from './Input';
 import Select from './Select';

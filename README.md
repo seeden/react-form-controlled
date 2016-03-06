@@ -428,6 +428,8 @@ Star this project on [GitHub][github-url].
  - Google Analytics [react-g-analytics](https://github.com/seeden/react-g-analytics)
  - Google AdSense via Google Publisher Tag [react-google-publisher-tag](https://github.com/seeden/react-google-publisher-tag)
 
-## Credits
+## License
 
-[Zlatko Fedor](http://github.com/seeden)
+The MIT License (MIT)
+
+Copyright (c) 2016 [Zlatko Fedor](http://github.com/seeden)

@@ -1,5 +1,5 @@
-import isArray from 'lodash/lang/isArray';
-import isPlainObject from 'lodash/lang/isPlainObject';
+import isArray from 'lodash/isArray';
+import isPlainObject from 'lodash/isPlainObject';
 
 function dirty(value) {
   if (isArray(value)) {

@@ -1,5 +1,5 @@
 import { cloneElement } from 'react';
-import forOwn from 'lodash/object/forOwn';
+import forOwn from 'lodash/forOwn';
 
 export default function extendChild(child, parent) {
   const { index } = parent.props;

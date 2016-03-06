@@ -1,5 +1,5 @@
 import { Children, cloneElement } from 'react';
-import isArray from 'lodash/lang/isArray';
+import isArray from 'lodash/isArray';
 
 export default function traverse(child, processCallback, replaceCallback) {
   if (isArray(child)) {
