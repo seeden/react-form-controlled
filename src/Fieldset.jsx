@@ -236,7 +236,7 @@ export default class Fieldset extends Element {
       }
 
       const { replace } = this.getFormProps();
-      if (!replace || child.props.replace === false) {
+      if (!replace || (child.props && child.props.replace === false)) {
         return void 0;
       }
 
