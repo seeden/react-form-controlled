@@ -20,7 +20,6 @@ export default class Form extends Fieldset {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    onError: PropTypes.func,
     ajvOptions: PropTypes.object.isRequired,
     replace: PropTypes.bool.isRequired,
   };
@@ -51,7 +50,7 @@ export default class Form extends Fieldset {
     return this.props;
   }
 
-  validate(callback) {
+  validate(value, callback) {
     this.errors = [];
 
     const schema = this.props.schema;
@@ -59,7 +58,7 @@ export default class Form extends Fieldset {
       return callback(null, true);
     }
 
-    const isValid = this.validateData(this.props.value);
+    const isValid = this.validateData(value);
     if (isValid) {
       return callback(null, true);
     }
@@ -69,15 +68,13 @@ export default class Form extends Fieldset {
       const prop = errorToProperty(err);
       const path = err.dataPath ? err.dataPath.substr(1) : null;
 
-      err.path = path
-        ? `${path}.${prop}`
-        : prop;
+      err.path = path ? `${path}.${prop}` : prop;
     });
 
     const err = new Error(DEFAULT_INVALID_ERROR);
     err.errors = errors;
 
-    callback(err);
+    callback(null, false);
   }
 
   getErrors(path) {
@@ -110,23 +107,10 @@ export default class Form extends Fieldset {
   handleSubmit(evn) {
     evn.preventDefault();
 
-    this.validate((err) => {
-      if (err) {
-        if (this.props.onError) {
-          this.props.onError(err);
-        }
-
-        // redraw for ErrorAlert
-        this.setState({
-          error: err,
-        });
-
+    this.validate(this.props.value, (err, isValid) => {
+      if (err || !isValid) {
         return;
       }
-
-      this.setState({
-        error: null,
-      });
 
       if (this.props.onSubmit) {
         this.props.onSubmit(this.props.value);
@@ -160,17 +144,5 @@ export default class Form extends Fieldset {
       };
 
     return createElement(element, props, children);
-/*
-    return (
-      <form
-        autoComplete={autoComplete}
-        method={this.props.method}
-        action={this.props.action}
-        className={this.props.className || 'form'}
-        onSubmit={this.handleSubmit}
-        onChange={this.handleChange}>
-        {children}
-      </form>
-    );*/
   }
 }
