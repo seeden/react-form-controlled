@@ -213,7 +213,7 @@ export default class Fieldset extends Element {
           indexes = [...indexes, child.props.index];
         }
 
-        cloneElement(child, {
+        return cloneElement(child, {
           extend: {
             originalProps: child.props,
             value: this.getValue(name),
