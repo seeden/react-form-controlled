@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, createElement } from 'react';
 import Ajv from 'ajv';
 import Fieldset from './Fieldset';
 
@@ -6,15 +6,16 @@ const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
 function errorToProperty(err) {
   switch (err.keyword) {
-  case 'required':
-    return err.params.missingProperty;
-  default:
-    return void 0;
+    case 'required':
+      return err.params.missingProperty;
+    default:
+      return void 0;
   }
 }
 
 export default class Form extends Fieldset {
   static isElement = Fieldset.isElement;
+  static isForm = true;
 
   static propTypes = {
     onChange: PropTypes.func.isRequired,
@@ -143,6 +144,23 @@ export default class Form extends Fieldset {
       ? this.props.autoComplete
       : 'off';
 
+    const element = this.props.form ? 'fieldset' : 'form';
+
+    const props = element === 'form'
+      ? {
+        autoComplete,
+        method: this.props.method,
+        action: this.props.action,
+        className: this.props.className || element,
+        onSubmit: this.handleSubmit,
+        onChange: this.handleChange,
+      }
+      : {
+        className: this.props.className || element,
+      };
+
+    return createElement(element, props, children);
+/*
     return (
       <form
         autoComplete={autoComplete}
@@ -153,6 +171,6 @@ export default class Form extends Fieldset {
         onChange={this.handleChange}>
         {children}
       </form>
-    );
+    );*/
   }
 }

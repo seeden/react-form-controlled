@@ -202,6 +202,31 @@ export default class Fieldset extends Element {
     let indexes = this.props.indexes || [];
 
     return traverse(children, (child) => {
+      // support for extend
+      if (child && child.type && child.props && child.props.name && child.props.extend) {
+        const { name, valueIndex } = child.props;
+        const currentPath = this.buildPath(name);
+
+        this.disableSmartUpdate(name);
+
+        if (typeof child.props.index !== 'undefined') {
+          indexes = [...indexes, child.props.index];
+        }
+
+        cloneElement(child, {
+          extend: {
+            originalProps: child.props,
+            value: this.getValue(name),
+            originalValue: valueIndex ? this.props.index : child.props.value,
+            form: this.props.form || this,
+            parent: this,
+            path: currentPath,
+            indexes,
+            onChange: (newValue, component) => this.setValue(name, newValue, component),
+          },
+        });
+      }
+
       if (!isFunction(child.type) || !child.type.isElement) {
         return void 0;
       }
