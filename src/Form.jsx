@@ -79,7 +79,7 @@ export default class Form extends Fieldset {
 
     const parentPath = `${path}.`;
 
-    return erros.map((error) => {
+    return errors.map((error) => {
       if (!error.path) {
         return false;
       }
