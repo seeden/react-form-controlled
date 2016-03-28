@@ -27,7 +27,6 @@ export default class Form extends Fieldset {
   static defaultProps = {
     ajvOptions: {
       allErrors: true,
-      verbose: true,
     },
     onChange: () => {},
     onSubmit: () => {},
@@ -36,8 +35,6 @@ export default class Form extends Fieldset {
 
   constructor(props, context) {
     super(props, context);
-
-    this.errors = [];
 
     const ajv = Ajv(props.ajvOptions);
     this.validateData = ajv.compile(props.schema || {});
@@ -51,64 +48,70 @@ export default class Form extends Fieldset {
   }
 
   validate(value, callback) {
-    this.errors = [];
-
     const schema = this.props.schema;
     if (!schema) {
-      return callback(null, true);
+      return callback(null, []);
     }
 
     const isValid = this.validateData(value);
     if (isValid) {
-      return callback(null, true);
+      return callback(null, []);
     }
 
-    const errors = this.errors = this.validateData.errors || [];
+    // prepare error paths
+    const errors = this.validateData.errors || [];
     errors.forEach((err) => {
       const prop = errorToProperty(err);
       const path = err.dataPath ? err.dataPath.substr(1) : null;
 
-      err.path = path ? `${path}.${prop}` : prop;
+      err.path = path && prop ? `${path}.${prop}` : path || prop;
     });
 
-    const err = new Error(DEFAULT_INVALID_ERROR);
-    err.errors = errors;
 
-    callback(null, false);
+    callback(null, errors);
   }
 
-  getErrors(path) {
-    const errors = this.errors;
+  getErrors(path, exactMatch) {
+    const errors = this.errors || [];
     if (!path) {
       return errors;
     }
 
-    const ret = [];
+    const parentPath = `${path}.`;
 
-    for (let index = 0; index < errors.length; index++) {
-      const error = errors[index];
-      if (error.path !== path) {
-        continue;
+    return erros.map((error) => {
+      if (!error.path) {
+        return false;
       }
 
-      ret.push(error);
-    }
-    return ret;
+      if (error.path === path) {
+        return true;
+      }
+
+      if (!exactMatch && error.path.indexOf(parentPath) === 0) {
+        return true;
+      }
+
+      return false;
+    });
   }
 
-  hasErrors(path) {
-    return !!this.getErrors(path).length;
+  hasErrors(path, exactMatch) {
+    return !!this.getErrors(path, exactMatch).length;
   }
 
-  isValid(path) {
-    return !this.hasErrors(path);
+  isValid(path, exactMatch) {
+    return !this.hasErrors(path, exactMatch);
   }
 
   handleSubmit(evn) {
     evn.preventDefault();
 
-    this.validate(this.props.value, (err, isValid) => {
-      if (err || !isValid) {
+    this.validate(this.props.value, (err, errors) => {
+      // store current errors
+      this.setErrors(errors);
+
+      if (err || errors.length) {
         return;
       }
 
@@ -119,7 +122,19 @@ export default class Form extends Fieldset {
   }
 
   handleChange() {
-    this.errors = [];
+    this.clearErrors();
+  }
+
+  setErrors(errors = []) {
+    this.errors = errors;
+
+    this.setState({
+      errors,
+    });
+  }
+
+  clearErrors() {
+    this.setErrors([]);
   }
 
   render() {

@@ -33,12 +33,15 @@ export default class Fieldset extends Element {
 
   constructor(props, context) {
     super(props, context);
+
+    this.state = {};
   }
 
-  shouldComponentUpdate(nextProps) {
-    const props = this.props;
+  shouldComponentUpdate(nextProps, nextState) {
+    const { props, state } = this;
 
     return (!this.smartUpdate
+      || props.errors !== nextState.errors
       || props.name !== nextProps.name
       || props.className !== nextProps.className
       || props.value !== nextProps.value
