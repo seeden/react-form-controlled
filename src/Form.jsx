@@ -1,6 +1,7 @@
 import React, { PropTypes, createElement } from 'react';
 import Ajv from 'ajv';
 import Fieldset from './Fieldset';
+import filter from 'lodash/filter';
 
 const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
@@ -79,7 +80,7 @@ export default class Form extends Fieldset {
 
     const parentPath = `${path}.`;
 
-    return errors.map((error) => {
+    return filter(errors, (error) => {
       if (!error.path) {
         return false;
       }

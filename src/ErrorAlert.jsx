@@ -8,6 +8,7 @@ export default class ErrorAlert extends Element {
     ...Element.propTypes,
     className: PropTypes.string,
     processError: PropTypes.func,
+    exactMatch: PropTypes.boolean,
   };
 
   static defaultProps = {
@@ -15,12 +16,12 @@ export default class ErrorAlert extends Element {
   };
 
   render() {
-    const { path, form, className, processError } = this.props;
+    const { path, form, className, processError, exactMatch } = this.props;
     if (!path || !form) {
       return null;
     }
 
-    const errors = form.getErrors(path);
+    const errors = form.getErrors(path, exactMatch);
     if (!errors || !errors.length) {
       return null;
     }
