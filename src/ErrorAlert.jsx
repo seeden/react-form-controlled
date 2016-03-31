@@ -9,14 +9,32 @@ export default class ErrorAlert extends Element {
     className: PropTypes.string,
     processError: PropTypes.func,
     exactMatch: PropTypes.boolean,
+    children: PropTypes.node,
   };
 
   static defaultProps = {
     className: 'alert alert-danger',
   };
 
+  renderErrors(errors) {
+    const { children, processError } = this.props;
+
+    if (children) {
+      return children;
+    }
+
+    return errors
+      .map((error) => {
+        if (processError) {
+          return processError(error);
+        }
+
+        return error.message;
+      });
+  }
+
   render() {
-    const { path, form, className, processError, exactMatch } = this.props;
+    const { path, form, className, exactMatch } = this.props;
     if (!path || !form) {
       return null;
     }
@@ -28,7 +46,7 @@ export default class ErrorAlert extends Element {
 
     return (
       <div className={className} role="alert">
-        {this.props.children || errors.map((error) => processError ? processError(error) : error.message)}
+        {this.renderErrors(errors)}
       </div>
     );
   }
