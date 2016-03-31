@@ -122,8 +122,10 @@ export default class Form extends Fieldset {
     });
   }
 
-  handleChange() {
+  setValue(path, value, component) {
     this.clearErrors();
+
+    super.setValue(path, value, component);
   }
 
   setErrors(errors = []) {
@@ -153,7 +155,6 @@ export default class Form extends Fieldset {
         action: this.props.action,
         className: this.props.className || element,
         onSubmit: this.handleSubmit,
-        onChange: this.handleChange,
       }
       : {
         className: this.props.className || element,
