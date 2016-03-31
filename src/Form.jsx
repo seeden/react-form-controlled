@@ -40,8 +40,7 @@ export default class Form extends Fieldset {
     const ajv = Ajv(props.ajvOptions);
     this.validateData = ajv.compile(props.schema || {});
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.onSubmit = ::this.onSubmit;
   }
 
   getFormProps() {
@@ -105,7 +104,7 @@ export default class Form extends Fieldset {
     return !this.hasErrors(path, exactMatch);
   }
 
-  handleSubmit(evn) {
+  onSubmit(evn) {
     evn.preventDefault();
 
     this.validate(this.props.value, (err, errors) => {
@@ -154,7 +153,7 @@ export default class Form extends Fieldset {
         method: this.props.method,
         action: this.props.action,
         className: this.props.className || element,
-        onSubmit: this.handleSubmit,
+        onSubmit: this.onSubmit,
       }
       : {
         className: this.props.className || element,
