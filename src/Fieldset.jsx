@@ -41,7 +41,8 @@ export default class Fieldset extends Element {
     const { props, state } = this;
 
     return (!this.smartUpdate
-      || props.errors !== nextState.errors
+      || props.errors !== nextProps.errors
+      || state.errors !== nextState.errors
       || props.name !== nextProps.name
       || props.className !== nextProps.className
       || props.value !== nextProps.value
@@ -193,6 +194,7 @@ export default class Fieldset extends Element {
         ? children.props.children
         : children;
 
+
       return value.map((val, itemIndex) => {
         return this.registerChildren((
           <Fieldset name={itemIndex} key={itemIndex} index={itemIndex} tagName={childTag}>
@@ -206,6 +208,8 @@ export default class Fieldset extends Element {
 
     return traverse(children, (child) => {
       // support for extend
+      const form = this.props.form || this;
+
       if (child && child.type && child.props && child.props.name && child.props.extend) {
         const { name, valueIndex } = child.props;
         const currentPath = this.buildPath(name);
@@ -221,8 +225,8 @@ export default class Fieldset extends Element {
             originalProps: child.props,
             value: this.getValue(name),
             originalValue: valueIndex ? this.props.index : child.props.value,
-            form: this.props.form || this,
-            errors: this.props.errors,
+            form: form,
+            errors: form.errors,
             parent: this,
             path: currentPath,
             indexes,
@@ -248,8 +252,8 @@ export default class Fieldset extends Element {
         originalProps: child.props,
         value: this.getValue(name),
         originalValue: valueIndex ? this.props.index : child.props.value,
-        form: this.props.form || this,
-        errors: this.props.errors,
+        form: form,
+        errors: form.errors,
         parent: this,
         path: currentPath,
         indexes,
