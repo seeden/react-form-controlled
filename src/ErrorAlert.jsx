@@ -8,7 +8,7 @@ export default class ErrorAlert extends Element {
     ...Element.propTypes,
     className: PropTypes.string,
     processError: PropTypes.func,
-    exactMatch: PropTypes.boolean,
+    exactMatch: PropTypes.bool,
     children: PropTypes.node,
   };
 
