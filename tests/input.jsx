@@ -1,6 +1,6 @@
 import React from 'react';
 import should from 'should';
-import Form, { Input, Textarea, Word, Select, Fieldset, Index, If, Tbody } from '../dist';
+import Form, { Input, Textarea, Word, Select, Fieldset, Index, If, Tbody, Integrate } from '../dist';
 import { renderJSX } from '../utils/tester';
 import { findDOMNode } from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
@@ -717,6 +717,33 @@ describe('Tbody', () => {
             <tr>
               <td>
                 <Input name="." />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('123');
+  });
+});
+
+describe('Integrate', () => {
+ it('should be able to create object', () => {
+    const value = {
+      rows: [123, 456],
+    };
+
+    const node = renderJSX(
+      <Form value={value}>
+        <table>
+          <tbody name="rows">
+            <tr>
+              <td>
+                <Integrate name=".">
+                  <input />
+                </Integrate>
               </td>
             </tr>
           </tbody>
