@@ -1,6 +1,7 @@
 import React from 'react';
 import should from 'should';
-import Form, { Input, Textarea, Word, Select, Fieldset, Index, If, Tbody, Integrate } from '../dist';
+import Form, { Input, Textarea, Word, Select, Fieldset,
+  Index, If, Tbody, Integrate } from '../dist';
 import { renderJSX } from '../utils/tester';
 import { findDOMNode } from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
