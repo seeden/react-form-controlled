@@ -18,7 +18,6 @@ export default class Integrate extends Element {
 
   static defaultProps = {
     onChange: true,
-    value: 'value',
   };
 
   render() {

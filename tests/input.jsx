@@ -731,6 +731,23 @@ describe('Tbody', () => {
 });
 
 describe('Integrate', () => {
+  it('should be able to create simple object', () => {
+    const value = {
+     place: 'Kosice',
+    };
+
+    const node = renderJSX(
+     <Form value={value}>
+       <Integrate name="place" value="value" onChange="onChange">
+         <input placeholder="1122"/>
+       </Integrate>
+     </Form>
+    );
+
+    const ele = findDOMNode(node).querySelector('input');
+    ele.value.should.equal('Kosice');
+  });
+
  it('should be able to create object', () => {
     const value = {
       rows: [123, 456],
@@ -742,8 +759,8 @@ describe('Integrate', () => {
           <tbody name="rows">
             <tr>
               <td>
-                <Integrate name=".">
-                  <input />
+                <Integrate name="." value="value" onChange="onChange">
+                  <input placeholder="1122"/>
                 </Integrate>
               </td>
             </tr>
