@@ -55,10 +55,11 @@ export default class Input extends Element {
       value = !!target.checked;
     } else if (target.type === 'radio' && target.checked) {
       value = this.props.originalValue;
-    } else if (target.type === 'number' && isNumeric(value)) {
+    } else if (target.type === 'number') {
+      const fixedValue = value.replace(',', '.').replace(' ', '');
       // fix decimal numbers
-      const numberValue = Number(value);
-      if (numberValue.toString() === value) {
+      const numberValue = Number(fixedValue);
+      if (numberValue.toString() === fixedValue) {
         value = numberValue;
       }
     }
