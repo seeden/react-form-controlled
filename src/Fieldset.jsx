@@ -65,6 +65,8 @@ export default class Fieldset extends Element {
       ...value.slice(0, index),
       ...value.slice(index + 1),
     ], this);
+
+    return true;
   }
 
   up(index) {
@@ -84,6 +86,8 @@ export default class Fieldset extends Element {
       value[index - 1],
       ...value.slice(index + 1),
     ], this);
+
+    return true;
   }
 
   down(index) {
@@ -138,7 +142,7 @@ export default class Fieldset extends Element {
       }
 
       const val = current.props.value;
-      const newState = isArray(val) ? [...val] : {...val};
+      const newState = isArray(val) ? [...val] : { ...val };
 
       set(newState, subPath, value);
 
@@ -195,13 +199,11 @@ export default class Fieldset extends Element {
         : children;
 
 
-      return value.map((val, itemIndex) => {
-        return this.registerChildren((
-          <Fieldset name={itemIndex} key={itemIndex} index={itemIndex} tagName={childTag}>
-            {subChildren}
-          </Fieldset>
-        ));
-      });
+      return value.map((val, itemIndex) => this.registerChildren((
+        <Fieldset name={itemIndex} key={itemIndex} index={itemIndex} tagName={childTag}>
+          {subChildren}
+        </Fieldset>
+      )));
     }
 
     let indexes = this.props.indexes || [];
@@ -225,7 +227,7 @@ export default class Fieldset extends Element {
             originalProps: child.props,
             value: this.getValue(name),
             originalValue: valueIndex ? this.props.index : child.props.value,
-            form: form,
+            form,
             errors: form.errors,
             parent: this,
             path: currentPath,
@@ -252,7 +254,7 @@ export default class Fieldset extends Element {
         originalProps: child.props,
         value: this.getValue(name),
         originalValue: valueIndex ? this.props.index : child.props.value,
-        form: form,
+        form,
         errors: form.errors,
         parent: this,
         path: currentPath,
@@ -285,6 +287,8 @@ export default class Fieldset extends Element {
       } else if (child.type === 'tbody' && child.props.name) {
         return <Fieldset tagName="tbody" {...child.props} />;
       }
+
+      return void 0;
     });
   }
 

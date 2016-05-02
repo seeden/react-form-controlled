@@ -12,4 +12,16 @@ import Integrate from './Integrate';
 import markAsDirty from './utils/markAsDirty';
 
 export default Form;
-export { Input, Select, Textarea, ErrorAlert, Fieldset, Tbody, Word, Index, If, Integrate, markAsDirty };
+export {
+  Input,
+  Select,
+  Textarea,
+  ErrorAlert,
+  Fieldset,
+  Tbody,
+  Word,
+  Index,
+  If,
+  Integrate,
+  markAsDirty,
+};

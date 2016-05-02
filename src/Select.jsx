@@ -133,14 +133,13 @@ export default class Select extends Element {
         disabled={disabled}
         required={required}
         multiple={this.isMultiple()}
-        onChange={this.handleChange}>
-          {this.renderPlaceholder()}
+        onChange={this.handleChange}
+      >
+        {this.renderPlaceholder()}
 
-          {options.map((option, pos) => {
-            return (
-              <option value={pos} key={pos}>{option.label}</option>
-            );
-          })}
+        {options.map((option, pos) => (
+          <option value={pos} key={pos}>{option.label}</option>
+        ))}
       </select>
     );
   }

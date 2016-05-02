@@ -7,10 +7,6 @@ function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
 }
 
-function isNumeric(value) {
-  return !isNaN(parseFloat(value)) && isFinite(value);
-}
-
 export default class Input extends Element {
   static isElement = Element.isElement;
 
@@ -110,8 +106,9 @@ export default class Input extends Element {
         {...originalProps}
         name={path}
         onChange={this.handleChange}
-        checked={checked ? checked : void 0}
-        value={this.state.value} />
+        checked={checked || void 0}
+        value={this.state.value}
+      />
     );
   }
 }
