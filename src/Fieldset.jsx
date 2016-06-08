@@ -85,9 +85,13 @@ export default class Fieldset extends Element {
   }
 
   remove(index) {
-    const hasIndex = typeof this.props.index !== 'undefined';
-    if (hasIndex) {
-      return this.props.parent.remove(index);
+    if (typeof index === 'undefined') {
+      if (!this.isIndex()) {
+        throw new Error('This is not an array');
+      }
+
+      const parent = this.getParent();
+      return parent.remove(this.props.index);
     }
 
     const value = this.getValue();
@@ -95,7 +99,7 @@ export default class Fieldset extends Element {
       return false;
     }
 
-    this.setValue([
+    this.setValue(void 0, [
       ...value.slice(0, index),
       ...value.slice(index + 1),
     ]);
@@ -104,9 +108,13 @@ export default class Fieldset extends Element {
   }
 
   up(index) {
-    const hasIndex = typeof this.props.index !== 'undefined';
-    if (hasIndex) {
-      return this.props.parent.up(index);
+    if (typeof index === 'undefined') {
+      if (!this.isIndex()) {
+        throw new Error('This is not an array');
+      }
+
+      const parent = this.getParent();
+      return parent.up(this.props.index);
     }
 
     const value = this.getValue();
@@ -114,17 +122,28 @@ export default class Fieldset extends Element {
       return false;
     }
 
-    this.setValue([
+    const newValue = [
       ...value.slice(0, index - 1),
       value[index],
       value[index - 1],
       ...value.slice(index + 1),
-    ]);
+    ];
+
+    this.setValue(void 0, newValue);
 
     return true;
   }
 
   down(index) {
+    if (typeof index === 'undefined') {
+      if (!this.isIndex()) {
+        throw new Error('This is not an array');
+      }
+
+      const parent = this.getParent();
+      return parent.down(this.props.index);
+    }
+
     return this.up(index + 1);
   }
 
@@ -229,6 +248,7 @@ export default class Fieldset extends Element {
       return;
     }*/
 
+
     if (path && path[0] === '.') {
       this.resolveByPath(path, (err, current, subPath) => {
         if (err) {
@@ -240,10 +260,14 @@ export default class Fieldset extends Element {
       return;
     }
 
+    let newValue = value;
     const currentValue = this.getValue();
-    const newValue = isArray(currentValue) ? [...currentValue] : { ...currentValue };
 
-    set(newValue, path, value);
+    if (!isEmpty(path)) {
+      newValue = isArray(currentValue) ? [...currentValue] : { ...currentValue };
+      set(newValue, path, value);
+    }
+
     super.setValue(newValue, component);
 
     const { onChange } = this.props;
@@ -418,10 +442,12 @@ export default class Fieldset extends Element {
   render() {
     const children = this.registerChildren(this.props.children, true);
     const { tagName, className, style } = this.props;
+    const path = this.getPath();
 
     return createElement(tagName, {
       className,
       style,
+      'data-path': path,
     }, children);
   }
 }

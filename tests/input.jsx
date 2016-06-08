@@ -405,7 +405,7 @@ describe('Fieldset', () => {
     };
 
     function onChange(state) {
-      state.data[0].inputValue.should.equal('222');
+      state.data[0].inputValue.should.equal('333');
       done();
     }
 
@@ -419,17 +419,17 @@ describe('Fieldset', () => {
 
     findDOMNode(node).nodeName.should.equal('FORM');
 
-    const ele = findDOMNode(node).querySelector('input');
-    ele.value.should.equal('123');
+    const inputs = findDOMNode(node).querySelectorAll('input');
+    inputs[0].value.should.equal('123');
+    inputs[1].value.should.equal('222');
 
-    TestUtils.Simulate.change(ele, { target: {
-      value: '222',
-      getAttribute: (name) => ele.getAttribute(name)
+    TestUtils.Simulate.change(inputs[0], { target: {
+      value: '333',
+      getAttribute: (name) => inputs[0].getAttribute(name)
     }});
 
-    ele.value.should.equal('222');
+    inputs[0].value.should.equal('333');
   });
-
 
   it('should be able to simplify array object with index', () => {
     const value = {
@@ -777,5 +777,89 @@ describe('Integrate', () => {
 
     const ele = findDOMNode(node).querySelector('input');
     ele.value.should.equal('123');
+  });
+});
+
+describe('Up', () => {
+  it('should be able to move item in array', (done) => {
+    const value = {
+     items: [1, 2, 3],
+    };
+
+    function onChange(state) {
+      state.items.should.containDeepOrdered([2, 1, 3]);
+      done();
+    }
+
+    const node = renderJSX(
+     <Form value={value} onChange={onChange}>
+       <fieldset name="items">
+         <input name="."/>
+         <button type="button" up>Up</button>
+       </fieldset>
+     </Form>
+    );
+
+    const ele = findDOMNode(node).querySelectorAll('input');
+    ele[0].value.should.equal('1');
+
+    const buttons = findDOMNode(node).querySelectorAll('button');
+    TestUtils.Simulate.click(buttons[1]);
+  });
+});
+
+describe('Down', () => {
+  it('should be able to move item in array', (done) => {
+    const value = {
+     items: [1, 2, 3],
+    };
+
+    function onChange(state) {
+      state.items.should.containDeepOrdered([2, 1, 3]);
+      done();
+    }
+
+    const node = renderJSX(
+     <Form value={value} onChange={onChange}>
+       <fieldset name="items">
+         <input name="."/>
+         <button type="button" down>Up</button>
+       </fieldset>
+     </Form>
+    );
+
+    const ele = findDOMNode(node).querySelectorAll('input');
+    ele[0].value.should.equal('1');
+
+    const buttons = findDOMNode(node).querySelectorAll('button');
+    TestUtils.Simulate.click(buttons[0]);
+  });
+});
+
+describe('Remove', () => {
+  it('should be able to move item in array', (done) => {
+    const value = {
+     items: [1, 2, 3],
+    };
+
+    function onChange(state) {
+      state.items.should.containDeepOrdered([1, 3]);
+      done();
+    }
+
+    const node = renderJSX(
+     <Form value={value} onChange={onChange}>
+       <fieldset name="items">
+         <input name="."/>
+         <button type="button" remove>Remove</button>
+       </fieldset>
+     </Form>
+    );
+
+    const ele = findDOMNode(node).querySelectorAll('input');
+    ele[1].value.should.equal('2');
+
+    const buttons = findDOMNode(node).querySelectorAll('button');
+    TestUtils.Simulate.click(buttons[1]);
   });
 });

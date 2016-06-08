@@ -1,8 +1,7 @@
 import { cloneElement } from 'react';
 
 export default function extendChild(child, parent) {
-  const { index } = parent.props;
-  if (typeof index === 'undefined') {
+  if (!parent.isIndex()) {
     return child;
   }
 
@@ -20,7 +19,7 @@ export default function extendChild(child, parent) {
     if (provideIndex) {
       const key = typeof provideIndex === 'string' ? provideIndex : 'onClick';
       const fn = newProps[key] || child.props[key];
-      newProps[key] = (...args) => fn(index, ...args);
+      newProps[key] = (...args) => fn(parent.props.index, ...args);
     }
 
     if (providePath) {
@@ -43,7 +42,7 @@ export default function extendChild(child, parent) {
     changed = true;
 
     newProps.onClick = () => {
-      parent.remove(index);
+      parent.remove();
 
       if (onClickBefore) {
         setTimeout(onClickBefore, 0);
@@ -54,7 +53,7 @@ export default function extendChild(child, parent) {
     changed = true;
 
     newProps.onClick = () => {
-      parent.up(index);
+      parent.up();
 
       if (onClickBefore) {
         setTimeout(onClickBefore, 0);
@@ -65,7 +64,7 @@ export default function extendChild(child, parent) {
     changed = true;
 
     newProps.onClick = () => {
-      parent.down(index);
+      parent.down();
 
       if (onClickBefore) {
         setTimeout(onClickBefore, 0);

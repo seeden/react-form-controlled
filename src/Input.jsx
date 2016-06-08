@@ -38,7 +38,7 @@ export default class Input extends Element {
     if (target.type === 'checkbox') {
       value = !!target.checked;
     } else if (target.type === 'radio' && target.checked) {
-      value = this.props.getOriginalValue();
+      value = this.getOriginalValue();
     } else if (target.type === 'number') {
       const fixedValue = value
         .replace(',', '.')
