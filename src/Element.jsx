@@ -30,24 +30,17 @@ export default class Element extends Component {
     };
   }
 
-  componentWillReceiveProps(newProps) {
-    // TODO fix newProps has no value
-    const isDiff = this.state.value !== newProps.value;
-    if (!isDiff) {
-      return;
-    }
-
-    // wait for it
+  componentWillReceiveProps() {
     this.clearTimeout();
     this.timeoutId = setTimeout(() => {
       this.timeoutId = null;
-      const currentValue = this.getValue();
-      if (this.state.value === currentValue) {
+      const newValue = this.getValue();
+      if (this.state.value === newValue) {
         return;
       }
 
       this.setState({
-        value: this.getValue(),
+        value: newValue,
       });
     }, DIFF_TIMEOUT);
   }
