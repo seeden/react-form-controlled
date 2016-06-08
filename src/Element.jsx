@@ -17,7 +17,6 @@ export default class Element extends Component {
   };
 
   static defaultProps = {
-    name: '.',
   };
 
   static isElement = true;
@@ -29,8 +28,13 @@ export default class Element extends Component {
       value: this.getValue(),
     };
   }
-
+/*
   componentWillReceiveProps() {
+    const newValue = this.getValue();
+    this.setState({
+      value: newValue,
+    });*/
+/*
     this.clearTimeout();
     this.timeoutId = setTimeout(() => {
       this.timeoutId = null;
@@ -42,12 +46,12 @@ export default class Element extends Component {
       this.setState({
         value: newValue,
       });
-    }, DIFF_TIMEOUT);
-  }
-
+    }, DIFF_TIMEOUT);*/
+//  }
+/*
   componentWillUnmount() {
     this.clearTimeout();
-  }
+  }*/
 
   getParent() {
     return this.context.parent;
@@ -71,7 +75,7 @@ export default class Element extends Component {
   }
 
   setValue(value, component = this) {
-    this.clearTimeout();
+    //this.clearTimeout();
     this.setState({ value });
 
     const parent = this.getParent();
@@ -94,7 +98,7 @@ export default class Element extends Component {
     const parent = this.getParent();
     return parent.getForm();
   }
-
+/*
   clearTimeout() {
     if (!this.timeoutId) {
       return;
@@ -102,7 +106,7 @@ export default class Element extends Component {
 
     clearTimeout(this.timeoutId);
     this.timeoutId = null;
-  }
+  }*/
 
   render() {
     return null;
