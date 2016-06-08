@@ -1,13 +1,16 @@
 import React, { PropTypes } from 'react';
 import Element from './Element';
-
-const DIFF_TIMEOUT = 100;
+import { autobind } from 'core-decorators';
 
 function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
 }
 
 export default class Input extends Element {
+  static contextTypes = {
+    ...Element.contextTypes,
+  };
+
   static isElement = Element.isElement;
 
   static propTypes = {
@@ -15,7 +18,6 @@ export default class Input extends Element {
     autoComplete: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
-    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -23,36 +25,25 @@ export default class Input extends Element {
     type: 'text',
   };
 
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      value: fixUncontrolledValue(props.value), // fix because null and undefined is uncontrolled
-    };
-
-    this.handleChange = this.handleChange.bind(this);
+  getValue() {
+    return fixUncontrolledValue(super.getValue());
   }
 
-  _clearChangeTimeout() {
-    if (!this.timeoutId) {
-      return;
-    }
-
-    clearTimeout(this.timeoutId);
-    this.timeoutId = null;
-  }
-
-  handleChange(evn) {
-    const target = evn.target || {};
+  @autobind
+  onChange(evn) {
+    const { target } = evn;
 
     let value = target.value;
 
     if (target.type === 'checkbox') {
       value = !!target.checked;
     } else if (target.type === 'radio' && target.checked) {
-      value = this.props.originalValue;
+      value = this.props.getOriginalValue();
     } else if (target.type === 'number') {
-      const fixedValue = value.replace(',', '.').replace(' ', '');
+      const fixedValue = value
+        .replace(',', '.')
+        .replace(' ', '');
+
       // fix decimal numbers
       const numberValue = Number(fixedValue);
       if (numberValue.toString() === fixedValue) {
@@ -60,54 +51,27 @@ export default class Input extends Element {
       }
     }
 
-    this._clearChangeTimeout();
-    this.setState({ value });
+    this.setValue(value);
 
-    const { originalProps, onChange } = this.props;
-
-    onChange(value, this);
-
-    if (typeof originalProps.onChange === 'function') {
-      originalProps.onChange(evn);
+    const { onChange } = this.props;
+    if (typeof onChange === 'function') {
+      onChange(evn);
     }
-  }
-
-  componentWillReceiveProps(newProps) {
-    const isDiff = this.state.value !== newProps.value;
-    if (!isDiff) {
-      return;
-    }
-
-    // wait for it
-    this._clearChangeTimeout();
-    this.timeoutId = setTimeout(() => {
-      this.timeoutId = null;
-      if (this.state.value === this.props.value) {
-        return;
-      }
-
-      this.setState({
-        value: fixUncontrolledValue(this.props.value),
-      });
-    }, DIFF_TIMEOUT);
-  }
-
-  componentWillUnmount() {
-    this._clearChangeTimeout();
   }
 
   render() {
-    const { type, originalProps, value, originalValue, path } = this.props;
+    const { value } = this.state;
+    const { type, path } = this.props;
     const checked = (type === 'checkbox' && value)
-      || (type === 'radio' && value === originalValue);
+      || (type === 'radio' && value === this.getOriginalValue());
 
     return (
       <input
-        {...originalProps}
+        {...this.props}
         name={path}
-        onChange={this.handleChange}
+        onChange={this.onChange}
         checked={checked || void 0}
-        value={this.state.value}
+        value={value}
       />
     );
   }

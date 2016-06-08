@@ -6,7 +6,7 @@ const jsdom = require('jsdom');
 function renderComponent(react, props) {
   global.document = jsdom.jsdom('<!DOCTYPE html><html><body></body></html>');
   global.window = document.defaultView;
-  global.navigator = {userAgent: 'node.js'};
+  global.navigator = { userAgent: 'node.js' };
 
   const rendered = TestUtils.renderIntoDocument(React.createElement(react, props));
 

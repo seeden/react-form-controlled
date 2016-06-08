@@ -2,6 +2,10 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 
 export default class ErrorAlert extends Element {
+  static contextTypes = {
+    ...Element.contextTypes,
+  };
+
   static isElement = Element.isElement;
 
   static propTypes = {
@@ -34,10 +38,9 @@ export default class ErrorAlert extends Element {
   }
 
   render() {
-    const { path, form, className, exactMatch } = this.props;
-    if (!path || !form) {
-      return null;
-    }
+    const { className, exactMatch } = this.props;
+    const path = this.getPath();
+    const form = this.getForm();
 
     const errors = form.getErrors(path, exactMatch);
     if (!errors || !errors.length) {

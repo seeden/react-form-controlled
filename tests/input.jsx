@@ -233,8 +233,6 @@ describe('Fieldset', () => {
       value: '222',
       getAttribute: (name) => ele.getAttribute(name)
     }});
-
-    ele.value.should.equal('222');
   });
 
   it('should be able to create object as html fieldset', (done) => {
@@ -467,7 +465,7 @@ describe('Fieldset', () => {
     };
 
     function onChange(state, component) {
-      component.props.path.should.equal('data.0.inputValue');
+      component.getPath().should.equal('data.0.inputValue');
       done();
     }
 
@@ -522,7 +520,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input name="." />
+          <Input name="" />
           <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
@@ -545,7 +543,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input name="." />
+          <Input name="" />
           <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
@@ -590,11 +588,14 @@ describe('Fieldset', () => {
         <fieldset name="data">
           <fieldset name="options">
             <textarea name="."/>
-            <input type="radio" name=".selected" />
+            <input type="radio" name="..selected" />
           </fieldset>
         </fieldset>
       </Form>
     );
+
+    const eleTextarea = findDOMNode(node).querySelector('textarea');
+    eleTextarea.value.should.equal('1');
 
     const ele = findDOMNode(node).querySelector('input');
     ele.value.should.equal('2');
@@ -615,7 +616,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input type="radio" name=".test" valueIndex/>
+          <Input type="radio" name="..test" valueIndex/>
         </Fieldset>
       </Form>
     );
@@ -648,6 +649,8 @@ describe('Fieldset', () => {
     TestUtils.Simulate.click(ele);
   });
 
+
+
   it('should be able to use if', () => {
     const value = {
       data: [{
@@ -664,8 +667,8 @@ describe('Fieldset', () => {
       <Form value={value}>
         <fieldset name="data">
           <fieldset name="options">
-            <If name=".selected" cond={(value) => checkValue(value)}>
-              <textarea name=".selected" />
+            <If name="..selected" cond={(value) => checkValue(value)}>
+              <textarea name="..selected" />
             </If>
           </fieldset>
         </fieldset>
@@ -685,6 +688,9 @@ describe('Fieldset', () => {
     };
 
     function checkValue(value) {
+      if (value !== false) {
+        throw new Error('value must be false');
+      }
       return value === true;
     }
 
@@ -692,8 +698,8 @@ describe('Fieldset', () => {
       <Form value={value}>
         <fieldset name="data">
           <fieldset name="options">
-            <If name=".selected" cond={(value) => checkValue(value)}>
-              <textarea name=".selected" />
+            <If name="..selected" cond={(value) => checkValue(value)}>
+              <textarea name="..selected" />
             </If>
           </fieldset>
         </fieldset>
@@ -759,7 +765,7 @@ describe('Integrate', () => {
           <tbody name="rows">
             <tr>
               <td>
-                <Integrate name="." value="value" onChange="onChange">
+                <Integrate name=".">
                   <input placeholder="1122"/>
                 </Integrate>
               </td>

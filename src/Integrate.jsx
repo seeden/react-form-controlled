@@ -1,41 +1,40 @@
-import React, { PropTypes, cloneElement } from 'react';
+import { PropTypes, cloneElement } from 'react';
 import Element from './Element';
 
 export default class Integrate extends Element {
+  static contextTypes = {
+    ...Element.contextTypes,
+  };
+
   static isElement = Element.isElement;
 
   static propTypes = {
     ...Element.propTypes,
     children: PropTypes.node,
-    // todo remove originalProps and add new props as additional variable
-    /*
     onChange: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.bool,
     ]),
-    value: PropTypes.string,*/
+    value: PropTypes.string,
   };
 
   static defaultProps = {
-    onChange: true,
+    onChange: 'onChange',
+    value: 'value',
   };
 
   render() {
-    const { children, originalProps = {}, onChange, value } = this.props;
-    const { onChange: onChangeOriginal, value: originalValue } = originalProps;
+    const { children, onChange, value, name } = this.props;
+    const newProps = {
+      name,
+    };
 
-    const newProps = {};
-
-    if (onChangeOriginal !== false) {
-      const onChangePropName = onChangeOriginal === 'string'
-        ? onChangeOriginal
-        : 'onChange';
-
-      newProps[onChangePropName] = (newValue) => onChange(newValue, this);
+    if (typeof onChange === 'string') {
+      newProps[onChange] = this.setValue;
     }
 
-    if (originalValue) {
-      newProps[originalValue] = value;
+    if (value) {
+      newProps[value] = this.getValue();
     }
 
     return cloneElement(children, newProps);

@@ -2,10 +2,15 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 import isPlainObject from 'lodash/isPlainObject';
 import isArray from 'lodash/isArray';
+import { autobind } from 'core-decorators';
 
 const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
 export default class Select extends Element {
+  static contextTypes = {
+    ...Element.contextTypes,
+  };
+
   static isElement = Element.isElement;
 
   static propTypes = {
@@ -18,7 +23,6 @@ export default class Select extends Element {
     super(props, context);
 
     this.state = this.prepareState(props);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -27,7 +31,8 @@ export default class Select extends Element {
 
   prepareState(props) {
     const selectOptions = [];
-    const { options, value, placeholder } = props;
+    const value = this.getValue();
+    const { options, placeholder } = props;
 
     if (isPlainObject(options)) {
       Object.keys(options).forEach((key) => {
@@ -68,7 +73,8 @@ export default class Select extends Element {
     };
   }
 
-  handleChange(evn) {
+  @autobind
+  onChange(evn) {
     evn.stopPropagation();
 
     const nodes = evn.target.options || [];
@@ -96,18 +102,17 @@ export default class Select extends Element {
     }
 
     const isMultiple = this.isMultiple();
-    const { originalProps, onChange } = this.props;
 
-    onChange(isMultiple ? values : values[0], this);
+    this.setValue(isMultiple ? values : values[0]);
 
-    if (typeof originalProps.onChange === 'function') {
-      originalProps.onChange(evn);
+    const { onChange } = this.props;
+    if (typeof onChange === 'function') {
+      onChange(evn);
     }
   }
 
   renderPlaceholder() {
     const { placeholder } = this.props;
-
     if (typeof placeholder === 'undefined') {
       return null;
     }
@@ -133,7 +138,7 @@ export default class Select extends Element {
         disabled={disabled}
         required={required}
         multiple={this.isMultiple()}
-        onChange={this.handleChange}
+        onChange={this.onChange}
       >
         {this.renderPlaceholder()}
 

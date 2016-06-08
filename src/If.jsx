@@ -2,7 +2,11 @@ import { PropTypes, Children } from 'react';
 import Element from './Element';
 
 export default class If extends Element {
-  static isElement = Element.isElement;
+  static contextTypes = {
+    ...Element.contextTypes,
+  };
+
+  static isElement = false; // need to process children
 
   static propTypes = {
     ...Element.propTypes,
@@ -16,7 +20,8 @@ export default class If extends Element {
   };
 
   render() {
-    const { cond, value, children } = this.props;
+    const value = this.getValue();
+    const { cond, children } = this.props;
     if (typeof cond !== 'function' || !children) {
       return null;
     }

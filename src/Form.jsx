@@ -1,7 +1,11 @@
-import React, { PropTypes, createElement } from 'react';
+import { PropTypes, createElement } from 'react';
 import Ajv from 'ajv';
 import Fieldset from './Fieldset';
 import filter from 'lodash/filter';
+
+function isEmpty(value) {
+  return typeof value === 'undefined' || value === null || value === '';
+}
 
 const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
@@ -17,6 +21,14 @@ function errorToProperty(err) {
 export default class Form extends Fieldset {
   static isElement = Fieldset.isElement;
   static isForm = true;
+
+  static childContextTypes = {
+    ...Fieldset.childContextTypes,
+  };
+
+  static contextTypes = {
+    parent: PropTypes.object,
+  };
 
   static propTypes = {
     onChange: PropTypes.func.isRequired,
@@ -43,8 +55,8 @@ export default class Form extends Fieldset {
     this.onSubmit = ::this.onSubmit;
   }
 
-  getFormProps() {
-    return this.props;
+  getForm() {
+    return this;
   }
 
   validate(value, callback) {
@@ -121,10 +133,18 @@ export default class Form extends Fieldset {
     });
   }
 
+  getCurrentValue() {
+    return this.props.value;
+  }
+
   setValue(path, value, component) {
     this.clearErrors();
 
     super.setValue(path, value, component);
+  }
+
+  getPath() {
+    return void 0;
   }
 
   setErrors(errors = []) {
@@ -138,6 +158,19 @@ export default class Form extends Fieldset {
   clearErrors() {
     this.setErrors([]);
   }
+/*
+  childChanged(component = this) {
+    const parent = this.getParent();
+    if (parent !== this) {
+      parent.childChanged(component);
+      return;
+    }
+
+    const { onChange } = this.props;
+    if (onChange) {
+      onChange(value, component);
+    }
+  }*/
 
   render() {
     const children = this.registerChildren(this.props.children);

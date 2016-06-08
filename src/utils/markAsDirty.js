@@ -7,7 +7,7 @@ function dirty(value) {
   }
 
   if (isPlainObject(value)) {
-    return {...value};
+    return { ...value };
   }
 
   return value;

@@ -1,5 +1,6 @@
 import Input from './Input';
 import { remove as removeDiacritics } from 'diacritics';
+import { autobind } from 'core-decorators';
 
 function fixValue(value) {
   if (!value) {
@@ -19,20 +20,25 @@ function fixValue(value) {
 }
 
 export default class Word extends Input {
+  static contextTypes = {
+    ...Input.contextTypes,
+  };
+
   static isElement = Input.isElement;
 
   static propTypes = {
     ...Input.propTypes,
   };
 
-  handleChange(evn) {
-    const target = evn.target || {};
+  @autobind
+  onChange(evn) {
+    const { target } = evn;
 
     const fixedValue = fixValue(target.value);
     if (fixedValue !== target.value) {
       target.value = fixedValue;
     }
 
-    super.handleChange(evn);
+    super.onChange(evn);
   }
 }

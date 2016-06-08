@@ -1,5 +1,4 @@
 import { cloneElement } from 'react';
-import forOwn from 'lodash/forOwn';
 
 export default function extendChild(child, parent) {
   const { index } = parent.props;
@@ -18,25 +17,23 @@ export default function extendChild(child, parent) {
 
     changed = true;
 
-    forOwn(child.props, (fn, key) => {
-      if (typeof fn !== 'function') {
-        return;
-      }
+    if (provideIndex) {
+      const key = typeof provideIndex === 'string' ? provideIndex : 'onClick';
+      const fn = newProps[key] || child.props[key];
+      newProps[key] = (...args) => fn(index, ...args);
+    }
 
-      if (provideIndex) {
-        newProps[key] = (...args) => fn(index, ...args);
-      }
+    if (providePath) {
+      const key = typeof providePath === 'string' ? providePath : 'onClick';
+      const fn = newProps[key] || child.props[key];
+      newProps[key] = (...args) => fn(parent.getPath(), ...args);
+    }
 
-      if (providePath) {
-        const currentFn = child.props[key];
-        newProps[key] = (...args) => currentFn(parent.props.path, ...args);
-      }
-
-      if (provideIndexes) {
-        const currentFn = child.props[key];
-        newProps[key] = (...args) => currentFn(parent.props.indexes, ...args);
-      }
-    });
+    if (provideIndexes) {
+      const key = typeof provideIndexes === 'string' ? provideIndexes : 'onClick';
+      const fn = newProps[key] || child.props[key];
+      newProps[key] = (...args) => fn(parent.getIndexes(), ...args);
+    }
   }
 
   const onClickBefore = newProps.onClick || onClick;

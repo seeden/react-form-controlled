@@ -2,6 +2,10 @@ import React, { PropTypes } from 'react';
 import Input from './Input';
 
 export default class Textarea extends Input {
+  static contextTypes = {
+    ...Input.contextTypes,
+  };
+
   static isElement = Input.isElement;
 
   static propTypes = {
@@ -11,14 +15,15 @@ export default class Textarea extends Input {
   };
 
   render() {
-    const { originalProps, path } = this.props;
+    const { path } = this.props;
 
     return (
       <textarea
-        {...originalProps}
+        {...this.props}
         name={path}
-        onChange={this.handleChange}
-        value={this.state.value} />
+        onChange={this.onChange}
+        value={this.state.value}
+      />
     );
   }
 }
