@@ -54,7 +54,7 @@ export default class Fieldset extends Element {
     const { props } = this;
 
     if (!this.smartUpdate) {
-      return false;
+      return true;
     }
 
     const value = this.getValue();
