@@ -20,7 +20,11 @@ export default class FieldsetIndex extends Element {
     const newFormat = nextProps.format;
     const newIndex = nextProps.parent.props.index;
 
-    if (oldFormat(oldIndex) !== newFormat(newIndex)) {
+    if (!!oldFormat !== !!newFormat) {
+      return true;
+    }
+
+    if (oldFormat && newFormat && oldFormat(oldIndex) !== newFormat(newIndex)) {
       return true;
     }
 
