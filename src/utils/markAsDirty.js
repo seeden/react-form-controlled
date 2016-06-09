@@ -1,7 +1,12 @@
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
 
-function dirty(value) {
+export function normalizePath(originalPath) {
+  const path = String(originalPath);
+  return path.replace(/\[/g, '.').replace(/\]/g, '');
+}
+
+export function dirty(value) {
   if (isArray(value)) {
     return [...value];
   }
@@ -13,8 +18,9 @@ function dirty(value) {
   return value;
 }
 
-export default function markAsDirty(value, path, updateCallback) {
+export default function markAsDirty(value, originalPath, updateCallback) {
   const start = dirty(value);
+  const path = normalizePath(originalPath);
   const parts = path.split('.');
 
   let current = start;

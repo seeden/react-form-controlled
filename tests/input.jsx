@@ -431,6 +431,28 @@ describe('Fieldset', () => {
     inputs[0].value.should.equal('333');
   });
 
+  it('should be able to simplify array object with complex array', () => {
+    const value = {
+      data: [[1, 2, 3], [4, 5 ,6]],
+    };
+
+    const node = renderJSX(
+      <Form value={value}>
+        <fieldset name="data">
+          <Input name="." />
+        </fieldset>
+      </Form>
+    );
+
+    findDOMNode(node).nodeName.should.equal('FORM');
+
+    const inputs = findDOMNode(node).querySelectorAll('input');
+    inputs[0].value.should.equal('1');
+    inputs[1].value.should.equal('2');
+    inputs[2].value.should.equal('3');
+    inputs[3].value.should.equal('4');
+  });
+
   it('should be able to simplify array object with index', () => {
     const value = {
       data: [{
@@ -498,7 +520,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input name="" />
+          <Input name="." />
         </Fieldset>
       </Form>
     );
@@ -520,7 +542,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input name="" />
+          <Input name="." />
           <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
@@ -543,7 +565,7 @@ describe('Fieldset', () => {
     const node = renderJSX(
       <Form value={value}>
         <Fieldset name="data">
-          <Input name="" />
+          <Input name="." />
           <button onClick={onClick} provideIndex/>
         </Fieldset>
       </Form>
@@ -648,8 +670,6 @@ describe('Fieldset', () => {
     const ele = findDOMNode(node).querySelector('button');
     TestUtils.Simulate.click(ele);
   });
-
-
 
   it('should be able to use if', () => {
     const value = {

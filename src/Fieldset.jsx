@@ -1,7 +1,7 @@
-import React, { PropTypes, createElement } from 'react';
+import React, { PropTypes, createElement, cloneElement } from 'react';
 import Element from './Element';
 import isArray from 'lodash/isArray';
-import set from 'lodash/set';
+import set from './utils/set';
 import get from 'lodash/get';
 import traverse from './utils/traverse';
 import Input from './Input';
@@ -15,14 +15,6 @@ function isEmpty(value) {
 
 export default class Fieldset extends Element {
   static isElement = Element.isElement;
-
-  static childContextTypes = {
-    parent: PropTypes.object.isRequired,
-  };
-
-  static contextTypes = {
-    parent: PropTypes.object.isRequired,
-  };
 
   static propTypes = {
     ...Element.propTypes,
@@ -38,50 +30,12 @@ export default class Fieldset extends Element {
     tagName: 'fieldset',
   };
 
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {};
-  }
-
-  getChildContext() {
-    return {
-      parent: this,
-    };
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
-    const { props } = this;
-
     if (!this.smartUpdate) {
       return true;
     }
 
-    const value = this.getValue();
-    if (value !== nextState.value) {
-      return true;
-    }
-
-    if (props.name !== nextProps.name) {
-      return true;
-    } else if (props.className !== nextProps.className) {
-      return true;
-    } else if (props.map !== nextProps.map) {
-      return true;
-    } else if (props.index !== nextProps.index) {
-      return true;
-    }
-
-    return false;
-/*
-    return (!this.smartUpdate
-      || props.errors !== nextProps.errors
-      || state.errors !== nextState.errors
-      || props.name !== nextProps.name
-      || props.className !== nextProps.className
-      || props.value !== nextProps.value
-      || props.map !== nextProps.map
-      || props.index !== nextProps.index);*/
+    return super.shouldComponentUpdate(nextProps, nextState);
   }
 
   remove(index) {
@@ -149,7 +103,6 @@ export default class Fieldset extends Element {
 
   // return current or parent fieldset
   resolveByPath(path, callback) {
-    // return parent
     if (path && path[0] === '.') {
       const parent = this.getParent();
       const subPath = path.substr(1);
@@ -159,44 +112,9 @@ export default class Fieldset extends Element {
       }
 
       return parent.resolveByPath(subPath, callback);
-      /*
-      const { index } = this.props;
-      if (!parent) {
-        return callback(new Error('Parent is undefined'));
-      }
-
-      const isIndex = typeof index !== 'undefined';
-      const realParent = isIndex ? parent.props.parent : parent;
-
-      let subPath = path.substr(1);
-      if (isEmpty(subPath)) {
-        subPath = `${parent.props.name}.${index}`;
-      }
-
-      if (!realParent) {
-        return callback(new Error('Parent is undefined'));
-      }
-
-      return realParent.resolveByPath(subPath, callback);*/
     }
 
     return callback(null, this, path);
-  }
-
-  getCurrentValue() {
-    const parent = this.getParent();
-    const { name } = this.props;
-
-    const value = parent.getCurrentValue();
-    if (!value) {
-      return void 0;
-    }
-
-    if (isEmpty(name)) {
-      return value;
-    }
-
-    return get(value, name);
   }
 
   isIndex() {
@@ -205,23 +123,17 @@ export default class Fieldset extends Element {
     return typeof index !== 'undefined';
   }
 
-  getValue(path) {
-/*
-    if (path === '.') {
-      return this.getValue('');
-    }*/
-/*
-    if (path && path[0] === '.') {
-      const parent = this.getParent();
-      return parent.getValue(path);
-    }*/
+  getChildValue(path) {
+    if (isEmpty(path)) {
+      throw new Error('Path is not defined');
+    }
 
     return this.resolveByPath(path, (err, current, subPath) => {
       if (err) {
         throw err;
       }
 
-      const value = current.getCurrentValue();
+      const value = current.getValue();
       if (isEmpty(subPath)) {
         return value;
       }
@@ -231,24 +143,6 @@ export default class Fieldset extends Element {
   }
 
   setValue(path, value, component) {
-  /*  if (path === '.') {
-      if (this.isIndex()) {
-        const parent = this.getParent();
-        parent.setValue(this.props.index, value, component);
-        return;
-      }
-
-      this.setValue(void 0, value, component);
-      return;
-    }*/
-/*
-    if (path && path[0] === '.' && this.isIndex()) {
-      const parent = this.getParent();
-      parent.setValue(path, value, component);
-      return;
-    }*/
-
-
     if (path && path[0] === '.') {
       this.resolveByPath(path, (err, current, subPath) => {
         if (err) {
@@ -261,11 +155,10 @@ export default class Fieldset extends Element {
     }
 
     let newValue = value;
-    const currentValue = this.getValue();
 
     if (!isEmpty(path)) {
-      newValue = isArray(currentValue) ? [...currentValue] : { ...currentValue };
-      set(newValue, path, value);
+      const currentValue = this.getValue();
+      newValue = set(currentValue, path, value);
     }
 
     super.setValue(newValue, component);
@@ -312,7 +205,7 @@ export default class Fieldset extends Element {
     const { map } = this.props;
     const value = this.getValue();
 
-    if (topLevel && map && isArray(value)) {
+    if (topLevel && map !== false && isArray(value)) {
       const { tagName, childTagName } = this.props;
       const childTag = tagName === 'tbody' ? 'tr' : childTagName;
 
@@ -321,14 +214,20 @@ export default class Fieldset extends Element {
         : children;
 
       // removed this.registerChildren(
-      return value.map((val, itemIndex) => (
-        <Fieldset name={itemIndex} index={itemIndex} tagName={childTag} key={itemIndex}>
+      return value.map((fieldsetValue, itemIndex) => (
+        <Fieldset
+          parent={this}
+          value={fieldsetValue}
+          name={itemIndex}
+          index={itemIndex}
+          tagName={childTag}
+          key={itemIndex}
+        >
           {subChildren}
         </Fieldset>
       ));
     }
 
-    // let indexes = this.props.indexes || [];
 
     return traverse(children, (child) => {
       // support for extend
@@ -360,8 +259,15 @@ export default class Fieldset extends Element {
       }*/
 
       if (child.type && child.type.isElement) {
-        this.disableSmartUpdate(child.props.name);
-        return child;
+        const { name, value: originalValue } = child.props;
+
+        this.disableSmartUpdate(name);
+
+        return cloneElement(child, {
+          parent: this,
+          originalValue,
+          value: this.getChildValue(name),
+        });
       }
 
       return void 0;

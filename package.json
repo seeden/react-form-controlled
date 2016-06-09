@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.16.5",
+  "version": "0.16.6",
   "description": "React controlled form components. The main idea is to make forms as simple as possible.",
   "author": {
     "name": "Zlatko Fedor",
@@ -37,7 +37,8 @@
   "dependencies": {
     "diacritics": "^1.2.3",
     "ajv": "~4.1.2",
-    "lodash": "^4.13.1"
+    "lodash": "^4.13.1",
+    "react-addons-shallow-compare": "^15.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -45,6 +46,7 @@
     "babel-eslint": "^6.0.4",
     "babel-plugin-transform-class-properties": "^6.9.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-proto-to-assign": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",

@@ -1,4 +1,6 @@
 import { Component, PropTypes } from 'react';
+import shallowCompare from 'react-addons-shallow-compare';
+
 const DIFF_TIMEOUT = 100;
 
 export default class Element extends Component {
@@ -10,13 +12,9 @@ export default class Element extends Component {
     className: PropTypes.string,
     style: PropTypes.object,
     valueIndex: PropTypes.bool,
-  };
-
-  static contextTypes = {
-    parent: PropTypes.object.isRequired,
-  };
-
-  static defaultProps = {
+    children: PropTypes.node,
+    value: PropTypes.any,
+    parent: PropTypes.object,
   };
 
   static isElement = true;
@@ -25,15 +23,18 @@ export default class Element extends Component {
     super(props, context);
 
     this.state = {
-      value: this.getValue(),
+      value: props.value,
     };
   }
-/*
-  componentWillReceiveProps() {
-    const newValue = this.getValue();
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState);
+  }
+
+  componentWillReceiveProps(props) {
     this.setState({
-      value: newValue,
-    });*/
+      value: props.value,
+    });
 /*
     this.clearTimeout();
     this.timeoutId = setTimeout(() => {
@@ -47,31 +48,30 @@ export default class Element extends Component {
         value: newValue,
       });
     }, DIFF_TIMEOUT);*/
-//  }
+  }
+  
 /*
   componentWillUnmount() {
     this.clearTimeout();
   }*/
 
   getParent() {
-    return this.context.parent;
+    return this.props.parent;
   }
 
   getValue() {
-    const parent = this.getParent();
-
-    return parent.getValue(this.props.name);
+    return this.state.value;
   }
 
   getOriginalValue() {
     const parent = this.getParent();
-    const { value, valueIndex } = this.props;
+    const { originalValue, valueIndex } = this.props;
 
     if (valueIndex) {
       return parent.props.index;
     }
 
-    return value;
+    return originalValue;
   }
 
   setValue(value, component = this) {

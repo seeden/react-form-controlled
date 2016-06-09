@@ -7,12 +7,6 @@ function fixUncontrolledValue(value) {
 }
 
 export default class Input extends Element {
-  static contextTypes = {
-    ...Element.contextTypes,
-  };
-
-  static isElement = Element.isElement;
-
   static propTypes = {
     ...Element.propTypes,
     autoComplete: PropTypes.string.isRequired,
@@ -60,7 +54,7 @@ export default class Input extends Element {
   }
 
   render() {
-    const { value } = this.state;
+    const value = this.getValue();
     const { type, path } = this.props;
     const checked = (type === 'checkbox' && value)
       || (type === 'radio' && value === this.getOriginalValue());

@@ -6,22 +6,15 @@ export default class If extends Element {
     ...Element.contextTypes,
   };
 
-  static isElement = false; // need to process children
-
   static propTypes = {
     ...Element.propTypes,
     cond: PropTypes.func.isRequired,
     children: PropTypes.node,
-    childTransform: PropTypes.bool.isRequired,
-  };
-
-  static defaultProps = {
-    childTransform: true,
   };
 
   render() {
-    const value = this.getValue();
-    const { cond, children } = this.props;
+    const { value } = this.state;
+    const { cond, children, parent } = this.props;
     if (typeof cond !== 'function' || !children) {
       return null;
     }
@@ -31,6 +24,6 @@ export default class If extends Element {
       return null;
     }
 
-    return Children.only(children);
+    return Children.only(parent.registerChildren(children));
   }
 }

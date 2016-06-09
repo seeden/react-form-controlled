@@ -2,12 +2,6 @@ import { PropTypes, cloneElement } from 'react';
 import Element from './Element';
 
 export default class Integrate extends Element {
-  static contextTypes = {
-    ...Element.contextTypes,
-  };
-
-  static isElement = Element.isElement;
-
   static propTypes = {
     ...Element.propTypes,
     children: PropTypes.node,
@@ -24,7 +18,7 @@ export default class Integrate extends Element {
   };
 
   render() {
-    const { children, onChange, value, name } = this.props;
+    const { children, onChange, originalValue, name } = this.props;
     const newProps = {
       name,
     };
@@ -33,8 +27,8 @@ export default class Integrate extends Element {
       newProps[onChange] = this.setValue;
     }
 
-    if (value) {
-      newProps[value] = this.getValue();
+    if (originalValue) {
+      newProps[originalValue] = this.getValue();
     }
 
     return cloneElement(children, newProps);
