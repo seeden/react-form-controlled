@@ -1,7 +1,7 @@
 import { cloneElement } from 'react';
 
 export default function extendChild(child, parent) {
-  if (!parent.isIndex()) {
+  if (!parent.isIndex() || !child.props) {
     return child;
   }
 
