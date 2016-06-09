@@ -27,14 +27,6 @@ export default class Element extends Component {
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { props, state } = this;
-
-    const isSame = shallowCompare(props, nextProps, ['value']) && shallowCompare(state, nextState);
-
-    return !isSame;
-  }
-
   componentWillReceiveProps(props) {
     this.setState({
       value: props.value,
@@ -52,6 +44,20 @@ export default class Element extends Component {
         value: newValue,
       });
     }, DIFF_TIMEOUT);*/
+  }
+
+  shouldComponentUpdate(nextProps, nextState, ignore = []) {
+    const { props, state } = this;
+
+    if (!shallowCompare(props, nextProps, ['value', ...ignore])) {
+      return true;
+    }
+
+    if (shallowCompare(state, nextState, ignore)) {
+      return true;
+    }
+
+    return false;
   }
 
 /*

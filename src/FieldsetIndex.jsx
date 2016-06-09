@@ -28,7 +28,7 @@ export default class FieldsetIndex extends Element {
       return true;
     }
 
-    return super.shouldComponentUpdate(nextProps, nextState);
+    return super.shouldComponentUpdate(nextProps, nextState, ['format']);
   }
 
   render() {
