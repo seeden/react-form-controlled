@@ -46,14 +46,14 @@ export default class Element extends Component {
     }, DIFF_TIMEOUT);*/
   }
 
-  shouldComponentUpdate(nextProps, nextState, ignore = []) {
+  shouldComponentUpdate(nextProps, nextState, nextContext, ignore = []) {
     const { props, state } = this;
 
     if (!shallowCompare(props, nextProps, ['value', ...ignore])) {
       return true;
     }
 
-    if (shallowCompare(state, nextState, ignore)) {
+    if (!shallowCompare(state, nextState, ignore)) {
       return true;
     }
 

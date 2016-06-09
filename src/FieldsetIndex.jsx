@@ -11,7 +11,7 @@ export default class FieldsetIndex extends Element {
     name: '.',
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
     const { props } = this;
 
     const oldFormat = props.format;
@@ -28,7 +28,7 @@ export default class FieldsetIndex extends Element {
       return true;
     }
 
-    return super.shouldComponentUpdate(nextProps, nextState, ['format']);
+    return super.shouldComponentUpdate(nextProps, nextState, nextContext, ['format']);
   }
 
   render() {

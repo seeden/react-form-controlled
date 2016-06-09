@@ -39,7 +39,7 @@ export default function shallowEqual(objA, objB, ignore = []) {
   // Test for A's keys different from B.
   for (let i = 0; i < keysA.length; i++) {
     const propName = keysA[i];
-    if (ignore.indexOf(propName) !== -1 || typeof objA[propName] === 'function') {
+    if (ignore.indexOf(propName) !== -1) {
       continue;
     }
 
