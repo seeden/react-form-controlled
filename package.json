@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.16.7",
+  "version": "0.16.8",
   "description": "React controlled form components. The main idea is to make forms as simple as possible.",
   "author": {
     "name": "Zlatko Fedor",

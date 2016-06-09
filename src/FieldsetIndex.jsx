@@ -2,12 +2,6 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 
 export default class FieldsetIndex extends Element {
-  static contextTypes = {
-    ...Element.contextTypes,
-  };
-
-  static isElement = Element.isElement;
-
   static propTypes = {
     ...Element.propTypes,
     format: PropTypes.func,
@@ -16,6 +10,22 @@ export default class FieldsetIndex extends Element {
   static defaultProps = {
     name: '.',
   };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { props } = this;
+
+    const oldFormat = props.format;
+    const oldIndex = props.parent.props.index;
+
+    const newFormat = nextProps.format;
+    const newIndex = nextProps.parent.props.index;
+
+    if (oldFormat(oldIndex) !== newFormat(newIndex)) {
+      return true;
+    }
+
+    return super.shouldComponentUpdate(nextProps, nextState);
+  }
 
   render() {
     const parent = this.getParent();

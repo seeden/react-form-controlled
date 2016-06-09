@@ -32,7 +32,7 @@ export default class Input extends Element {
     if (target.type === 'checkbox') {
       value = !!target.checked;
     } else if (target.type === 'radio' && target.checked) {
-      value = this.getOriginalValue();
+      value = this.props.originalValue;
     } else if (target.type === 'number') {
       const fixedValue = value
         .replace(',', '.')
@@ -55,9 +55,9 @@ export default class Input extends Element {
 
   render() {
     const value = this.getValue();
-    const { type, path } = this.props;
+    const { type, path, originalValue } = this.props;
     const checked = (type === 'checkbox' && value)
-      || (type === 'radio' && value === this.getOriginalValue());
+      || (type === 'radio' && value === originalValue);
 
     return (
       <input

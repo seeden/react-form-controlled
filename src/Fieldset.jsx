@@ -259,13 +259,13 @@ export default class Fieldset extends Element {
       }*/
 
       if (child.type && child.type.isElement) {
-        const { name, value: originalValue } = child.props;
+        const { name, value: childValue, valueIndex } = child.props;
 
         this.disableSmartUpdate(name);
 
         return cloneElement(child, {
           parent: this,
-          originalValue,
+          originalValue: valueIndex ? this.props.index : childValue,
           value: this.getChildValue(name),
         });
       }

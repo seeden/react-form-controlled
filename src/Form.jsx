@@ -19,16 +19,7 @@ function errorToProperty(err) {
 }
 
 export default class Form extends Fieldset {
-  static isElement = Fieldset.isElement;
   static isForm = true;
-
-  static childContextTypes = {
-    ...Fieldset.childContextTypes,
-  };
-
-  static contextTypes = {
-    parent: PropTypes.object,
-  };
 
   static propTypes = {
     onChange: PropTypes.func.isRequired,

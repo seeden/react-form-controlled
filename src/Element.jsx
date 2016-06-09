@@ -67,17 +67,6 @@ export default class Element extends Component {
     return this.state.value;
   }
 
-  getOriginalValue() {
-    const parent = this.getParent();
-    const { originalValue, valueIndex } = this.props;
-
-    if (valueIndex) {
-      return parent.props.index;
-    }
-
-    return originalValue;
-  }
-
   setValue(value, component = this) {
     //this.clearTimeout();
     this.setState({ value });
