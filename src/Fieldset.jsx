@@ -185,7 +185,7 @@ export default class Fieldset extends Element {
   }
 
   disableSmartUpdate(name) {
-    if (!name || name[0] !== '.') {
+    if (!name || name[0] !== '.' || name === '.') {
       return;
     }
 

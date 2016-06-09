@@ -1,5 +1,5 @@
 import { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import shallowCompare from './utils/shallowCompare';
 
 const DIFF_TIMEOUT = 100;
 
@@ -28,7 +28,11 @@ export default class Element extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
+    const { props, state } = this;
+
+    const isSame = shallowCompare(props, nextProps, ['value']) && shallowCompare(state, nextState);
+
+    return !isSame;
   }
 
   componentWillReceiveProps(props) {
@@ -49,7 +53,7 @@ export default class Element extends Component {
       });
     }, DIFF_TIMEOUT);*/
   }
-  
+
 /*
   componentWillUnmount() {
     this.clearTimeout();
