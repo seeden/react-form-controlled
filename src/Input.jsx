@@ -2,8 +2,6 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 import { autobind } from 'core-decorators';
 
-const DEBOUNCE = 500;
-
 function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
 }
@@ -14,11 +12,13 @@ export default class Input extends Element {
     autoComplete: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
+    debaunce: PropTypes.number,
   };
 
   static defaultProps = {
     autoComplete: 'off',
     type: 'text',
+    debaunce: 500,
   };
 
   getValue() {
@@ -60,13 +60,17 @@ export default class Input extends Element {
     super.componentWillReceiveProps(props);
   }
 
-  clearTimeout() {
+  clearTimeout(sendValue) {
     if (!this.timeoutId) {
       return;
     }
 
     clearTimeout(this.timeoutId);
     this.timeoutId = null;
+
+    if (sendValue && this.props.value !== this.state.value) {
+      this.notifiyParent(this.state.value, this);
+    }
   }
 
   componentWillUnmount() {
@@ -74,7 +78,9 @@ export default class Input extends Element {
   }
 
   notifiyParent(value, component) {
-    if (!this.focused) {
+    const { type, debaunce } = this.props;
+
+    if (!this.focused || !debaunce || type === 'checkbox' || type === 'radio') {
       super.notifiyParent(value, component);
       return;
     }
@@ -83,7 +89,7 @@ export default class Input extends Element {
     this.timeoutId = setTimeout(() => {
       this.timeoutId = null;
       super.notifiyParent(value, component);
-    }, DEBOUNCE);
+    }, debaunce);
   }
 
   @autobind
@@ -102,10 +108,7 @@ export default class Input extends Element {
     const { onBlur } = this.props;
 
     this.focused = false;
-
-    if (this.props.value !== this.state.value) {
-      this.notifiyParent(this.state.value, this);
-    }
+    this.clearTimeout(true);
 
     if (onBlur) {
       onBlur(...args);
