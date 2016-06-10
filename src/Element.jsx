@@ -31,14 +31,14 @@ export default class Element extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState, nextContext, ignore = []) {
+  shouldComponentUpdate(nextProps, nextState, nextContext, ignoreProps = [], ignoreState = ignoreProps) {
     const { props, state } = this;
 
-    if (!shallowCompare(props, nextProps, ['value', ...ignore])) {
+    if (!shallowCompare(props, nextProps, ['value', ...ignoreProps])) {
       return true;
     }
 
-    if (!shallowCompare(state, nextState, ignore)) {
+    if (!shallowCompare(state, nextState, ignoreState)) {
       return true;
     }
 

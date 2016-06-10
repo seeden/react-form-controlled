@@ -29,6 +29,15 @@ export default class Select extends Element {
     this.setState(this.prepareState(newProps));
   }
 
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return super.shouldComponentUpdate(
+      nextProps,
+      nextState,
+      nextContext,
+      [],
+      ['values', 'options']);
+  }
+
   prepareState(props) {
     const selectOptions = [];
     const { options, placeholder, value } = props;
