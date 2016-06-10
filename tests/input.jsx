@@ -21,6 +21,36 @@ describe('Form', () => {
   });
 });
 
+
+describe('Select', () => {
+  it('should be able to create select', (done) => {
+    const value = {
+      inputValue: 123,
+    };
+
+    function onChange(state) {
+      state.inputValue.should.equal(456);
+      done();
+    }
+
+    const node = renderJSX(
+      <Form value={value} onChange={onChange}>
+        <select name="inputValue" options={[123, 456]}/>
+      </Form>
+    );
+
+    findDOMNode(node).nodeName.should.equal('FORM');
+    const ele = findDOMNode(node).querySelector('select');
+
+    ele.selectedIndex = 1;
+
+    TestUtils.Simulate.change(ele, { target: {
+      options: ele.options,
+      getAttribute: (name) => ele.getAttribute(name)
+    }});
+  });
+});
+
 describe('Input', () => {
   it('should be able to create input', (done) => {
     const value = {

@@ -31,8 +31,7 @@ export default class Select extends Element {
 
   prepareState(props) {
     const selectOptions = [];
-    const value = this.getValue();
-    const { options, placeholder } = props;
+    const { options, placeholder, value } = props;
 
     if (isPlainObject(options)) {
       Object.keys(options).forEach((key) => {
