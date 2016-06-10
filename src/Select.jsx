@@ -68,6 +68,7 @@ export default class Select extends Element {
     }
 
     return {
+      value,
       options: selectOptions,
       values: isMultiple ? values : values[0],
     };
