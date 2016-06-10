@@ -128,10 +128,10 @@ export default class Form extends Fieldset {
     return this.props.value;
   }
 
-  setValue(path, value, component) {
+  setValue(value, component) {
     this.clearErrors();
 
-    super.setValue(path, value, component);
+    super.setValue(value, component);
   }
 
   getPath() {

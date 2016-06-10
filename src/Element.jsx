@@ -1,8 +1,6 @@
 import { Component, PropTypes } from 'react';
 import shallowCompare from './utils/shallowCompare';
 
-const DIFF_TIMEOUT = 100;
-
 export default class Element extends Component {
   static propTypes = {
     name: PropTypes.oneOfType([
@@ -31,19 +29,6 @@ export default class Element extends Component {
     this.setState({
       value: props.value,
     });
-/*
-    this.clearTimeout();
-    this.timeoutId = setTimeout(() => {
-      this.timeoutId = null;
-      const newValue = this.getValue();
-      if (this.state.value === newValue) {
-        return;
-      }
-
-      this.setState({
-        value: newValue,
-      });
-    }, DIFF_TIMEOUT);*/
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext, ignore = []) {
@@ -60,29 +45,12 @@ export default class Element extends Component {
     return false;
   }
 
-/*
-  componentWillUnmount() {
-    this.clearTimeout();
-  }*/
-
   getParent() {
     return this.props.parent;
   }
 
   getValue() {
     return this.state.value;
-  }
-
-  setValue(value, component = this) {
-    //this.clearTimeout();
-    this.setState({ value });
-
-    const parent = this.getParent();
-    if (!parent) {
-      return;
-    }
-
-    parent.setValue(this.props.name, value, component);
   }
 
   getPath() {
@@ -97,15 +65,21 @@ export default class Element extends Component {
     const parent = this.getParent();
     return parent.getForm();
   }
-/*
-  clearTimeout() {
-    if (!this.timeoutId) {
+
+  setValue(value, component = this) {
+    this.setState({ value });
+
+    this.notifiyParent(value, component);
+  }
+
+  notifiyParent(value, component) {
+    const parent = this.getParent();
+    if (!parent) {
       return;
     }
 
-    clearTimeout(this.timeoutId);
-    this.timeoutId = null;
-  }*/
+    parent.setChildValue(this.props.name, value, component);
+  }
 
   render() {
     return null;

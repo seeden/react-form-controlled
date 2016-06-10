@@ -50,6 +50,7 @@ describe('Input', () => {
     ele.value.should.equal('222');
   });
 
+
   it('should be able to create input with standard input', (done) => {
     const value = {
       inputValue: 123,

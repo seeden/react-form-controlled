@@ -22,6 +22,8 @@ export default class Textarea extends Input {
         {...this.props}
         name={path}
         onChange={this.onChange}
+        onFocus={this.onFocus}
+        onBlur={this.onBlur}
         value={this.state.value}
       />
     );

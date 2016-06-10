@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 import { autobind } from 'core-decorators';
 
+const DEBOUNCE = 500;
+
 function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
 }
@@ -53,6 +55,63 @@ export default class Input extends Element {
     }
   }
 
+  componentWillReceiveProps(props) {
+    this.clearTimeout();
+    super.componentWillReceiveProps(props);
+  }
+
+  clearTimeout() {
+    if (!this.timeoutId) {
+      return;
+    }
+
+    clearTimeout(this.timeoutId);
+    this.timeoutId = null;
+  }
+
+  componentWillUnmount() {
+    this.clearTimeout();
+  }
+
+  notifiyParent(value, component) {
+    if (!this.focused) {
+      super.notifiyParent(value, component);
+      return;
+    }
+
+    this.clearTimeout();
+    this.timeoutId = setTimeout(() => {
+      this.timeoutId = null;
+      super.notifiyParent(value, component);
+    }, DEBOUNCE);
+  }
+
+  @autobind
+  onFocus(...args) {
+    const { onFocus } = this.props;
+
+    this.focused = true;
+
+    if (onFocus) {
+      onFocus(...args);
+    }
+  }
+
+  @autobind
+  onBlur(...args) {
+    const { onBlur } = this.props;
+
+    this.focused = false;
+
+    if (this.props.value !== this.state.value) {
+      this.notifiyParent(this.state.value, this);
+    }
+
+    if (onBlur) {
+      onBlur(...args);
+    }
+  }
+
   render() {
     const value = this.getValue();
     const { type, path, originalValue } = this.props;
@@ -64,6 +123,8 @@ export default class Input extends Element {
         {...this.props}
         name={path}
         onChange={this.onChange}
+        onFocus={this.onFocus}
+        onBlur={this.onBlur}
         checked={checked || void 0}
         value={value}
       />

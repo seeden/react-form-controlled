@@ -53,7 +53,7 @@ export default class Fieldset extends Element {
       return false;
     }
 
-    this.setValue(void 0, [
+    this.setValue([
       ...value.slice(0, index),
       ...value.slice(index + 1),
     ]);
@@ -76,14 +76,12 @@ export default class Fieldset extends Element {
       return false;
     }
 
-    const newValue = [
+    this.setValue([
       ...value.slice(0, index - 1),
       value[index],
       value[index - 1],
       ...value.slice(index + 1),
-    ];
-
-    this.setValue(void 0, newValue);
+    ]);
 
     return true;
   }
@@ -142,31 +140,26 @@ export default class Fieldset extends Element {
     });
   }
 
-  setValue(path, value, component) {
-    if (path && path[0] === '.') {
-      this.resolveByPath(path, (err, current, subPath) => {
-        if (err) {
-          throw err;
-        }
+  setChildValue(path, value, component) {
+    this.resolveByPath(path, (err, current, subPath) => {
+      if (err) {
+        throw err;
+      }
 
-        current.setValue(subPath, value, component);
-      });
-      return;
-    }
+      let newValue = value;
+      if (!isEmpty(subPath)) {
+        const currentValue = current.getValue();
+        newValue = set(currentValue, subPath, value);
+      }
 
-    let newValue = value;
 
-    if (!isEmpty(path)) {
-      const currentValue = this.getValue();
-      newValue = set(currentValue, path, value);
-    }
+      current.setValue(newValue, component);
 
-    super.setValue(newValue, component);
-
-    const { onChange } = this.props;
-    if (onChange) {
-      onChange(newValue, component);
-    }
+      const { onChange } = current.props;
+      if (onChange) {
+        onChange(newValue, component);
+      }
+    });
   }
 
   buildPath(path) {
@@ -271,40 +264,6 @@ export default class Fieldset extends Element {
       }
 
       return void 0;
-/*
-      if (!isFunction(child.type) || !child.type.isElement) {
-        return void 0;
-      }
-/*
-      const { name, valueIndex, childTransform } = child.props;
-      const currentPath = this.buildPath(name);
-
-      this.disableSmartUpdate(name);
-
-      if (typeof child.props.index !== 'undefined') {
-        indexes = [...indexes, child.props.index];
-      }
-
-      if (child.type === Integrate || child.type === Input
-        || child.type === Textarea || child.type === Word) {
-        return child;
-      }
-
-      const newProps = {
-        originalProps: child.props,
-        value: this.getValue(name),
-        originalValue: valueIndex ? this.props.index : child.props.value,
-        form,
-        errors: form.errors,
-        parent: this,
-        path: currentPath,
-        indexes,
-        onChange: (newValue, component) => this.setValue(name, newValue, component),
-      };
-
-      return childTransform
-        ? cloneElement(child, newProps, this.registerChildren(child.props.children))
-        : cloneElement(child, newProps);*/
     }, (child) => {
       const updatedChild = extendChild(child, this);
       if (updatedChild !== child) {
