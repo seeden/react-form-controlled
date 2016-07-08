@@ -24,6 +24,7 @@ export default class Textarea extends Input {
         onChange={this.onChange}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
+        onKeyPress={this.onKeyPress}
         value={this.state.value}
       />
     );

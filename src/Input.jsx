@@ -26,6 +26,13 @@ export default class Input extends Element {
   }
 
   @autobind
+  onKeyPress(evn) {
+    if (evn.key === 'Enter') {
+      this.clearTimeout(true);
+    }
+  }
+
+  @autobind
   onChange(evn) {
     const { target } = evn;
 
@@ -128,6 +135,7 @@ export default class Input extends Element {
         onChange={this.onChange}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
+        onKeyPress={this.onKeyPress}
         checked={checked || void 0}
         value={value}
       />
