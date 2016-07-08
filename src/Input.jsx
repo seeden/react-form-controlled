@@ -68,15 +68,13 @@ export default class Input extends Element {
   }
 
   clearTimeout(sendValue) {
-    if (!this.timeoutId) {
-      return;
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
     }
 
-    clearTimeout(this.timeoutId);
-    this.timeoutId = null;
-
     if (sendValue && this.props.value !== this.state.value) {
-      this.notifiyParent(this.state.value, this);
+      this.notifiyParent(this.state.value, this, sendValue);
     }
   }
 
@@ -84,7 +82,7 @@ export default class Input extends Element {
     this.clearTimeout();
   }
 
-  notifiyParent(value, component) {
+  notifiyParent(value, component, force) {
     const { type, debaunce } = this.props;
 
     if (!this.focused || !debaunce || type === 'checkbox' || type === 'radio') {
@@ -93,6 +91,12 @@ export default class Input extends Element {
     }
 
     this.clearTimeout();
+
+    if (force) {
+      super.notifiyParent(value, component, force);
+      return;
+    }
+
     this.timeoutId = setTimeout(() => {
       this.timeoutId = null;
       super.notifiyParent(value, component);
