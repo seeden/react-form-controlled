@@ -132,9 +132,17 @@ export default class Input extends Element {
     const checked = (type === 'checkbox' && value)
       || (type === 'radio' && value === originalValue);
 
+    const inputProps = {
+      ...this.props,
+      debounce: void 0,
+      parent: void 0,
+      originalValue: void 0,
+      valueIndex: void 0,
+    };
+
     return (
       <input
-        {...this.props}
+        {...inputProps}
         name={path}
         onChange={this.onChange}
         onFocus={this.onFocus}
