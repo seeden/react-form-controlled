@@ -6,6 +6,19 @@ function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
 }
 
+function clearProps(props) {
+  const newProps = {
+    ...props,
+  };
+
+  delete newProps.debounce;
+  delete newProps.parent;
+  delete newProps.originalValue;
+  delete newProps.valueIndex;
+
+  return newProps;
+}
+
 export default class Input extends Element {
   static propTypes = {
     ...Element.propTypes,
@@ -132,13 +145,7 @@ export default class Input extends Element {
     const checked = (type === 'checkbox' && value)
       || (type === 'radio' && value === originalValue);
 
-    const inputProps = {
-      ...this.props,
-      debounce: void 0,
-      parent: void 0,
-      originalValue: void 0,
-      valueIndex: void 0,
-    };
+    const inputProps = clearProps(this.props);
 
     return (
       <input
