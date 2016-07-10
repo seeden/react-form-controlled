@@ -11,7 +11,7 @@ function clearProps(props) {
     ...props,
   };
 
-  delete newProps.debounce;
+  delete newProps.debaunce;
   delete newProps.parent;
   delete newProps.originalValue;
   delete newProps.valueIndex;
