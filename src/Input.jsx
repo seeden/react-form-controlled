@@ -139,6 +139,11 @@ export default class Input extends Element {
     }
   }
 
+  getClassName() {
+    const { className } = this.props;
+    return className;
+  }
+
   render() {
     const value = this.getValue();
     const { type, path, originalValue } = this.props;
@@ -150,6 +155,7 @@ export default class Input extends Element {
     return (
       <input
         {...inputProps}
+        className={this.getClassName()}
         name={path}
         onChange={this.onChange}
         onFocus={this.onFocus}
