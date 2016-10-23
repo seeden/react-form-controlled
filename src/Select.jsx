@@ -135,15 +135,20 @@ export default class Select extends Element {
     return !!this.props.multi || !!this.props.multiple;
   }
 
+  getClassName() {
+    const { className } = this.props;
+    return className;
+  }
+
   render() {
     const { options, values } = this.state;
-    const { path, className, disabled, required } = this.props;
+    const { path, disabled, required } = this.props;
 
     return (
       <select
         name={path}
         value={values}
-        className={className}
+        className={this.getClassName()}
         disabled={disabled}
         required={required}
         multiple={this.isMultiple()}
