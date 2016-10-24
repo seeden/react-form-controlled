@@ -163,6 +163,11 @@ export default class Form extends Fieldset {
     }
   }*/
 
+  getClassName() {
+    const { className } = this.props;
+    return className;
+  }
+
   render() {
     const children = this.registerChildren(this.props.children);
     const autoComplete = typeof this.props.autoComplete !== 'undefined'
@@ -176,11 +181,11 @@ export default class Form extends Fieldset {
         autoComplete,
         method: this.props.method,
         action: this.props.action,
-        className: this.props.className || element,
+        className: this.getClassName() || element,
         onSubmit: this.onSubmit,
       }
       : {
-        className: this.props.className || element,
+        className: this.getClassName() || element,
       };
 
     return createElement(element, props, children);
