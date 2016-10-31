@@ -145,11 +145,16 @@ export default class Input extends Element {
   }
 
   render() {
-    const value = this.getValue();
+    let value = this.getValue();
     const { type, path, originalValue } = this.props;
     const checked = (type === 'checkbox' && value)
       || (type === 'radio' && value === originalValue);
 
+    if (type === 'radio' && originalValue) {
+      value = originalValue;
+    }
+
+    const isCheckbox = type === 'checkbox' || type === 'radio';
     const inputProps = clearProps(this.props);
 
     return (
@@ -161,7 +166,7 @@ export default class Input extends Element {
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onKeyPress={this.onKeyPress}
-        checked={checked || void 0}
+        checked={isCheckbox ? checked : void 0}
         value={value}
       />
     );
