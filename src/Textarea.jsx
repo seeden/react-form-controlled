@@ -14,12 +14,18 @@ export default class Textarea extends Input {
     className: PropTypes.string,
   };
 
+  getClassName() {
+    const { className } = this.props;
+    return className;
+  }
+
   render() {
     const { path } = this.props;
 
     return (
       <textarea
         {...this.props}
+        className={this.getClassName()}
         name={path}
         onChange={this.onChange}
         onFocus={this.onFocus}
