@@ -1,7 +1,6 @@
 import { PropTypes, createElement } from 'react';
 import Ajv from 'ajv';
 import Fieldset from './Fieldset';
-import filter from 'lodash/filter';
 
 function isEmpty(value) {
   return typeof value === 'undefined' || value === null || value === '';
@@ -10,12 +9,13 @@ function isEmpty(value) {
 const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
 function errorToProperty(err) {
-  switch (err.keyword) {
-    case 'required':
-      return err.params.missingProperty;
-    default:
-      return void 0;
+  const { params = {} } = err;
+
+  if (params.missingProperty) {
+    return params.missingProperty;
   }
+
+  return undefined;
 }
 
 export default class Form extends Fieldset {
@@ -24,65 +24,80 @@ export default class Form extends Fieldset {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    ajvOptions: PropTypes.object.isRequired,
+    onError: PropTypes.func,
     replace: PropTypes.bool.isRequired,
+    value: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
-    ajvOptions: {
-      allErrors: true,
-    },
     onChange: () => {},
     onSubmit: () => {},
     replace: true,
   };
 
-  constructor(props, context) {
-    super(props, context);
+  getStateFromProps(props) {
+    const { schema } = props;
 
-    const ajv = Ajv(props.ajvOptions);
-    this.validateData = ajv.compile(props.schema || {});
+    let validator = this.validator;
+    if (schema && (!validator || validator.schema !== schema)) {
+      const ajv = this.ajv = this.ajv || Ajv({
+        allErrors: true,
+        async: true,
+      });
+      validator = ajv.compile({
+        $async: true,
+        ...schema,
+      });
+      validator.schema = schema;
+    }
 
-    this.onSubmit = ::this.onSubmit;
+    return {
+      ...super.getStateFromProps(props),
+      validator,
+    };
   }
 
   getForm() {
     return this;
   }
 
-  validate(value, callback) {
-    const schema = this.props.schema;
-    if (!schema) {
-      return callback(null, []);
+  async validate(value) {
+    const { validator } = this.state;
+    if (!validator) {
+      return [];
     }
 
-    const isValid = this.validateData(value);
-    if (isValid) {
-      return callback(null, []);
+    try {
+      await validator(value);
+      return [];
+    } catch (e) {
+      const { errors } = e;
+
+      return errors.map((err) => {
+        const prop = errorToProperty(err);
+        const path = err.dataPath ? err.dataPath.substr(1) : null;
+
+        const fullPath = path && prop
+          ? `${path}.${prop}`
+          : path || prop;
+
+        return {
+          ...err,
+          path: fullPath,
+        };
+      });
     }
-
-    // prepare error paths
-    const errors = this.validateData.errors || [];
-    errors.forEach((err) => {
-      const prop = errorToProperty(err);
-      const path = err.dataPath ? err.dataPath.substr(1) : null;
-
-      err.path = path && prop ? `${path}.${prop}` : path || prop;
-    });
-
-
-    callback(null, errors);
   }
 
   getErrors(path, exactMatch) {
-    const errors = this.errors || [];
+    const errors = this.state.errors || [];
     if (!path) {
       return errors;
     }
 
     const parentPath = `${path}.`;
 
-    return filter(errors, (error) => {
+    return errors.filter((error) => {
       if (!error.path) {
         return false;
       }
@@ -107,21 +122,21 @@ export default class Form extends Fieldset {
     return !this.hasErrors(path, exactMatch);
   }
 
-  onSubmit(evn) {
+  onSubmit = async (evn) => {
     evn.preventDefault();
 
-    this.validate(this.props.value, (err, errors) => {
-      // store current errors
-      this.setErrors(errors);
-
-      if (err || errors.length) {
-        return;
-      }
-
-      if (this.props.onSubmit) {
-        this.props.onSubmit(this.props.value);
-      }
+    const { onSubmit, onError, value } = this.props;
+    const errors = await this.validate(value);
+    // store current errors
+    this.setState({
+      errors,
     });
+
+    if (!errors.length && onSubmit) {
+      onSubmit(value);
+    } else if (errors.length && onError) {
+      onError(errors);
+    }
   }
 
   getCurrentValue() {
@@ -135,19 +150,13 @@ export default class Form extends Fieldset {
   }
 
   getPath() {
-    return void 0;
-  }
-
-  setErrors(errors = []) {
-    this.errors = errors;
-
-    this.setState({
-      errors,
-    });
+    return undefined;
   }
 
   clearErrors() {
-    this.setErrors([]);
+    this.setState({
+      errors: [],
+    });
   }
 /*
   childChanged(component = this) {

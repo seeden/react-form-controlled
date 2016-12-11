@@ -10,9 +10,9 @@ export default function extendChild(child, parent) {
   let changed = false;
 
   if (provideIndex || providePath || provideIndexes) {
-    newProps.provideIndex = void 0;
-    newProps.providePath = void 0;
-    newProps.provideIndexes = void 0;
+    newProps.provideIndex = undefined;
+    newProps.providePath = undefined;
+    newProps.provideIndexes = undefined;
 
     changed = true;
 
@@ -38,7 +38,7 @@ export default function extendChild(child, parent) {
   const onClickBefore = newProps.onClick || onClick;
 
   if (remove) {
-    newProps.remove = void 0;
+    newProps.remove = undefined;
     changed = true;
 
     newProps.onClick = () => {
@@ -49,7 +49,7 @@ export default function extendChild(child, parent) {
       }
     };
   } else if (up) {
-    newProps.up = void 0;
+    newProps.up = undefined;
     changed = true;
 
     newProps.onClick = () => {
@@ -60,7 +60,7 @@ export default function extendChild(child, parent) {
       }
     };
   } else if (down) {
-    newProps.down = void 0;
+    newProps.down = undefined;
     changed = true;
 
     newProps.onClick = () => {

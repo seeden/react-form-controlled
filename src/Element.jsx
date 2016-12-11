@@ -20,15 +20,17 @@ export default class Element extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      value: props.value,
-    };
+    this.state = this.getStateFromProps(props);
   }
 
   componentWillReceiveProps(props) {
-    this.setState({
+    this.setState(this.getStateFromProps(props));
+  }
+
+  getStateFromProps(props) {
+    return {
       value: props.value,
-    });
+    };
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext, ignoreProps = [], ignoreState = ignoreProps) {

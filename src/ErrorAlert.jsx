@@ -20,6 +20,10 @@ export default class ErrorAlert extends Element {
     className: 'alert alert-danger',
   };
 
+  shouldComponentUpdate() {
+    return true;
+  }
+
   renderErrors(errors) {
     const { children, processError } = this.props;
 
