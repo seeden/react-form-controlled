@@ -1,27 +1,16 @@
-import Form from './Form';
-import Input from './Input';
-import Select from './Select';
-import Textarea from './Textarea';
-import ErrorAlert from './ErrorAlert';
-import Fieldset from './Fieldset';
-import Tbody from './Tbody';
-import Word from './Word';
-import Index from './FieldsetIndex';
-import If from './If';
-import Integrate from './Integrate';
-import markAsDirty from './utils/markAsDirty';
-
-export default Form;
-export {
-  Input,
-  Select,
-  Textarea,
-  ErrorAlert,
-  Fieldset,
-  Tbody,
-  Word,
-  Index,
-  If,
-  Integrate,
-  markAsDirty,
-};
+export default from './Form';
+export Input from './Input';
+export Select from './Select';
+export Textarea from './Textarea';
+export ErrorAlert from './ErrorAlert';
+export Fieldset from './Fieldset';
+export Tbody from './Tbody';
+export Word from './Word';
+export Index from './FieldsetIndex';
+export If from './If';
+export Integrate from './Integrate';
+export markAsDirty from './utils/markAsDirty';
+export Remove from './Remove';
+export Down from './Down';
+export Up from './Up';
+export Path from './Path';

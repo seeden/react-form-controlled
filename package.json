@@ -1,7 +1,7 @@
 {
   "name": "react-form-controlled",
-  "version": "0.16.25",
-  "description": "React controlled form components. The main idea is to make forms as simple as possible.",
+  "version": "0.17.0",
+  "description": "React controlled form components",
   "author": {
     "name": "Zlatko Fedor",
     "email": "zfedor@gmail.com",
@@ -19,7 +19,8 @@
     "controlled",
     "input",
     "select",
-    "react-select"
+    "react-select",
+    "redux"
   ],
   "private": false,
   "license": "MIT",
@@ -31,12 +32,13 @@
     "prepublish": "npm run build",
     "test": "jest --coverage",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
-    "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ."
+    "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ./src"
   },
   "dependencies": {
     "diacritics": "^1.2.3",
     "ajv": "^4.9.2",
-    "lodash": "^4.17.2"
+    "lodash": "^4.17.2",
+    "core-decorators": "^0.14.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -49,7 +51,6 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
-    "core-decorators": "^0.14.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-loader": "^1.6.1",
@@ -67,7 +68,7 @@
     "enzyme": "^2.6.0"
   },
   "peerDependencies": {
-    "react": "15.x || 0.14.x"
+    "react": "15.x"
   },
   "typings": "react-form-controlled.d.ts"
 }

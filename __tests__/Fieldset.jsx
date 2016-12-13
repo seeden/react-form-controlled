@@ -1,9 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Form, {
-  Input, Textarea, Word, Select, Fieldset,
-  Index, If, Tbody, Integrate,
-  ErrorAlert,
+  Input,
+  Fieldset,
+  Index,
+  If,
 } from '../src';
 
 describe('Fieldset', () => {
@@ -79,7 +80,7 @@ describe('Fieldset', () => {
 
     const wrapper = mount((
       <Form value={value} onChange={onChange}>
-        <Fieldset name="data" map={false}>
+        <Fieldset name="data" skipMap>
           <Fieldset name="0">
             <Input name="inputValue" />
           </Fieldset>
@@ -317,7 +318,11 @@ describe('Fieldset', () => {
       <Form value={value}>
         <Fieldset name="data">
           <Input name="." />
-          <button onClick={onClick} provideIndex />
+          <Index
+            render={({ index }) =>
+              <button onClick={evn => onClick(index, evn)} />
+            }
+          />
         </Fieldset>
       </Form>
     ));
@@ -339,7 +344,11 @@ describe('Fieldset', () => {
       <Form value={value}>
         <Fieldset name="data">
           <Input name="." />
-          <button onClick={onClick} provideIndex />
+          <Index
+            render={({ index }) =>
+              <button onClick={evn => onClick(index, evn)} />
+            }
+          />
         </Fieldset>
       </Form>
     ));
@@ -394,7 +403,7 @@ describe('Fieldset', () => {
       value: '222',
     } });
   });
-
+/*
   it('should be able to get index value', () => {
     const value = {
       test: 0,
@@ -433,7 +442,7 @@ describe('Fieldset', () => {
 
     wrapper.find('button').first().simulate('click');
   });
-
+*/
   it('should be able to use if', () => {
     const value = {
       data: [{

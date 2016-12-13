@@ -1,18 +1,11 @@
+import isPlainObject from 'lodash/isPlainObject';
+import { autobind } from 'core-decorators';
 import React, { PropTypes } from 'react';
 import Element from './Element';
-import isPlainObject from 'lodash/isPlainObject';
-import isArray from 'lodash/isArray';
-import { autobind } from 'core-decorators';
 
 const PLACEHOLDER_VALUE = ''; // null and undefined is uncontrolled value
 
 export default class Select extends Element {
-  static contextTypes = {
-    ...Element.contextTypes,
-  };
-
-  static isElement = Element.isElement;
-
   static propTypes = {
     ...Element.propTypes,
     disabled: PropTypes.bool,
@@ -22,25 +15,20 @@ export default class Select extends Element {
   constructor(props, context) {
     super(props, context);
 
-    this.state = this.prepareState(props);
+    this.state = {
+      ...this.state,
+      options: this.prepareOptions(props.options),
+    };
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState(this.prepareState(newProps));
+  componentWillReceiveProps(props) {
+    this.setState({
+      options: this.prepareOptions(props.options),
+    });
   }
 
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return super.shouldComponentUpdate(
-      nextProps,
-      nextState,
-      nextContext,
-      [],
-      ['values', 'options']);
-  }
-
-  prepareState(props) {
+  prepareOptions(options) {
     const selectOptions = [];
-    const { options, placeholder, value } = props;
 
     if (isPlainObject(options)) {
       Object.keys(options).forEach((key) => {
@@ -49,7 +37,7 @@ export default class Select extends Element {
           label: options[key],
         });
       });
-    } else if (isArray(options)) {
+    } else if (Array.isArray(options)) {
       options.forEach((option) => {
         const isObject = isPlainObject(option);
 
@@ -60,10 +48,18 @@ export default class Select extends Element {
       });
     }
 
+    return selectOptions;
+  }
+
+  getValues() {
+    const { options } = this.state;
+    const value = this.getValue();
+    const { placeholder } = this.props;
+
     const isMultiple = this.isMultiple();
     const values = [];
 
-    selectOptions.forEach((option, pos) => {
+    options.forEach((option, pos) => {
       if (!isMultiple && option.value === value) {
         values.push(pos);
       } else if (isMultiple && value && value.length && value.indexOf(option.value) !== -1) {
@@ -75,11 +71,7 @@ export default class Select extends Element {
       values.unshift(PLACEHOLDER_VALUE);
     }
 
-    return {
-      value,
-      options: selectOptions,
-      values: isMultiple ? values : values[0],
-    };
+    return isMultiple ? values : values[0];
   }
 
   @autobind
@@ -141,8 +133,10 @@ export default class Select extends Element {
   }
 
   render() {
-    const { options, values } = this.state;
+    const { options } = this.state;
     const { path, disabled, required } = this.props;
+    const values = this.getValues();
+
 
     return (
       <select

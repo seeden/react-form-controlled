@@ -2,10 +2,6 @@ import { PropTypes, Children } from 'react';
 import Element from './Element';
 
 export default class If extends Element {
-  static contextTypes = {
-    ...Element.contextTypes,
-  };
-
   static propTypes = {
     ...Element.propTypes,
     cond: PropTypes.func.isRequired,
@@ -14,7 +10,8 @@ export default class If extends Element {
 
   render() {
     const { value } = this.state;
-    const { cond, children, parent } = this.props;
+    const { cond, children } = this.props;
+    const parent = this.getParent();
     if (typeof cond !== 'function' || !children) {
       return null;
     }
@@ -24,6 +21,6 @@ export default class If extends Element {
       return null;
     }
 
-    return Children.only(parent.registerChildren(children));
+    return Children.only(parent.processChildren(children));
   }
 }

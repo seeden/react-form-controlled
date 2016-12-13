@@ -1,12 +1,16 @@
 import { Children, cloneElement } from 'react';
-import isArray from 'lodash/isArray';
+import Element from '../Element';
 
 export default function traverse(child, processCallback, replaceCallback) {
-  if (isArray(child)) {
-    return Children.map(child, (children) => traverse(children, processCallback, replaceCallback));
+  if (Array.isArray(child)) {
+    return Children.map(child, children => traverse(children, processCallback, replaceCallback));
   }
 
   if (!child || typeof child === 'string') {
+    return child;
+  }
+
+  if (child === Element || Element.isPrototypeOf(child.type)) {
     return child;
   }
 

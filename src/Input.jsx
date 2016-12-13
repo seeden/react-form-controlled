@@ -1,37 +1,30 @@
 import React, { PropTypes } from 'react';
-import Element from './Element';
 import { autobind } from 'core-decorators';
+import Element from './Element';
 
 function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
 }
 
-function clearProps(props) {
-  const newProps = {
-    ...props,
-  };
-
-  delete newProps.debaunce;
-  delete newProps.parent;
-  delete newProps.originalValue;
-  delete newProps.valueIndex;
-
-  return newProps;
-}
-
 export default class Input extends Element {
   static propTypes = {
     ...Element.propTypes,
+    className: PropTypes.string,
+    style: PropTypes.object,
     autoComplete: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
-    debaunce: PropTypes.number,
+    debounce: PropTypes.number,
   };
 
   static defaultProps = {
     autoComplete: 'off',
     type: 'text',
-    debaunce: 500,
+    debounce: 500,
+  };
+
+  static contextTypes = {
+    ...Element.contextTypes,
   };
 
   getValue() {
@@ -75,9 +68,9 @@ export default class Input extends Element {
     }
   }
 
-  componentWillReceiveProps(props) {
+  componentWillReceiveProps(props, context) {
     this.clearTimeout();
-    super.componentWillReceiveProps(props);
+    super.componentWillReceiveProps(props, context);
   }
 
   clearTimeout(sendValue) {
@@ -87,7 +80,7 @@ export default class Input extends Element {
     }
 
     if (sendValue && this.props.value !== this.state.value) {
-      this.notifiyParent(this.state.value, this, sendValue);
+      this.notifyParent(this.state.value, this, sendValue);
     }
   }
 
@@ -95,25 +88,25 @@ export default class Input extends Element {
     this.clearTimeout();
   }
 
-  notifiyParent(value, component, force) {
-    const { type, debaunce } = this.props;
+  notifyParent(value, component, force) {
+    const { type, debounce } = this.props;
 
-    if (!this.focused || !debaunce || type === 'checkbox' || type === 'radio') {
-      super.notifiyParent(value, component);
+    if (!this.focused || !debounce || type === 'checkbox' || type === 'radio') {
+      super.notifyParent(value, component);
       return;
     }
 
     this.clearTimeout();
 
     if (force) {
-      super.notifiyParent(value, component, force);
+      super.notifyParent(value, component, force);
       return;
     }
 
     this.timeoutId = setTimeout(() => {
       this.timeoutId = null;
-      super.notifiyParent(value, component);
-    }, debaunce);
+      super.notifyParent(value, component);
+    }, debounce);
   }
 
   @autobind
@@ -140,13 +133,19 @@ export default class Input extends Element {
   }
 
   getClassName() {
-    const { className } = this.props;
-    return className;
+    return this.props.className;
   }
 
   render() {
+    const {
+      type,
+      debounce,
+      value: originalValue,
+      ...rest
+    } = this.props;
+
     let value = this.getValue();
-    const { type, path, originalValue } = this.props;
+
     const checked = (type === 'checkbox' && value)
       || (type === 'radio' && value === originalValue);
 
@@ -155,19 +154,17 @@ export default class Input extends Element {
     }
 
     const isCheckbox = type === 'checkbox' || type === 'radio';
-    const inputProps = clearProps(this.props);
 
     return (
       <input
-        {...inputProps}
-        className={this.getClassName()}
-        name={path}
+        {...rest}
+        type={type}
+        value={value}
+        checked={isCheckbox ? checked : undefined}
         onChange={this.onChange}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onKeyPress={this.onKeyPress}
-        checked={isCheckbox ? checked : void 0}
-        value={value}
       />
     );
   }

@@ -1,5 +1,4 @@
 import { Component, PropTypes } from 'react';
-import shallowCompare from './utils/shallowCompare';
 
 export default class Element extends Component {
   static propTypes = {
@@ -7,80 +6,67 @@ export default class Element extends Component {
       PropTypes.string,
       PropTypes.number,
     ]).isRequired,
-    className: PropTypes.string,
-    style: PropTypes.object,
-    valueIndex: PropTypes.bool,
-    children: PropTypes.node,
-    value: PropTypes.any,
-    parent: PropTypes.object,
   };
 
-  static isElement = true;
+  static contextTypes = {
+    fieldset: PropTypes.object.isRequired,
+  };
 
   constructor(props, context) {
     super(props, context);
 
-    this.state = this.getStateFromProps(props);
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState(this.getStateFromProps(props));
-  }
-
-  getStateFromProps(props) {
-    return {
-      value: props.value,
+    this.state = {
+      value: this.getOriginalValue(props, context),
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState, nextContext, ignoreProps = [], ignoreState = ignoreProps) {
-    const { props, state } = this;
+  getOriginalValue(props, context) {
+    const { name } = props;
+    const { fieldset } = context;
 
-    if (!shallowCompare(props, nextProps, ['value', ...ignoreProps])) {
-      return true;
-    }
-
-    if (!shallowCompare(state, nextState, ignoreState)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  getParent() {
-    return this.props.parent;
+    return fieldset.getChildValue(name);
   }
 
   getValue() {
     return this.state.value;
   }
 
+  getParent() {
+    return this.context.fieldset;
+  }
+
   getPath() {
+    const { name } = this.props;
     const parent = this.getParent();
     const parentPath = parent.getPath();
-    const { name } = this.props;
 
-    return parentPath ? `${parentPath}.${name}` : name;
+    return parentPath
+      ? `${parentPath}.${name}`
+      : name;
   }
 
   getForm() {
-    const parent = this.getParent();
-    return parent.getForm();
+    return this.getParent().getForm();
   }
 
   setValue(value, component = this) {
     this.setState({ value });
 
-    this.notifiyParent(value, component);
+    this.notifyParent(value, component);
   }
 
-  notifiyParent(value, component) {
-    const parent = this.getParent();
-    if (!parent) {
-      return;
-    }
+  replaceChildren(children) {
+    return this.getParent().replaceChildren(children);
+  }
 
-    parent.setChildValue(this.props.name, value, component);
+  notifyParent(value, component) {
+    const { name } = this.props;
+    const parent = this.getParent();
+
+    // form has no parent
+    if (parent) {
+      parent.setChildValue(name, value, component);
+    }
   }
 
   render() {

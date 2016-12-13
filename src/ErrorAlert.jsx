@@ -2,22 +2,11 @@ import React, { PropTypes } from 'react';
 import Element from './Element';
 
 export default class ErrorAlert extends Element {
-  static contextTypes = {
-    ...Element.contextTypes,
-  };
-
-  static isElement = Element.isElement;
-
   static propTypes = {
-    ...Element.propTypes,
-    className: PropTypes.string,
-    processError: PropTypes.func,
-    exactMatch: PropTypes.bool,
-    children: PropTypes.node,
-  };
-
-  static defaultProps = {
-    className: 'alert alert-danger',
+    name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    exact: PropTypes.bool,
+    children: PropTypes.func,
+    render: PropTypes.func,
   };
 
   shouldComponentUpdate() {
@@ -42,19 +31,29 @@ export default class ErrorAlert extends Element {
   }
 
   render() {
-    const { className, exactMatch } = this.props;
+    const { children, render, component, exact, ...rest } = this.props;
     const path = this.getPath();
     const form = this.getForm();
 
-    const errors = form.getErrors(path, exactMatch);
+    const errors = form.getErrors(path, exact);
     if (!errors || !errors.length) {
       return null;
     }
 
-    return (
-      <div className={className} role="alert">
-        {this.renderErrors(errors)}
-      </div>
-    );
+    if (typeof children === 'function') {
+      return this.replaceChildren(children({ errors }));
+    } else if (typeof render === 'function') {
+      return this.replaceChildren(render({ errors }));
+    }
+
+    if (!component) {
+      return (
+        <div role="alert">
+          {errors.map(error => error.message)}
+        </div>
+      );
+    }
+
+    return <component errors={errors} {...rest} />;
   }
 }

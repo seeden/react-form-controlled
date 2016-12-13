@@ -4,7 +4,6 @@ import Element from './Element';
 export default class Integrate extends Element {
   static propTypes = {
     ...Element.propTypes,
-    children: PropTypes.node,
     onChange: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.bool,
@@ -18,17 +17,17 @@ export default class Integrate extends Element {
   };
 
   render() {
-    const { children, onChange, originalValue, name } = this.props;
+    const { children, onChange, value, name } = this.props;
     const newProps = {
       name,
     };
 
     if (typeof onChange === 'string') {
-      newProps[onChange] = this.setValue;
+      newProps[onChange] = (...args) => this.setValue(...args);
     }
 
-    if (originalValue) {
-      newProps[originalValue] = this.getValue();
+    if (value) {
+      newProps[value] = this.getValue();
     }
 
     return cloneElement(children, newProps);

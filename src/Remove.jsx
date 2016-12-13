@@ -1,29 +1,38 @@
 import React, { PropTypes, cloneElement } from 'react';
+import { autobind } from 'core-decorators';
 import Element from './Element';
 
-export default class FieldsetIndex extends Element {
+export default class Remove extends Element {
   static propTypes = {
     render: PropTypes.func,
-    children: PropTypes.func,
+    text: PropTypes.string,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   };
 
+  static defaultProps = {
+    text: 'Remove',
+  };
+
+  @autobind
+  onClick() {
+    this.getParent().remove();
+  }
+
   render() {
-    const parent = this.getParent();
-    const index = Number(parent.props.name);
-    const { children, render, ...rest } = this.props;
+    const { children, render, text } = this.props;
     const newProps = {
-      index,
+      onClick: this.onClick,
     };
 
     if (typeof children === 'function') {
       return this.replaceChildren(children(newProps));
-    } else if (typeof render === 'function') {
+    } if (typeof render === 'function') {
       return this.replaceChildren(render(newProps));
     }
 
     if (!children) {
       return (
-        <span {...rest}>{`${index + 1}.`}</span>
+        <button type="button">{text}</button>
       );
     }
 

@@ -1,12 +1,7 @@
 import { PropTypes, createElement } from 'react';
 import Ajv from 'ajv';
+import { autobind } from 'core-decorators';
 import Fieldset from './Fieldset';
-
-function isEmpty(value) {
-  return typeof value === 'undefined' || value === null || value === '';
-}
-
-const DEFAULT_INVALID_ERROR = 'Form is invalid';
 
 function errorToProperty(err) {
   const { params = {} } = err;
@@ -22,20 +17,58 @@ export default class Form extends Fieldset {
   static isForm = true;
 
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func,
+    onChange: PropTypes.func,
     onError: PropTypes.func,
-    replace: PropTypes.bool.isRequired,
+    skipReplace: PropTypes.bool,
     value: PropTypes.object.isRequired,
+    method: PropTypes.string,
+    action: PropTypes.string,
+    autoComplete: PropTypes.string,
+    children: PropTypes.node,
+    tagName: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    onChange: () => {},
-    onSubmit: () => {},
-    replace: true,
+    autoComplete: 'off',
+    tagName: 'form',
   };
 
-  getStateFromProps(props) {
+  static childContextTypes = {
+    fieldset: PropTypes.object.isRequired,
+  };
+
+  static contextTypes = {
+    fieldset: PropTypes.object,
+  };
+
+  componentWillReceiveProps(props) {
+    const value = this.getValue();
+    if (props.value !== value) {
+      this.setValue(props.value);
+    }
+  }
+
+  getPath() {
+    return undefined;
+  }
+
+  getValue() {
+    return this.props.value;
+  }
+
+  getOriginalValue() {
+    return this.props.value;
+  }
+
+  getForm() {
+    const parent = this.getParent();
+    return parent
+      ? parent.getForm()
+      : this;
+  }
+
+  getStateFromProps(props, context) {
     const { schema } = props;
 
     let validator = this.validator;
@@ -52,13 +85,9 @@ export default class Form extends Fieldset {
     }
 
     return {
-      ...super.getStateFromProps(props),
+      ...super.getStateFromProps(props, context),
       validator,
     };
-  }
-
-  getForm() {
-    return this;
   }
 
   async validate(value) {
@@ -90,7 +119,7 @@ export default class Form extends Fieldset {
   }
 
   getErrors(path, exactMatch) {
-    const errors = this.state.errors || [];
+    const errors = this.errors || [];
     if (!path) {
       return errors;
     }
@@ -114,23 +143,21 @@ export default class Form extends Fieldset {
     });
   }
 
-  hasErrors(path, exactMatch) {
-    return !!this.getErrors(path, exactMatch).length;
+  hasErrors(path, exact) {
+    return !!this.getErrors(path, exact).length;
   }
 
-  isValid(path, exactMatch) {
-    return !this.hasErrors(path, exactMatch);
+  isValid(path, exact) {
+    return !this.hasErrors(path, exact);
   }
 
-  onSubmit = async (evn) => {
+  @autobind
+  async onSubmit(evn) {
     evn.preventDefault();
 
-    const { onSubmit, onError, value } = this.props;
-    const errors = await this.validate(value);
-    // store current errors
-    this.setState({
-      errors,
-    });
+    const { onSubmit, onError } = this.props;
+    const value = this.getValue();
+    const errors = this.errors = await this.validate(value);
 
     if (!errors.length && onSubmit) {
       onSubmit(value);
@@ -139,64 +166,39 @@ export default class Form extends Fieldset {
     }
   }
 
-  getCurrentValue() {
-    return this.props.value;
-  }
-
   setValue(value, component) {
     this.clearErrors();
 
     super.setValue(value, component);
-  }
-
-  getPath() {
-    return undefined;
-  }
-
-  clearErrors() {
-    this.setState({
-      errors: [],
-    });
-  }
-/*
-  childChanged(component = this) {
-    const parent = this.getParent();
-    if (parent !== this) {
-      parent.childChanged(component);
-      return;
-    }
 
     const { onChange } = this.props;
     if (onChange) {
       onChange(value, component);
     }
-  }*/
+  }
+
+  clearErrors() {
+    this.errors = [];
+  }
 
   getClassName() {
-    const { className } = this.props;
-    return className;
+    const { className, tagName } = this.props;
+    return className || tagName;
   }
 
   render() {
-    const children = this.registerChildren(this.props.children);
-    const autoComplete = typeof this.props.autoComplete !== 'undefined'
-      ? this.props.autoComplete
-      : 'off';
+    const { autoComplete, tagName, children, method, action } = this.props;
 
-    const element = this.props.form ? 'fieldset' : 'form';
+    const props = tagName === 'form' ? {
+      autoComplete,
+      method,
+      action,
+      className: this.getClassName(),
+      onSubmit: this.onSubmit,
+    } : {
+      className: this.getClassName(),
+    };
 
-    const props = element === 'form'
-      ? {
-        autoComplete,
-        method: this.props.method,
-        action: this.props.action,
-        className: this.getClassName() || element,
-        onSubmit: this.onSubmit,
-      }
-      : {
-        className: this.getClassName() || element,
-      };
-
-    return createElement(element, props, children);
+    return createElement(tagName, props, this.processChildren(children));
   }
 }
