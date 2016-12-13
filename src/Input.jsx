@@ -68,9 +68,8 @@ export default class Input extends Element {
     }
   }
 
-  componentWillReceiveProps(props, context) {
+  componentWillReceiveProps() {
     this.clearTimeout();
-    super.componentWillReceiveProps(props, context);
   }
 
   clearTimeout(sendValue) {
