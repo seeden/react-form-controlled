@@ -45,7 +45,7 @@ export default class Form extends Fieldset {
   componentWillReceiveProps(props) {
     const value = this.getValue();
     if (props.value !== value) {
-      this.setValue(props.value);
+      this.setValue(props.value, this, true);
     }
   }
 
@@ -166,10 +166,13 @@ export default class Form extends Fieldset {
     }
   }
 
-  setValue(value, component) {
+  setValue(value, component, dontNotify) {
     this.clearErrors();
 
     super.setValue(value, component);
+    if (dontNotify) {
+      return;
+    }
 
     const { onChange } = this.props;
     if (onChange) {
