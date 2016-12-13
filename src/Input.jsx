@@ -158,6 +158,7 @@ export default class Input extends Element {
     return (
       <input
         {...rest}
+        className={this.getClassName()}
         type={type}
         value={value}
         checked={isCheckbox ? checked : undefined}
