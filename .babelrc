@@ -5,6 +5,7 @@
     "es2015"
   ],
   "plugins": [
+    "transform-runtime",
     "transform-decorators-legacy",
     "transform-class-properties",
     "transform-proto-to-assign",
