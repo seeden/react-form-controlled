@@ -1,13 +1,11 @@
-import { autobind } from 'core-decorators';
-import Remove from './Remove';
+import Button from './Button';
 
-export default class Up extends Remove {
+export default class Up extends Button {
   static defaultProps = {
-    text: 'Down',
+    text: 'Up',
   };
 
-  @autobind
-  onClick() {
-    this.getParent().up();
+  async process() {
+    return await this.getParent().up();
   }
 }

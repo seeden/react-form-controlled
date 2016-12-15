@@ -1,5 +1,6 @@
 import React, { PropTypes, createElement } from 'react';
 import get from 'lodash/get';
+import isPlainObject from 'lodash/isPlainObject';
 import Element from './Element';
 import set from './utils/set';
 import traverse from './utils/traverse';
@@ -32,13 +33,81 @@ export default class Fieldset extends Element {
     fieldset: PropTypes.object,
   };
 
+  constructor(...args) {
+    super(...args);
+
+    this.children = [];
+  }
+
+  getIndexes() {
+    const indexes = [];
+    if (typeof this.props.index !== 'undefined') {
+      indexes.push(this.props.index);
+    }
+
+    const parent = this.getParent();
+    if (!parent) {
+      return indexes;
+    }
+
+    const parentIndexes = parent.getIndexes();
+    return [...indexes, ...parentIndexes];
+  }
+
+  setValue(value, component, notifyChildren) {
+    super.setValue(value, component, notifyChildren);
+
+    if (notifyChildren) {
+      const { children } = this;
+      children.forEach(child => child.originalValueChanged());
+    }
+  }
+
+  originalValueChanged() {
+    super.originalValueChanged();
+
+    const { children } = this;
+    children.forEach(child => child.originalValueChanged());
+  }
+
+  registerChild(child, name) {
+    if (typeof name === 'undefined') {
+      return;
+    }
+
+    if (name[0] === '.') {
+      const parent = this.getParent();
+      parent.registerChild(child, name.substr(1));
+      return;
+    }
+
+    this.children.push(child);
+  }
+
+  unregisterChild(child, name) {
+    if (typeof name === 'undefined') {
+      return;
+    }
+
+    if (name[0] === '.') {
+      const parent = this.getParent();
+      parent.unregisterChild(child, name.substr(1));
+      return;
+    }
+
+    const pos = this.children.indexOf(child);
+    if (pos !== -1) {
+      this.children.splice(pos, 1);
+    }
+  }
+
   getChildContext() {
     return {
       fieldset: this,
     };
   }
 
-  remove(index) {
+  async remove(index) {
     if (typeof index === 'undefined') {
       if (typeof this.props.index === 'undefined') {
         throw new Error('This is not an array');
@@ -50,7 +119,7 @@ export default class Fieldset extends Element {
 
     const value = this.getValue();
     if (!Array.isArray(value) || index < 0 || value.length <= index) {
-      return false;
+      return undefined;
     }
 
     this.setValue([
@@ -58,10 +127,10 @@ export default class Fieldset extends Element {
       ...value.slice(index + 1),
     ]);
 
-    return true;
+    return index;
   }
 
-  up(index) {
+  async up(index) {
     if (typeof index === 'undefined') {
       if (typeof this.props.index === 'undefined') {
         throw new Error('This is not an array');
@@ -73,7 +142,7 @@ export default class Fieldset extends Element {
 
     const value = this.getValue();
     if (!Array.isArray(value) || index <= 0 || value.length <= index) {
-      return false;
+      return undefined;
     }
 
     this.setValue([
@@ -83,10 +152,10 @@ export default class Fieldset extends Element {
       ...value.slice(index + 1),
     ]);
 
-    return true;
+    return index;
   }
 
-  down(index) {
+  async down(index) {
     if (typeof index === 'undefined') {
       if (typeof this.props.index === 'undefined') {
         throw new Error('This is not an array');
@@ -96,7 +165,10 @@ export default class Fieldset extends Element {
       return parent.down(this.props.index);
     }
 
-    return this.up(index + 1);
+    const retVar = this.up(index + 1);
+    return typeof retVar === 'undefined'
+      ? retVar
+      : index;
   }
 
   // return current or parent fieldset
@@ -161,7 +233,7 @@ export default class Fieldset extends Element {
       }
 
       const currentPath = current.getPath();
-      if (!subPath) {
+      if (isEmpty(subPath)) {
         return currentPath;
       }
 
@@ -223,7 +295,12 @@ export default class Fieldset extends Element {
       const childrenOnly = this.props.tagName === 'tbody';
 
       return value.map((item, index) => (
-        <Fieldset name={index} key={index} index={index} childrenOnly={childrenOnly}>
+        <Fieldset
+          name={index}
+          key={index}
+          index={index}
+          childrenOnly={childrenOnly}
+        >
           {children}
         </Fieldset>
       ));

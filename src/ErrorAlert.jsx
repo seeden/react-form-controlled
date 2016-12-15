@@ -1,17 +1,13 @@
 import React, { PropTypes } from 'react';
 import Element from './Element';
 
-export default class ErrorAlert extends Element {
+export default class Alert extends Element {
   static propTypes = {
     name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     exact: PropTypes.bool,
     children: PropTypes.func,
     render: PropTypes.func,
   };
-
-  shouldComponentUpdate() {
-    return true;
-  }
 
   renderErrors(errors) {
     const { children, processError } = this.props;

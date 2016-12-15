@@ -14,3 +14,7 @@ export Remove from './Remove';
 export Down from './Down';
 export Up from './Up';
 export Path from './Path';
+export Value from './Value';
+export ProvideProps from './ProvideProps';
+export ProvideIndexes from './ProvideIndexes';
+export Button from './Button';

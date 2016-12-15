@@ -1,4 +1,5 @@
 import { Component, PropTypes } from 'react';
+import shallowEqual from './utils/shallowCompare';
 
 export default class Element extends Component {
   static propTypes = {
@@ -15,9 +16,45 @@ export default class Element extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      value: this.getOriginalValue(props, context),
-    };
+    this.value = this.getOriginalValue(props, context);
+  }
+
+  componentDidMount() {
+    const parent = this.getParent();
+    // I am form
+    if (!parent) {
+      return;
+    }
+
+    parent.registerChild(this, this.props.name);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const sameProps = shallowEqual(this.props, nextProps, ['children']);
+    if (!sameProps) {
+      return true;
+    }
+
+    const sameState = shallowEqual(this.state, nextState, []);
+    if (!sameState) {
+      return true;
+    }
+
+    return false;
+  }
+
+  componentWillUnmount() {
+    const parent = this.getParent();
+    // I am form
+    if (!parent) {
+      return;
+    }
+
+    parent.unregisterChild(this, this.props.name);
+  }
+
+  getIndexes() {
+    return this.getParent().getIndexes();
   }
 
   getOriginalValue(props, context) {
@@ -28,7 +65,7 @@ export default class Element extends Component {
   }
 
   getValue() {
-    return this.state.value;
+    return this.value;
   }
 
   getParent() {
@@ -38,25 +75,41 @@ export default class Element extends Component {
   getPath() {
     const { name } = this.props;
     const parent = this.getParent();
-    const parentPath = parent.getPath();
 
-    return parentPath
-      ? `${parentPath}.${name}`
-      : name;
+    return parent.buildPath(name);
   }
 
   getForm() {
     return this.getParent().getForm();
   }
 
-  setValue(value, component = this) {
-    this.setState({ value });
+  setValue(value, component = this, notifyChildren) {
+    const { value: currentValue } = this;
+    if (currentValue === value) {
+      return;
+    }
+
+    this.value = value;
+
+    if (notifyChildren) {
+      this.forceUpdate();
+      return;
+    }
 
     this.notifyParent(value, component);
+
+    if (component === this) {
+      this.forceUpdate();
+    }
   }
 
   replaceChildren(children) {
     return this.getParent().replaceChildren(children);
+  }
+
+  originalValueChanged() {
+    const value = this.getOriginalValue(this.props, this.context);
+    this.setValue(value, this, true);
   }
 
   notifyParent(value, component) {

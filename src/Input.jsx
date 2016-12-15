@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { autobind } from 'core-decorators';
 import Element from './Element';
+import wait from './utils/wait';
 
 function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
@@ -20,7 +21,6 @@ export default class Input extends Element {
   static defaultProps = {
     autoComplete: 'off',
     type: 'text',
-    debounce: 500,
   };
 
   static contextTypes = {
@@ -47,7 +47,7 @@ export default class Input extends Element {
     if (target.type === 'checkbox') {
       value = !!target.checked;
     } else if (target.type === 'radio' && target.checked) {
-      value = this.props.originalValue;
+      value = this.props.value;
     } else if (target.type === 'number') {
       const fixedValue = value
         .replace(',', '.')
@@ -60,11 +60,22 @@ export default class Input extends Element {
       }
     }
 
-    this.setValue(value);
+    const { type } = this.props;
 
-    const { onChange } = this.props;
-    if (typeof onChange === 'function') {
-      onChange(evn);
+    if (type === 'checkbox' || type === 'radio') {
+      setTimeout(() => {
+        this.setValue(value);
+        const { onChange } = this.props;
+        if (typeof onChange === 'function') {
+          onChange(evn);
+        }
+      }, 0);
+    } else {
+      this.setValue(value);
+      const { onChange } = this.props;
+      if (typeof onChange === 'function') {
+        onChange(evn);
+      }
     }
   }
 
@@ -78,17 +89,20 @@ export default class Input extends Element {
       this.timeoutId = null;
     }
 
-    if (sendValue && this.props.value !== this.state.value) {
-      this.notifyParent(this.state.value, this, sendValue);
+    // TODO validate this
+    if (sendValue && this.props.value !== this.getValue()) {
+      this.notifyParent(this.getValue(), this, sendValue);
     }
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     this.clearTimeout();
   }
 
   notifyParent(value, component, force) {
-    const { type, debounce } = this.props;
+    const { type } = this.props;
+    const debounce = this.getDebounce();
 
     if (!this.focused || !debounce || type === 'checkbox' || type === 'radio') {
       super.notifyParent(value, component);
@@ -133,6 +147,15 @@ export default class Input extends Element {
 
   getClassName() {
     return this.props.className;
+  }
+
+  getDebounce() {
+    const { debounce } = this.props;
+    if (typeof debounce !== 'undefined') {
+      return debounce;
+    }
+
+    return this.getForm().props.debounce;
   }
 
   render() {

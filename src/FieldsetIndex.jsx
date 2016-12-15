@@ -1,32 +1,19 @@
-import React, { PropTypes, cloneElement } from 'react';
-import Element from './Element';
+import React from 'react';
+import ProvideProps from './ProvideProps';
 
-export default class FieldsetIndex extends Element {
-  static propTypes = {
-    render: PropTypes.func,
-    children: PropTypes.func,
-  };
-
-  render() {
+export default class ProvideIndexes extends ProvideProps {
+  getProps() {
     const parent = this.getParent();
     const index = Number(parent.props.name);
-    const { children, render, ...rest } = this.props;
-    const newProps = {
+
+    return {
       index,
     };
+  }
 
-    if (typeof children === 'function') {
-      return this.replaceChildren(children(newProps));
-    } else if (typeof render === 'function') {
-      return this.replaceChildren(render(newProps));
-    }
-
-    if (!children) {
-      return (
-        <span {...rest}>{`${index + 1}.`}</span>
-      );
-    }
-
-    return this.replaceChildren(cloneElement(children, newProps));
+  renderEmptyChildren({ index }) {
+    return (
+      <span>{`${index + 1}.`}</span>
+    );
   }
 }

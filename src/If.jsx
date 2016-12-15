@@ -9,7 +9,7 @@ export default class If extends Element {
   };
 
   render() {
-    const { value } = this.state;
+    const value = this.getValue();
     const { cond, children } = this.props;
     const parent = this.getParent();
     if (typeof cond !== 'function' || !children) {

@@ -27,11 +27,13 @@ export default class Form extends Fieldset {
     autoComplete: PropTypes.string,
     children: PropTypes.node,
     tagName: PropTypes.string.isRequired,
+    debounce: PropTypes.number,
   };
 
   static defaultProps = {
     autoComplete: 'off',
     tagName: 'form',
+    debounce: 250,
   };
 
   static childContextTypes = {
@@ -43,18 +45,11 @@ export default class Form extends Fieldset {
   };
 
   componentWillReceiveProps(props) {
-    const value = this.getValue();
-    if (props.value !== value) {
-      this.setValue(props.value, this, true);
-    }
+    this.setValue(props.value, this, true);
   }
 
   getPath() {
     return undefined;
-  }
-
-  getValue() {
-    return this.props.value;
   }
 
   getOriginalValue() {
@@ -166,18 +161,10 @@ export default class Form extends Fieldset {
     }
   }
 
-  setValue(value, component, dontNotify) {
+  setValue(value, component, notifyChildren) {
     this.clearErrors();
 
-    super.setValue(value, component);
-    if (dontNotify) {
-      return;
-    }
-
-    const { onChange } = this.props;
-    if (onChange) {
-      onChange(value, component);
-    }
+    super.setValue(value, component, notifyChildren);
   }
 
   clearErrors() {
