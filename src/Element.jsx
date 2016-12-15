@@ -13,6 +13,8 @@ export default class Element extends Component {
     fieldset: PropTypes.object.isRequired,
   };
 
+  state = {};
+
   constructor(props, context) {
     super(props, context);
 

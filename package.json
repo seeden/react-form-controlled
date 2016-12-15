@@ -20,6 +20,8 @@
     "input",
     "select",
     "react-select",
+    "textarea",
+    "redux-form",
     "redux"
   ],
   "private": false,
@@ -36,10 +38,8 @@
   },
   "dependencies": {
     "diacritics": "^1.2.3",
-    "ajv": "^4.10.0",
     "lodash": "^4.17.2",
-    "core-decorators": "^0.15.0",
-    "react-addons-shallow-compare": "^15.4.1"
+    "core-decorators": "^0.15.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

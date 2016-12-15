@@ -58,24 +58,22 @@ export default class Fieldset extends Element {
     super.setValue(value, component, notifyChildren);
 
     if (notifyChildren) {
-      const { children } = this;
-      children.forEach(child => child.originalValueChanged());
+      this.notifyChildren();
     }
   }
 
   originalValueChanged() {
     super.originalValueChanged();
+    this.notifyChildren();
+  }
 
+  notifyChildren() {
     const { children } = this;
     children.forEach(child => child.originalValueChanged());
   }
 
   registerChild(child, name) {
-    if (typeof name === 'undefined') {
-      return;
-    }
-
-    if (name[0] === '.') {
+    if (name && name[0] === '.') {
       const parent = this.getParent();
       parent.registerChild(child, name.substr(1));
       return;
@@ -85,11 +83,7 @@ export default class Fieldset extends Element {
   }
 
   unregisterChild(child, name) {
-    if (typeof name === 'undefined') {
-      return;
-    }
-
-    if (name[0] === '.') {
+    if (name && name[0] === '.') {
       const parent = this.getParent();
       parent.unregisterChild(child, name.substr(1));
       return;

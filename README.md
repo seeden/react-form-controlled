@@ -1,6 +1,13 @@
 # React controlled form
 
-This is a React controlled form components. More about controlled components [here](https://facebook.github.io/react/docs/forms.html#why-controlled-components). The main idea is to create a simple forms as possible based on immutable data structures and controlled state.
+Intuitive react forms for building powerful applications.
+
+
+All components are [controlled](https://facebook.github.io/react/docs/forms.html#why-controlled-components)
+That means form is always showing the current state and data are immutable.
+Each form has own internal state that means you can skip onChange event.
+If you will change the value prop of the form component it will change the state of the form immediately.
+Library is very fast and can handle thousands of elements.
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -16,23 +23,26 @@ This is a React controlled form components. More about controlled components [he
 
 # Features
 
-- Build on standards
+- Blazing fast on big forms
 - Immutable data
-- Controlled behavior
+- Controlled behavior (support for "uncontrolled" behaviour)
+- Build on latest standards ES6 and promises
 - Support for isomorphic application
-- Good speed on big forms ([pure](https://facebook.github.io/react/docs/pure-render-mixin.html) components)
 - You are able to use forms without special components
 - Support for arrays/lists and indexes
 - Standard html elements like an input, select, textarea and fieldset (arrays)
-- Custom components
+- Custom components and support for 3rd party libraries
 - Validation
+- Tests and coverage
 
 
 # Support us
 
 Star this project on [GitHub][github-url].
 
-# Usage
+# Examples
+
+## Simple usage
 
 ```js
 import React, { Component } from 'react';
@@ -42,31 +52,28 @@ export default class Example extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
+    this.formData = {
       firstName: null,
       lastName: null
     };
   }
 
-  handleChange(state) {
-    this.setState(state);
-  }
-
-  handleSubmit(state) {
-    alert(`Hi ${state.firstName} ${state.lastName}`);
+  onSubmit = (data) => {
+    alert(`Hi ${data.firstName} ${data.lastName}`);
   }
 
   render() {
-    const formData = this.state;
-
     return (
-      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+      <Form
+        value={this.formData}
+        onSubmit={this.onSubmit}
+      >
         <label>
-          <input type="text" name="firstName" placeholder="First name"/>
+          <input name="firstName" />
         </label>
 
         <label>
-          <input type="text" name="lastName" placeholder="Last name"/>
+          <input name="lastName" />
         </label>
 
         <button type="submit">Submit</button>
@@ -80,7 +87,7 @@ export default class Example extends Component {
 
 Value is automatically added as prop to the inputs. When you will change it it will reload whole form (controlled form, but this is the work for React).
 
-## Arrays
+## Arrays and controlled state
 
 ```js
 import React, { Component } from 'react';
@@ -99,22 +106,24 @@ export default class Example extends Component {
     };
   }
 
-  handleChange(state) {
-    this.setState(state);
+  onChange = (data) => {
+    this.setState(data);
   }
 
-  handleSubmit(state) {
-    alert(`Hi ${state.users[0].firstName}`);
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
   }
 
   render() {
-    const formData = this.state;
-
     return (
-      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+      <Form
+        value={this.state}
+        onChange={this.onChange}
+        onSubmit={this.onSubmit}
+      >
         <fieldset name="users">
           <label>
-            <input type="text" name="firstName" placeholder="First name" />
+            <input name="firstName" />
           </label>
         </fieldset>
 
@@ -142,19 +151,16 @@ export default class Example extends Component {
     };
   }
 
-  handleChange(state) {
-    this.setState(state);
-  }
-
-  handleSubmit(state) {
-    alert(`Hi ${state.users[0].firstName}`);
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
   }
 
   render() {
-    const formData = this.state;
-
     return (
-      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
         <fieldset name="items">
           <input type="text" />
         </fieldset>
@@ -193,25 +199,22 @@ export default class Example extends Component {
     };
   }
 
-  handleChange(state) {
-    this.setState(state);
-  }
-
-  handleSubmit(state) {
-    alert(`Hi ${state.users[0].firstName}`);
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
   }
 
   render() {
-    const formData = this.state;
-
     return (
-      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
         <fieldset name="users">
           <label>
-            <input type="text" name="firstName" placeholder="First name" />
+            <input name="firstName" />
           </label>
           <label>
-            <input type="text" name="stats.followers" placeholder="Followers" />
+            <input name="stats.followers" />
           </label>
         </fieldset>
 
@@ -247,19 +250,16 @@ export default class Example extends Component {
     };
   }
 
-  handleChange(state) {
-    this.setState(state);
-  }
-
-  handleSubmit(state) {
-    alert(`Hi ${state.users[0].firstName}`);
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
   }
 
   render() {
-    const formData = this.state;
-
     return (
-      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
         <fieldset name="users">
           <label>
             <input type="text" name="firstName" placeholder="First name" />
@@ -281,9 +281,17 @@ export default class Example extends Component {
 ## Indexes
 
 If you are using arrays with fieldset you want to use indexes.
-Index component has one parameter named format.
-It is a function and it is optional. You can format your index value with it.
-Default behavior is: 1. 2. 3. etc...
+
+### Props
+#### component: React element
+
+A React component constructor to render when the location matches. The component will be rendered with the following props:
+
+index: (number) the portion of the pattern matched.
+
+#### render: function
+
+Instead of having a component rendered for you, you can pass in a function. Your render function will be called with the same props that are passed to the component.
 
 ```js
 import React, { Component } from 'react';
@@ -302,23 +310,20 @@ export default class Component extends Component {
     };
   }
 
-  handleChange(state) {
-    this.setState(state);
-  }
-
-  handleSubmit(state) {
-    alert(`Hi ${state.users[0].firstName}`);
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
   }
 
   render() {
-    const formData = this.state;
-
     return (
-      <Form value={formData} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}>
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
         <fieldset name="users">
           <label>
-            <Index format={(index) => `${index})`} />
-            <input type="text" name="firstName" placeholder="First name" />
+            <Index render={({ index }) => <span>{index}.</span>} />
+            <input name="firstName" />
           </label>
         </fieldset>
 
@@ -331,9 +336,228 @@ export default class Component extends Component {
 
 ## Parent values
 
-You can use value from parent with dot notation ".options"
+You can use value from parent with dot notation. Example ".selected"
 
 ```js
+import React, { Component } from 'react';
+import Form, { Index } from 'react-form-controlled';
+
+export default class Component extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      options: ['dog', 'mouse', 'cat'],
+      selected: 1,
+    };
+  }
+
+  onSubmit = (data) => {
+    alert(`Selected option is ${data.options[data.selected]}`);
+  }
+
+  render() {
+    return (
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
+        <fieldset name="options">
+          <Index
+            render={({ index }) =>
+              <input type="radio" name="..selected" value={index} />
+            }
+          />
+          <input name="." />
+        </fieldset>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+
+## Integrate with 3rd party libraries
+
+Integration is very easy you can use Integrate component. Here is example with [react-select](https://github.com/JedWatson/react-select) library.
+### Props
+#### value: string
+Name of the integrated value property.
+#### onChange: function
+OnChange callback of the integrated component.
+#### name: string
+Name of the state property. You can use standard dot notation as always :)
+
+```js
+import React, { Component } from 'react';
+import Form, { Integrate } from 'react-form-controlled';
+import Select from 'react-select';
+
+export default class Component extends Component {
+  onSubmit = (data) => {
+    alert(`Selected option is ${data.selected}`);
+  }
+
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    return (
+      <Form
+        onSubmit={this.onSubmit}
+      >
+        <Integrate name="selected">
+          <Select options={options} />
+        </Integrate>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+
+## Remove item from array
+
+```js
+import React, { Component } from 'react';
+import Form, { Remove } from 'react-form-controlled';
+
+export default class Component extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      users: [{
+        firstName: 'Zlatko',
+      }, {
+        firstName: 'Livia',
+      }]
+    };
+  }
+
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
+  }
+
+  render() {
+    return (
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
+        <fieldset name="users">
+          <label>
+            <input name="firstName" />
+            <Remove>
+              <button type="button">Remove</button>
+            </Remove>
+          </label>
+        </fieldset>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+Remove, Up and Down components has same properties like index. You can use render and component property as well.
+
+## Move item up/down in array
+
+```js
+import React, { Component } from 'react';
+import Form, { Up, Down } from 'react-form-controlled';
+
+export default class Component extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      users: [{
+        firstName: 'Zlatko',
+      }, {
+        firstName: 'Livia',
+      }]
+    };
+  }
+
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
+  }
+
+  render() {
+    return (
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
+        <fieldset name="users">
+          <input name="firstName" />
+          <Up>
+            <button type="button">Up</button>
+          </Up>
+          <Down>
+            <button type="button">Down</button>
+          </Down>
+        </fieldset>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+
+## Working state
+
+You can simply handle working state and show loading indicator. Form property onSubmit is based on promises. During you processing of this callback is form in the "isWorking" state.
+If the form is in the isWorking state you are not able to submit form again.
+
+```js
+import React, { Component } from 'react';
+import Form, { Working } from 'react-form-controlled';
+
+export default class Component extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      users: [{
+        firstName: 'Zlatko',
+      }, {
+        firstName: 'Livia',
+      }]
+    };
+  }
+
+  onSubmit = async (data) => {
+    return new Promise((resolve) => {
+      alert(`Hi ${data.users[0].firstName}`);
+
+      setTimeout(resolve, 3000);
+    });
+  }
+
+  render() {
+    return (
+      <Form
+        value={this.state}
+        onSubmit={this.onSubmit}
+      >
+        <fieldset name="users">
+          <input name="firstName" />
+        </fieldset>
+
+        <Working render={({ isWorking }) => isWorking ? 'isWorking' : 'idle'} />
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
 ```
 
 ## So far so good (more complex form)
@@ -343,7 +567,7 @@ Try to image simple quiz with questions and answers. Y
 ## Combination with other components
 
 If you want to disable autoreplace of the standard components like an input, select, textarea etc...
-You can disable this behavior with the form parameter replace={false}.
+You can disable this behavior with the form parameter skipReplace.
 This feature is great if you want to use this library with other 3rd libraries.
 You will be able to use Input, Select, Textarea and Fieldset.
 
@@ -363,26 +587,20 @@ export default class Component extends Component {
     };
   }
 
-  handleChange(state) {
-    this.setState(state);
-  }
-
-  handleSubmit(state) {
-    alert(`Hi ${state.users[0].firstName}`);
+  onSubmit(data) {
+    alert(`Hi ${data.users[0].firstName}`);
   }
 
   render() {
-    const formData = this.state;
-
     return (
       <Form
-        value={formData}
-        replace={false}
-        onChange={this.handleChange.bind(this)}
-        onSubmit={this.handleSubmit.bind(this)}>
+        value={this.state}
+        onSubmit={this.onSubmit}
+        skipReplace
+      >
         <Fieldset name="users">
           <label>
-            <Index format={(index) => `${index})`} />
+            <Index />
             <Input type="text" name="firstName" placeholder="First name" />
           </label>
         </Fieldset>
@@ -395,6 +613,8 @@ export default class Component extends Component {
 ```
 
 # Support for schemas and validation?
+
+This part is moved to another library named react-form-controlled-validate
 
 Yes, you can use JSON schema as property to the form. Why JSON schema? Because it is a standard.
 ```js

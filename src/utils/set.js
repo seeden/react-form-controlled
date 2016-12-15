@@ -13,7 +13,7 @@ export default function set(currentValue, originalPath, value) {
   }
 
   let current = start;
-  for (let i = 0; i < parts.length; i++) {
+  for (let i = 0; i < parts.length; i += 1) {
     const key = parts[i];
     if (!key) {
       throw new Error('Path is not complete');

@@ -1,21 +1,8 @@
 import { PropTypes, createElement } from 'react';
-import Ajv from 'ajv';
 import { autobind } from 'core-decorators';
 import Fieldset from './Fieldset';
 
-function errorToProperty(err) {
-  const { params = {} } = err;
-
-  if (params.missingProperty) {
-    return params.missingProperty;
-  }
-
-  return undefined;
-}
-
 export default class Form extends Fieldset {
-  static isForm = true;
-
   static propTypes = {
     onSubmit: PropTypes.func,
     onChange: PropTypes.func,
@@ -28,6 +15,7 @@ export default class Form extends Fieldset {
     children: PropTypes.node,
     tagName: PropTypes.string.isRequired,
     debounce: PropTypes.number,
+    validate: PropTypes.func,
   };
 
   static defaultProps = {
@@ -61,56 +49,6 @@ export default class Form extends Fieldset {
     return parent
       ? parent.getForm()
       : this;
-  }
-
-  getStateFromProps(props, context) {
-    const { schema } = props;
-
-    let validator = this.validator;
-    if (schema && (!validator || validator.schema !== schema)) {
-      const ajv = this.ajv = this.ajv || Ajv({
-        allErrors: true,
-        async: true,
-      });
-      validator = ajv.compile({
-        $async: true,
-        ...schema,
-      });
-      validator.schema = schema;
-    }
-
-    return {
-      ...super.getStateFromProps(props, context),
-      validator,
-    };
-  }
-
-  async validate(value) {
-    const { validator } = this.state;
-    if (!validator) {
-      return [];
-    }
-
-    try {
-      await validator(value);
-      return [];
-    } catch (e) {
-      const { errors } = e;
-
-      return errors.map((err) => {
-        const prop = errorToProperty(err);
-        const path = err.dataPath ? err.dataPath.substr(1) : null;
-
-        const fullPath = path && prop
-          ? `${path}.${prop}`
-          : path || prop;
-
-        return {
-          ...err,
-          path: fullPath,
-        };
-      });
-    }
   }
 
   getErrors(path, exactMatch) {
@@ -150,15 +88,34 @@ export default class Form extends Fieldset {
   async onSubmit(evn) {
     evn.preventDefault();
 
-    const { onSubmit, onError } = this.props;
+    if (this.working) {
+      return;
+    }
+
+    this.working = true;
+    this.notifyChildren();
+
+    const { onSubmit, onError, validate } = this.props;
     const value = this.getValue();
-    const errors = this.errors = await this.validate(value);
+
+    this.errors = validate
+      ? await validate(value)
+      : [];
+
+    const errors = this.errors;
 
     if (!errors.length && onSubmit) {
-      onSubmit(value);
-    } else if (errors.length && onError) {
-      onError(errors);
+      await onSubmit(value);
+    } else if (errors && errors.length && onError) {
+      await onError(errors);
     }
+
+    this.working = false;
+    this.notifyChildren();
+  }
+
+  isWorking() {
+    return !!this.working;
   }
 
   setValue(value, component, notifyChildren) {
