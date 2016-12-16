@@ -107,7 +107,7 @@ export default class Form extends Fieldset {
     if (!errors.length && onSubmit) {
       await onSubmit(value);
     } else if (errors && errors.length && onError) {
-      await onError(errors);
+      await onError(errors, value);
     }
 
     this.working = false;
