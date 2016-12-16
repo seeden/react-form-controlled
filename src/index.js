@@ -7,6 +7,7 @@ export Tbody from './Tbody';
 export Word from './Word';
 export Index from './FieldsetIndex';
 export If from './If';
+export Element from './Element';
 export Integrate from './Integrate';
 export markAsDirty from './utils/markAsDirty';
 export Remove from './Remove';
