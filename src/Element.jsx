@@ -80,6 +80,9 @@ export default class Element extends Component {
   getPath() {
     const { name } = this.props;
     const parent = this.getParent();
+    if (!parent) {
+      return undefined;
+    }
 
     return parent.buildPath(name);
   }
