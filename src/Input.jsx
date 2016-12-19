@@ -160,6 +160,7 @@ export default class Input extends Element {
 
   render() {
     const {
+      name, // radio button must be without name
       type,
       debounce,
       value: originalValue,
