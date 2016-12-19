@@ -62,6 +62,9 @@ export default class Element extends Component {
   getOriginalValue(props, context) {
     const { name } = props;
     const { fieldset } = context;
+    if (!fieldset) {
+      return undefined;
+    }
 
     return fieldset.getChildValue(name);
   }

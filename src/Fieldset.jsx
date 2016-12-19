@@ -13,8 +13,6 @@ function isEmpty(value) {
 }
 
 export default class Fieldset extends Element {
-  static isElement = Element.isElement;
-
   static propTypes = {
     ...Element.propTypes,
     onChange: PropTypes.func,
