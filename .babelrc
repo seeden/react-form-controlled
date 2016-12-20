@@ -1,8 +1,8 @@
 {
   "presets": [
-    "stage-0",
+    ["es2015", {"loose": true}],
+    "stage-1",
     "react",
-    "es2015"
   ],
   "plugins": [
     "transform-runtime",

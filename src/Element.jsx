@@ -88,7 +88,12 @@ export default class Element extends Component {
   }
 
   getForm() {
-    return this.getParent().getForm();
+    const parent = this.getParent();
+    if (!parent) {
+      return undefined;
+    }
+
+    return parent.getForm();
   }
 
   setValue(value, component = this, notifyChildren) {
