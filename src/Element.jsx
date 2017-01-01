@@ -32,6 +32,17 @@ export default class Element extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    const { sameChildren } = nextProps;
+    const form = this.getForm();
+
+    if (sameChildren === true) {
+      return true;
+    }
+
+    if (typeof sameChildren === 'undefined' && form.props.sameChildren === true) {
+      return true;
+    }
+
     const sameProps = shallowEqual(this.props, nextProps, ['children']);
     if (!sameProps) {
       return true;

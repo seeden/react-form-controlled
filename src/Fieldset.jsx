@@ -21,6 +21,7 @@ export default class Fieldset extends Element {
     tagName: PropTypes.string,
     childrenOnly: PropTypes.bool,
     children: PropTypes.node,
+    sameChildren: PropTypes.bool,
   };
 
   static childContextTypes = {

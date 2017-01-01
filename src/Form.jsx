@@ -16,6 +16,7 @@ export default class Form extends Fieldset {
     tagName: PropTypes.string.isRequired,
     debounce: PropTypes.number,
     validate: PropTypes.func,
+    sameChildren: PropTypes.bool,
   };
 
   static defaultProps = {
