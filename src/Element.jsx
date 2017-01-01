@@ -35,25 +35,21 @@ export default class Element extends Component {
     const { sameChildren } = nextProps;
     const form = this.getForm();
 
-    if (sameChildren === true) {
-      return true;
+    if (sameChildren === true || (typeof sameChildren === 'undefined' && form.props.sameChildren === true)) {
+      const sameProps = shallowEqual(this.props, nextProps, ['children']);
+      if (!sameProps) {
+        return true;
+      }
+
+      const sameState = shallowEqual(this.state, nextState, []);
+      if (!sameState) {
+        return true;
+      }
+
+      return false;
     }
 
-    if (typeof sameChildren === 'undefined' && form.props.sameChildren === true) {
-      return true;
-    }
-
-    const sameProps = shallowEqual(this.props, nextProps, ['children']);
-    if (!sameProps) {
-      return true;
-    }
-
-    const sameState = shallowEqual(this.state, nextState, []);
-    if (!sameState) {
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   componentWillUnmount() {
