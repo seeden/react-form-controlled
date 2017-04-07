@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react';
-import { autobind } from 'core-decorators';
 import Element from './Element';
-import wait from './utils/wait';
 
 function fixUncontrolledValue(value) {
   return (typeof value === 'undefined' || value === null) ? '' : value;
@@ -31,14 +29,12 @@ export default class Input extends Element {
     return fixUncontrolledValue(super.getValue());
   }
 
-  @autobind
-  onKeyPress(evn) {
+  onKeyPress = (evn) => {
     if (evn.key === 'Enter') {
       this.clearTimeout(true);
     }
   }
 
-  @autobind
   onChange(evn) {
     const { target } = evn;
 
@@ -122,8 +118,7 @@ export default class Input extends Element {
     }, debounce);
   }
 
-  @autobind
-  onFocus(...args) {
+  onFocus = (...args) => {
     const { onFocus } = this.props;
 
     this.focused = true;
@@ -133,8 +128,7 @@ export default class Input extends Element {
     }
   }
 
-  @autobind
-  onBlur(...args) {
+  onBlur = (...args) => {
     const { onBlur } = this.props;
 
     this.focused = false;
@@ -185,7 +179,7 @@ export default class Input extends Element {
         type={type}
         value={value}
         checked={isCheckbox ? checked : undefined}
-        onChange={this.onChange}
+        onChange={(...args) => this.onChange(...args)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onKeyPress={this.onKeyPress}

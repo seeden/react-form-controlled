@@ -1,5 +1,4 @@
 import React, { PropTypes, cloneElement } from 'react';
-import { autobind } from 'core-decorators';
 import Element from './Element';
 import wait from './utils/wait';
 
@@ -18,8 +17,7 @@ export default class Button extends Element {
     throw new Error('You need to implement process');
   }
 
-  @autobind
-  async onClick(...args) {
+  onClick = async (...args) => {
     const result = await this.process();
     if (typeof result === 'undefined') {
       return;

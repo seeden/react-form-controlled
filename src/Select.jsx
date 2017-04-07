@@ -1,5 +1,4 @@
 import isPlainObject from 'lodash/isPlainObject';
-import { autobind } from 'core-decorators';
 import React, { PropTypes } from 'react';
 import Element from './Element';
 
@@ -74,8 +73,7 @@ export default class Select extends Element {
     return isMultiple ? values : values[0];
   }
 
-  @autobind
-  onChange(evn) {
+  onChange = (evn) => {
     evn.stopPropagation();
 
     const nodes = evn.target.options || [];

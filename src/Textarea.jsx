@@ -17,7 +17,7 @@ export default class Textarea extends Input {
         {...rest}
         className={this.getClassName()}
         name={path}
-        onChange={this.onChange}
+        onChange={(...args) => this.onChange(...args)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onKeyPress={this.onKeyPress}

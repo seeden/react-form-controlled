@@ -1,5 +1,4 @@
 import { PropTypes, createElement } from 'react';
-import { autobind } from 'core-decorators';
 import Fieldset from './Fieldset';
 
 export default class Form extends Fieldset {
@@ -85,8 +84,7 @@ export default class Form extends Fieldset {
     return !this.hasErrors(path, exact);
   }
 
-  @autobind
-  async onSubmit(evn) {
+  onSubmit = async (evn) => {
     evn.preventDefault();
 
     if (this.working) {

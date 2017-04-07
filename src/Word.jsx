@@ -1,5 +1,4 @@
 import { remove as removeDiacritics } from 'diacritics';
-import { autobind } from 'core-decorators';
 import Input from './Input';
 
 function fixValue(value) {
@@ -20,7 +19,6 @@ function fixValue(value) {
 }
 
 export default class Word extends Input {
-  @autobind
   onChange(evn) {
     const { target } = evn;
 
