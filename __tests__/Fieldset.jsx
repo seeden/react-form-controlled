@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import Form, {
   Input,
   Fieldset,
-  Index,
+  FieldsetIndex,
   If,
 } from '../src';
 
@@ -246,7 +246,7 @@ describe('Fieldset', () => {
     const wrapper = mount((
       <Form value={value}>
         <Fieldset name="data">
-          <Index />
+          <FieldsetIndex />
           <Input name="inputValue" />
         </Fieldset>
       </Form>
@@ -318,7 +318,7 @@ describe('Fieldset', () => {
       <Form value={value}>
         <Fieldset name="data">
           <Input name="." />
-          <Index
+          <FieldsetIndex
             render={({ index }) =>
               <button onClick={evn => onClick(index, evn)} />
             }
@@ -344,7 +344,7 @@ describe('Fieldset', () => {
       <Form value={value}>
         <Fieldset name="data">
           <Input name="." />
-          <Index
+          <FieldsetIndex
             render={({ index }) =>
               <button onClick={evn => onClick(index, evn)} />
             }

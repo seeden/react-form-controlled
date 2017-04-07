@@ -6,7 +6,7 @@ export Textarea from './Textarea';
 export Fieldset from './Fieldset';
 export Tbody from './Tbody';
 export Word from './Word';
-export Index from './FieldsetIndex';
+export FieldsetIndex from './FieldsetIndex';
 export If from './If';
 export Element from './Element';
 export Integrate from './Integrate';
