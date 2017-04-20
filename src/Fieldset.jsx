@@ -260,16 +260,18 @@ export default class Fieldset extends Element {
         return undefined;
       }
 
+      const childChildren = (child.props && child.props.children) || child.children;
+
       if (child.type === 'input') {
-        return <Input {...child.props} />;
+        return <Input {...child.props}>{childChildren}</Input>;
       } else if (child.type === 'select') {
-        return <Select {...child.props} />;
+        return <Select {...child.props}>{childChildren}</Select>;
       } else if (child.type === 'textarea') {
-        return <Textarea {...child.props} />;
+        return <Textarea {...child.props}>{childChildren}</Textarea>;
       } else if (child.type === 'fieldset' && child.props.name) {
-        return <Fieldset {...child.props} />;
+        return <Fieldset {...child.props}>{childChildren}</Fieldset>;
       } else if (child.type === 'tbody' && child.props.name) {
-        return <Fieldset {...child.props} tagName="tbody" />;
+        return <Fieldset {...child.props} tagName="tbody">{childChildren}</Fieldset>;
       }
 
       return undefined;
@@ -280,6 +282,7 @@ export default class Fieldset extends Element {
     const value = this.getValue();
 
     if (typeof children === 'function') {
+
       return this.processChildren(children({ value }));
     }
 
