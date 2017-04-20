@@ -1,4 +1,5 @@
-import { PropTypes, cloneElement } from 'react';
+import { cloneElement } from 'react';
+import PropTypes from 'prop-types';
 import Element from './Element';
 
 export default class Integrate extends Element {

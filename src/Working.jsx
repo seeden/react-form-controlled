@@ -1,3 +1,4 @@
+import React from 'react';
 import ProvideProps from './ProvideProps';
 
 export default class Working extends ProvideProps {

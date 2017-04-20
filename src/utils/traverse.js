@@ -3,7 +3,8 @@ import Element from '../Element';
 
 export default function traverse(child, processCallback, replaceCallback) {
   if (Array.isArray(child)) {
-    return Children.map(child, children => traverse(children, processCallback, replaceCallback));
+    return Children
+      .map(child, children => traverse(children, processCallback, replaceCallback));
   }
 
   if (!child || typeof child === 'string') {
@@ -28,14 +29,16 @@ export default function traverse(child, processCallback, replaceCallback) {
     }
   }
 
-  if (child.props && child.props.children) {
-    const children = traverse(child.props.children, processCallback, replaceCallback);
+  // support for preact
+  const children = (child.props && child.props.children) || child.children;
+  if (children) {
+    const traversedChildren = traverse(children, processCallback, replaceCallback);
     // speed up
-    if (children === child.props.children) {
+    if (traversedChildren === children) {
       return child;
     }
 
-    return cloneElement(child, {}, children);
+    return cloneElement(child, {}, traversedChildren);
   }
 
   return child;

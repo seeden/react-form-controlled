@@ -6,6 +6,6 @@ export default class Remove extends Button {
   };
 
   async process() {
-    return await this.getParent().remove();
+    return this.getParent().remove();
   }
 }

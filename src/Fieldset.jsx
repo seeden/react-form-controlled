@@ -1,6 +1,6 @@
-import React, { PropTypes, createElement } from 'react';
+import React, { createElement } from 'react';
+import PropTypes from 'prop-types';
 import get from 'lodash/get';
-import isPlainObject from 'lodash/isPlainObject';
 import Element from './Element';
 import set from './utils/set';
 import traverse from './utils/traverse';
@@ -35,7 +35,7 @@ export default class Fieldset extends Element {
   constructor(...args) {
     super(...args);
 
-    this.children = [];
+    this.registeredChildren = [];
   }
 
   getIndexes() {
@@ -67,8 +67,8 @@ export default class Fieldset extends Element {
   }
 
   notifyChildren() {
-    const { children } = this;
-    children.forEach(child => child.originalValueChanged());
+    const { registeredChildren } = this;
+    registeredChildren.forEach(child => child.originalValueChanged());
   }
 
   registerChild(child, name) {
@@ -78,7 +78,7 @@ export default class Fieldset extends Element {
       return;
     }
 
-    this.children.push(child);
+    this.registeredChildren.push(child);
   }
 
   unregisterChild(child, name) {
@@ -88,9 +88,9 @@ export default class Fieldset extends Element {
       return;
     }
 
-    const pos = this.children.indexOf(child);
+    const pos = this.registeredChildren.indexOf(child);
     if (pos !== -1) {
-      this.children.splice(pos, 1);
+      this.registeredChildren.splice(pos, 1);
     }
   }
 

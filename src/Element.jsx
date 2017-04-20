@@ -1,4 +1,5 @@
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
+import PropTypes from 'prop-types';
 import shallowEqual from './utils/shallowCompare';
 
 export default class Element extends Component {

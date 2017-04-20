@@ -6,6 +6,6 @@ export default class Up extends Button {
   };
 
   async process() {
-    return await this.getParent().up();
+    return this.getParent().up();
   }
 }
