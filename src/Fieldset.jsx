@@ -282,7 +282,6 @@ export default class Fieldset extends Element {
     const value = this.getValue();
 
     if (typeof children === 'function') {
-
       return this.processChildren(children({ value }));
     }
 
