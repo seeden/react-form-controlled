@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.17.23",
+  "version": "0.17.24",
   "description": "Intuitive react forms for building powerful applications",
   "author": {
     "name": "Zlatko Fedor",
@@ -27,6 +27,7 @@
   "private": false,
   "license": "MIT",
   "main": "./lib/index.js",
+  "esnext": "./src/index.js",
   "engines": {
     "node": ">= 0.10.0"
   },
