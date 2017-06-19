@@ -5,6 +5,7 @@ import Form, {
   Fieldset,
   FieldsetIndex,
   If,
+  Last,
 } from '../src';
 
 describe('Fieldset', () => {
@@ -498,5 +499,25 @@ describe('Fieldset', () => {
     ));
 
     expect(wrapper.find('textarea').length).toBe(0);
+  });
+
+  it('should be able to use last', () => {
+    const value = {
+      data: [123, 222],
+    };
+
+    const wrapper = mount((
+      <Form value={value}>
+        <Fieldset name="data">
+          <Last>
+            <Input name="." />
+          </Last>
+        </Fieldset>
+      </Form>
+    ));
+
+    expect(wrapper.find('form').length).toBe(1);
+    expect(wrapper.find('input').length).toBe(1);
+    expect(wrapper.find('input').get(0).value).toBe('222');
   });
 });

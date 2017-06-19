@@ -20,3 +20,4 @@ export ProvideProps from './ProvideProps';
 export ProvideIndexes from './ProvideIndexes';
 export Button from './Button';
 export Working from './Working';
+export Last from './Last';

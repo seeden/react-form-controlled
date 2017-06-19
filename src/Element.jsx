@@ -67,6 +67,10 @@ export default class Element extends Component {
     return this.getParent().getIndexes();
   }
 
+  getTotals() {
+    return this.getParent().getTotals();
+  }
+
   getOriginalValue(props, context) {
     const { name } = props;
     const { fieldset } = context;

@@ -17,6 +17,7 @@ export default class Fieldset extends Element {
     ...Element.propTypes,
     onChange: PropTypes.func,
     index: PropTypes.number,
+    total: PropTypes.number,
     children: PropTypes.node,
     tagName: PropTypes.string,
     childrenOnly: PropTypes.bool,
@@ -36,6 +37,21 @@ export default class Fieldset extends Element {
     super(...args);
 
     this.registeredChildren = [];
+  }
+
+  getTotals() {
+    const totals = [];
+    if (typeof this.props.total !== 'undefined') {
+      totals.push(this.props.total);
+    }
+
+    const parent = this.getParent();
+    if (!parent) {
+      return totals;
+    }
+
+    const parentTotals = parent.getTotals();
+    return [...totals, ...parentTotals];
   }
 
   getIndexes() {
@@ -294,6 +310,7 @@ export default class Fieldset extends Element {
           name={index}
           key={index}
           index={index}
+          total={value.length}
           childrenOnly={childrenOnly}
         >
           {children}
