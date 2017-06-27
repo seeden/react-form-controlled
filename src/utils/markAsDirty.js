@@ -24,15 +24,21 @@ export default function markAsDirty(value, originalPath, updateCallback) {
   const parts = path.split('.');
 
   let current = start;
-  for (let i = 0; i < parts.length; i += 1) {
-    const key = parts[i];
+  let before;
+
+  parts.forEach((key) => {
     current[key] = dirty(current[key]);
 
+    before = current;
     current = current[key];
-  }
+  });
 
   if (updateCallback) {
-    updateCallback(current);
+    const newValue = updateCallback(current);
+
+    if (before !== undefined && parts.length) {
+      before[parts.length - 1] = newValue;
+    }
   }
 
   return start;
