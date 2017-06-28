@@ -37,7 +37,8 @@ export default function markAsDirty(value, originalPath, updateCallback) {
     const newValue = updateCallback(current);
 
     if (before !== undefined && parts.length) {
-      before[parts.length - 1] = newValue;
+      const lastKey = parts[parts.length - 1];
+      before[lastKey] = newValue;
     }
   }
 
