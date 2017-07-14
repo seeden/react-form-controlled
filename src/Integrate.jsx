@@ -33,9 +33,7 @@ export default class Integrate extends Element {
         value: currentValue,
         onChange: this.handleChange,
       });
-    }
-
-    if (typeof children === 'function') {
+    } else if (typeof children === 'function') {
       return children({
         name,
         value: currentValue,
