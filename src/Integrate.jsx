@@ -10,25 +10,49 @@ export default class Integrate extends Element {
       PropTypes.bool,
     ]),
     value: PropTypes.string,
+    render: PropTypes.func,
   };
 
   static defaultProps = {
     onChange: 'onChange',
     value: 'value',
+    render: undefined,
   };
 
+  handleChange = (...args) => {
+    this.setValue(...args);
+  }
+
   render() {
-    const { children, onChange, value, name } = this.props;
+    const { children, onChange, value, name, render } = this.props;
+    const currentValue = this.getValue();
+
+    if (typeof render === 'function') {
+      return render({
+        name,
+        value: currentValue,
+        onChange: this.handleChange,
+      });
+    }
+
+    if (typeof children === 'function') {
+      return children({
+        name,
+        value: currentValue,
+        onChange: this.handleChange,
+      });
+    }
+
     const newProps = {
       name,
     };
 
     if (typeof onChange === 'string') {
-      newProps[onChange] = (...args) => this.setValue(...args);
+      newProps[onChange] = this.handleChange;
     }
 
-    if (value) {
-      newProps[value] = this.getValue();
+    if (typeof value === 'string') {
+      newProps[value] = currentValue;
     }
 
     return cloneElement(children, newProps);

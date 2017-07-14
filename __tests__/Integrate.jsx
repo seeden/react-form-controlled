@@ -19,6 +19,23 @@ describe('Integrate', () => {
     expect(wrapper.find('input').first().props().value).toBe('Kosice');
   });
 
+  it('should be able to use function', () => {
+    const state = {
+      place: 'Kosice',
+    };
+
+    const wrapper = mount((
+      <Form value={state}>
+        <Integrate name="place" render={({ name, value, onChange }) => (
+          <input placeholder="1122" name={name} value={value} onChange={onChange} />
+        )}
+        />
+      </Form>
+   ));
+
+    expect(wrapper.find('input').first().props().value).toBe('Kosice');
+  });
+
   it('should be able to create object', () => {
     const value = {
       rows: [123, 456],
