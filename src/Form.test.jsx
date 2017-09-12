@@ -21,7 +21,7 @@ describe('Form', () => {
     };
 
     const wrapper = mount((
-      <Form value={value} onSubmit={done} skipReplace>
+      <Form value={value} onSubmit={() => done()} skipReplace>
         <button type="submit">submit</button>
       </Form>
     ));

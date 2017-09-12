@@ -520,4 +520,47 @@ describe('Fieldset', () => {
     expect(wrapper.find('input').length).toBe(1);
     expect(wrapper.find('input').get(0).value).toBe('222');
   });
+
+
+  it('should be able to use render', (done) => {
+    const value = {
+      data: [{
+        inputValue: 123,
+      }, {
+        inputValue: 222,
+      }],
+    };
+
+    function onChange(state) {
+      expect(state.data[0].inputValue).toBe('333');
+      done();
+    }
+
+    const wrapper = mount((
+      <Form value={value} onChange={onChange}>
+        <Fieldset
+          name="data"
+          render={({ value }) => (
+            <div>
+              {value.map((val, index) => {
+                return (
+                  <fieldset name={index} key={index}>
+                    <input name="inputValue" />
+                  </fieldset>
+                );
+              })}
+            </div>
+          )}
+        />
+      </Form>
+    ));
+
+    expect(wrapper.find('form').length).toBe(1);
+    expect(wrapper.find('input').get(0).value).toBe('123');
+    expect(wrapper.find('input').get(1).value).toBe('222');
+
+    wrapper.find('input').first().simulate('change', { target: {
+      value: '333',
+    } });
+  });
 });

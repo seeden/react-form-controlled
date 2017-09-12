@@ -10,7 +10,7 @@ export default class Textarea extends Input {
   };
 
   render() {
-    const { path, debounce, type, ...rest } = this.props;
+    const { path, debounce, type, group, ...rest } = this.props;
     const value = this.getValue();
 
     return (

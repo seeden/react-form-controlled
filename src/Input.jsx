@@ -15,11 +15,13 @@ export default class Input extends Element {
     type: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     debounce: PropTypes.number,
+    group: PropTypes.string,
   };
 
   static defaultProps = {
     autoComplete: 'off',
     type: 'text',
+    group: undefined,
   };
 
   static contextTypes = {
@@ -38,7 +40,6 @@ export default class Input extends Element {
 
   onChange(evn) {
     const { target } = evn;
-
     let value = target.value;
 
     if (target.type === 'checkbox') {
@@ -63,6 +64,7 @@ export default class Input extends Element {
       setTimeout(() => {
         this.setValue(value);
         const { onChange } = this.props;
+
         if (typeof onChange === 'function') {
           onChange(evn);
         }
@@ -153,9 +155,18 @@ export default class Input extends Element {
     return this.getForm().props.debounce;
   }
 
+  getGroupName(group) {
+    if (!group) {
+      return undefined;
+    }
+
+    return this.getPathByName(group);
+  }
+
   render() {
     const {
       name, // radio button must be without name
+      group, // group name of the radio button
       type,
       debounce,
       value: originalValue,
@@ -172,10 +183,13 @@ export default class Input extends Element {
     }
 
     const isCheckbox = type === 'checkbox' || type === 'radio';
+    const isRadio = type === 'radio';
+    const newName = isRadio ? this.getGroupName(group) : undefined;
 
     return (
       <input
         {...rest}
+        name={newName}
         className={this.getClassName()}
         type={type}
         value={value}

@@ -284,9 +284,9 @@ export default class Fieldset extends Element {
         return <Select {...child.props}>{childChildren}</Select>;
       } else if (child.type === 'textarea') {
         return <Textarea {...child.props}>{childChildren}</Textarea>;
-      } else if (child.type === 'fieldset' && child.props.name) {
+      } else if (child.type === 'fieldset' && child.props.name !== undefined) {
         return <Fieldset {...child.props}>{childChildren}</Fieldset>;
-      } else if (child.type === 'tbody' && child.props.name) {
+      } else if (child.type === 'tbody' && child.props.name !== undefined) {
         return <Fieldset {...child.props} tagName="tbody">{childChildren}</Fieldset>;
       }
 
@@ -296,26 +296,32 @@ export default class Fieldset extends Element {
 
   processChildren(children) {
     const value = this.getValue();
+    const { render } = this.props;
 
-    if (typeof children === 'function') {
-      return this.processChildren(children({ value }));
+    if (typeof render === 'function') {
+      return this.replaceChildren(render({ value }));
     }
 
+    const path = this.getPath();
     const { skipMap } = this.props;
     if (Array.isArray(value) && !skipMap) {
       const childrenOnly = this.props.tagName === 'tbody';
 
-      return value.map((item, index) => (
-        <Fieldset
-          name={index}
-          key={index}
-          index={index}
-          total={value.length}
-          childrenOnly={childrenOnly}
-        >
-          {children}
-        </Fieldset>
-      ));
+      return value.map((item, index) => {
+        const uniqueKey = `${path}.${index}`;
+
+        return (
+          <Fieldset
+            name={index}
+            key={uniqueKey}
+            index={index}
+            total={value.length}
+            childrenOnly={childrenOnly}
+          >
+            {children}
+          </Fieldset>
+        );
+      });
     }
 
     return this.replaceChildren(children);

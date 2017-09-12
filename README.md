@@ -652,4 +652,4 @@ Star this project on [GitHub][github-url].
 
 The MIT License (MIT)
 
-Copyright (c) 2016 [Zlatko Fedor](http://github.com/seeden)
+Copyright (c) 2017 [Zlatko Fedor](http://github.com/seeden)

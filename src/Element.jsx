@@ -91,6 +91,10 @@ export default class Element extends Component {
 
   getPath() {
     const { name } = this.props;
+    return this.getPathByName(name);
+  }
+
+  getPathByName(name) {
     const parent = this.getParent();
     if (!parent) {
       return undefined;
