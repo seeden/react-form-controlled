@@ -1,6 +1,7 @@
 import React, { createElement } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
+import isNumber from 'lodash/isNumber';
 import Element from './Element';
 import set from './utils/set';
 import traverse from './utils/traverse';
@@ -118,12 +119,8 @@ export default class Fieldset extends Element {
 
   async remove(index) {
     if (typeof index === 'undefined') {
-      if (typeof this.props.index === 'undefined') {
-        throw new Error('This is not an array');
-      }
-
       const parent = this.getParent();
-      return parent.remove(this.props.index);
+      return parent.remove(this.getCurrentIndex());
     }
 
     const value = this.getValue();
@@ -141,12 +138,8 @@ export default class Fieldset extends Element {
 
   async up(index) {
     if (typeof index === 'undefined') {
-      if (typeof this.props.index === 'undefined') {
-        throw new Error('This is not an array');
-      }
-
       const parent = this.getParent();
-      return parent.up(this.props.index);
+      return parent.up(this.getCurrentIndex());
     }
 
     const value = this.getValue();
@@ -164,14 +157,24 @@ export default class Fieldset extends Element {
     return index;
   }
 
+  getCurrentIndex() {
+    const { name } = this.props;
+    if (name === undefined) {
+      throw new Error('This is not an array');
+    }
+
+    const indexNumber = Number(name);
+    if (indexNumber.toString() !== name.toString() || !isNumber(indexNumber)) {
+      throw new Error(`Index ${indexNumber} is not a number`);
+    }
+
+    return indexNumber;
+  }
+
   async down(index) {
     if (typeof index === 'undefined') {
-      if (typeof this.props.index === 'undefined') {
-        throw new Error('This is not an array');
-      }
-
       const parent = this.getParent();
-      return parent.down(this.props.index);
+      return parent.down(this.getCurrentIndex());
     }
 
     const retVar = this.up(index + 1);
@@ -314,7 +317,6 @@ export default class Fieldset extends Element {
           <Fieldset
             name={index}
             key={uniqueKey}
-            index={index}
             total={value.length}
             childrenOnly={childrenOnly}
           >
