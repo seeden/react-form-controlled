@@ -247,7 +247,11 @@ describe('Fieldset', () => {
     const wrapper = mount((
       <Form value={value}>
         <Fieldset name="data">
-          <FieldsetIndex />
+          <FieldsetIndex
+            render={({ index }) => (
+              <span>{`${index + 1}.`}</span>
+            )}
+          />
           <Input name="inputValue" />
         </Fieldset>
       </Form>

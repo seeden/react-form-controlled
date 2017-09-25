@@ -5,17 +5,10 @@ import Element from './Element';
 export default class Integrate extends Element {
   static propTypes = {
     ...Element.propTypes,
-    onChange: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.bool,
-    ]),
-    value: PropTypes.string,
     render: PropTypes.func,
   };
 
   static defaultProps = {
-    onChange: 'onChange',
-    value: 'value',
     render: undefined,
   };
 
@@ -24,35 +17,20 @@ export default class Integrate extends Element {
   }
 
   render() {
-    const { children, onChange, value, name, render } = this.props;
+    const { children, name, render } = this.props;
     const currentValue = this.getValue();
-
-    if (typeof render === 'function') {
-      return render({
-        name,
-        value: currentValue,
-        onChange: this.handleChange,
-      });
-    } else if (typeof children === 'function') {
-      return children({
-        name,
-        value: currentValue,
-        onChange: this.handleChange,
-      });
-    }
-
     const newProps = {
       name,
+      value: currentValue,
+      onChange: this.handleChange,
     };
 
-    if (typeof onChange === 'string') {
-      newProps[onChange] = this.handleChange;
+    if (typeof render === 'function') {
+      return render(newProps);
+    } else if (typeof children === 'function') {
+      return children(newProps);
     }
 
-    if (typeof value === 'string') {
-      newProps[value] = currentValue;
-    }
-
-    return cloneElement(children, newProps);
+    throw new Error('You need to set property render or children as function');
   }
 }

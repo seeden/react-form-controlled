@@ -7,10 +7,4 @@ export default class Value extends ProvideProps {
       value: this.getValue(),
     };
   }
-
-  renderEmptyChildren({ value }) {
-    return (
-      <span>{value}</span>
-    );
-  }
 }

@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import Form, { Remove, Down, Up } from '../src';
 
 describe('Up', () => {
-  it('should be able to move item in array', (done) => {
+  it('should be able to move up item in array', (done) => {
     const value = {
       items: [1, 2, 3],
     };
@@ -17,12 +17,14 @@ describe('Up', () => {
       <Form value={value} onChange={onChange}>
         <fieldset name="items">
           <input name="." />
-          <Up>
-            <button type="button">Up</button>
-          </Up>
+          <Up
+            render={({ onClick }) => (
+              <button type="button" onClick={onClick}>Up</button>
+            )}
+          />
         </fieldset>
       </Form>
-   ));
+    ));
 
     expect(wrapper.find('input').first().props().value).toBe(1);
 
@@ -31,7 +33,7 @@ describe('Up', () => {
 });
 
 describe('Down', () => {
-  it('should be able to move item in array', (done) => {
+  it('should be able to move down item in array', (done) => {
     const value = {
       items: [1, 2, 3],
     };
@@ -45,9 +47,11 @@ describe('Down', () => {
       <Form value={value} onChange={onChange}>
         <fieldset name="items">
           <input name="." />
-          <Down>
-            <button type="button">Down</button>
-          </Down>
+          <Down
+            render={({ onClick }) => (
+              <button type="button" onClick={onClick}>Down</button>
+            )}
+          />
         </fieldset>
       </Form>
     ));
@@ -59,7 +63,7 @@ describe('Down', () => {
 });
 
 describe('Remove', () => {
-  it('should be able to move item in array', (done) => {
+  it('should be able to remove item from array', (done) => {
     const value = {
       items: [1, 2, 3],
     };
@@ -73,44 +77,21 @@ describe('Remove', () => {
       <Form value={value} onChange={onChange}>
         <fieldset name="items">
           <input name="." />
-          <Remove>
-            <button type="button"></button>
-          </Remove>
-        </fieldset>
-      </Form>
-   ));
-
-    wrapper.find('button').first().simulate('click');
-  });
-});
-
-describe('Remove pure', () => {
-  it('should be able to move item in array', (done) => {
-    const value = {
-      items: [1, 2, 3],
-    };
-
-    function onChange(state) {
-      expect(state.items).toEqual([2, 3]);
-      done();
-    }
-
-    const wrapper = mount((
-      <Form value={value} onChange={onChange}>
-        <fieldset name="items">
-          <input name="." />
-          <Remove>{({ onClick }) =>
-            <button type="button" onClick={onClick}>Remove</button>
-          }
-          </Remove>
+          <Remove
+            render={({ onClick }) => (
+              <button type="button" onClick={onClick}>Remove</button>
+            )}
+          />
         </fieldset>
       </Form>
     ));
 
     wrapper.find('button').first().simulate('click');
   });
+});
 
-  it('should be able to move item in array', (done) => {
+describe('Remove pure', () => {
+  it('should be able to remove item from array as children function', (done) => {
     const value = {
       items: [1, 2, 3],
     };
@@ -125,7 +106,9 @@ describe('Remove pure', () => {
         <fieldset name="items">
           <input name="." />
           <Remove>
-            <button type="button">Remove</button>
+            {({ onClick }) =>
+              <button type="button" onClick={onClick}>Remove</button>
+            }
           </Remove>
         </fieldset>
       </Form>

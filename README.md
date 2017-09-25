@@ -134,6 +134,64 @@ export default class Example extends Component {
 }
 ```
 
+## You can do what do you want with value.
+
+```js
+import React, { Component } from 'react';
+import Form from 'react-form-controlled';
+
+export default class Example extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      users: [{
+        firstName: 'Zlatko'
+      }, {
+        firstName: 'Livia'
+      }]
+    };
+  }
+
+  onChange = (data) => {
+    this.setState(data);
+  }
+
+  onSubmit = (data) => {
+    alert(`Hi ${data.users[0].firstName}`);
+  }
+
+  render() {
+    return (
+      <Form
+        value={this.state}
+        onChange={this.onChange}
+        onSubmit={this.onSubmit}
+      >
+        <Row>
+          <fieldset 
+            name="users"
+            render={({ value }) => value.map((user, index) => (
+              <Column>
+                <fieldset name={index}>
+                  <label>
+                    <input name="firstName" />
+                  </label>
+                </fieldset>
+              </Column>
+            ))}
+          />
+          </fieldset>
+        </Row>
+
+        <button type="submit">Submit</button>
+      </Form>
+    );
+  }
+}
+```
+
+
 ## Simple arrays
 
 If you are using fieldset with simple array do not enter the name attribute.
@@ -283,11 +341,6 @@ export default class Example extends Component {
 If you are using arrays with fieldset you want to use indexes.
 
 ### Props
-#### component: React element
-
-A React component constructor to render when the location matches. The component will be rendered with the following props:
-
-index: (number) the portion of the pattern matched.
 
 #### render: function
 
@@ -322,7 +375,11 @@ export default class Component extends Component {
       >
         <fieldset name="users">
           <label>
-            <Index render={({ index }) => <span>{index}.</span>} />
+            <Index 
+              render={({ index }) => (
+                <span>{index}.</span>
+              )} 
+            />
             <input name="firstName" />
           </label>
         </fieldset>
@@ -364,9 +421,9 @@ export default class Component extends Component {
       >
         <fieldset name="options">
           <Index
-            render={({ index }) =>
+            render={({ index }) => (
               <input type="radio" name="..selected" value={index} />
-            }
+            )}
           />
           <input name="." />
         </fieldset>
@@ -409,9 +466,12 @@ export default class Component extends Component {
       <Form
         onSubmit={this.onSubmit}
       >
-        <Integrate name="selected">
-          <Select options={options} />
-        </Integrate>
+        <Integrate 
+          name="selected" 
+          render={({ value, onChange }) => (
+            <Select options={options} value={value} onChange={onChange} />
+          )}
+        />
 
         <button type="submit">Submit</button>
       </Form>
@@ -452,9 +512,11 @@ export default class Component extends Component {
         <fieldset name="users">
           <label>
             <input name="firstName" />
-            <Remove>
-              <button type="button">Remove</button>
-            </Remove>
+            <Remove 
+              render={({ onClick }) => (
+                <button type="button" onClick={onClick}>Remove</button>
+              )} 
+            />
           </label>
         </fieldset>
 
@@ -497,12 +559,16 @@ export default class Component extends Component {
       >
         <fieldset name="users">
           <input name="firstName" />
-          <Up>
-            <button type="button">Up</button>
-          </Up>
-          <Down>
-            <button type="button">Down</button>
-          </Down>
+          <Up 
+            render={({ onClick }) => (
+              <button type="button" onClick={onClick}>Up</button>
+            )} 
+          />
+          <Down 
+            render={({ onClick }) => (
+              <button type="button" onClick={onClick}>Down</button>
+            )} 
+          />
         </fieldset>
 
         <button type="submit">Submit</button>
@@ -552,7 +618,9 @@ export default class Component extends Component {
           <input name="firstName" />
         </fieldset>
 
-        <Working render={({ isWorking }) => isWorking ? 'isWorking' : 'idle'} />
+        <Working 
+          render={({ isWorking }) => isWorking ? 'isWorking' : 'idle'} 
+        />
         <button type="submit">Submit</button>
       </Form>
     );
@@ -600,7 +668,7 @@ export default class Component extends Component {
       >
         <Fieldset name="users">
           <label>
-            <Index />
+            <Index render={({ index }) => index} />
             <Input type="text" name="firstName" placeholder="First name" />
           </label>
         </Fieldset>

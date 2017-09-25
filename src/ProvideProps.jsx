@@ -1,19 +1,14 @@
-import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import Element from './Element';
 
 export default class ProvideProps extends Element {
   static propTypes = {
     render: PropTypes.func,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+    children: PropTypes.func,
   };
 
   getProps() {
     throw new Error('You need to override get props');
-  }
-
-  renderEmptyChildren(newProps) {
-    return null;
   }
 
   render() {
@@ -26,10 +21,6 @@ export default class ProvideProps extends Element {
       return this.replaceChildren(render(newProps));
     }
 
-    if (!children) {
-      return this.renderEmptyChildren(newProps);
-    }
-
-    return this.replaceChildren(cloneElement(children, newProps));
+    throw new Error('You need to set property render or children as function');
   }
 }

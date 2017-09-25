@@ -1,4 +1,3 @@
-import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import Element from './Element';
 import wait from './utils/wait';
@@ -7,7 +6,7 @@ export default class Button extends Element {
   static propTypes = {
     render: PropTypes.func,
     text: PropTypes.string,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+    children: PropTypes.func,
   };
 
   static defaultProps = {
@@ -32,7 +31,7 @@ export default class Button extends Element {
   }
 
   render() {
-    const { children, render, text } = this.props;
+    const { children, render } = this.props;
     const newProps = {
       onClick: this.onClick,
     };
@@ -43,12 +42,6 @@ export default class Button extends Element {
       return this.replaceChildren(render(newProps));
     }
 
-    if (!children) {
-      return (
-        <button type="button">{text}</button>
-      );
-    }
-
-    return this.replaceChildren(cloneElement(children, newProps));
+    throw new Error('You need to set property render or children as function');
   }
 }

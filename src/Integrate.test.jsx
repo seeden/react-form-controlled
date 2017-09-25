@@ -10,28 +10,34 @@ describe('Integrate', () => {
 
     const wrapper = mount((
       <Form value={value}>
-        <Integrate name="place" value="value" onChange="onChange">
-          <input placeholder="1122" />
-        </Integrate>
+        <Integrate
+          name="place"
+          render={({ value, onChange }) => (
+            <input placeholder="1122" value={value} onChange={onChange} />
+          )}
+        />
       </Form>
-   ));
+    ));
 
     expect(wrapper.find('input').first().props().value).toBe('Kosice');
   });
 
-  it('should be able to use function', () => {
+  it('should be able to use children function', () => {
     const state = {
       place: 'Kosice',
     };
 
     const wrapper = mount((
       <Form value={state}>
-        <Integrate name="place" render={({ name, value, onChange }) => (
-          <input placeholder="1122" name={name} value={value} onChange={onChange} />
-        )}
-        />
+        <Integrate
+          name="place"
+        >
+          {({ name, value, onChange }) => (
+            <input placeholder="1122" name={name} value={value} onChange={onChange} />
+          )}
+        </Integrate>
       </Form>
-   ));
+    ));
 
     expect(wrapper.find('input').first().props().value).toBe('Kosice');
   });
@@ -47,9 +53,12 @@ describe('Integrate', () => {
           <tbody name="rows">
             <tr>
               <td>
-                <Integrate name=".">
-                  <input placeholder="1122" />
-                </Integrate>
+                <Integrate
+                  name="."
+                  render={({ name, value, onChange }) => (
+                    <input placeholder="1122" name={name} value={value} onChange={onChange} />
+                  )}
+                />
               </td>
             </tr>
           </tbody>
