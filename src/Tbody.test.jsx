@@ -26,7 +26,7 @@ describe('Tbody', () => {
       </Form>
     ));
 
-    expect(wrapper.find('input').get(0).value).toBe('123');
-    expect(wrapper.find('input').get(1).value).toBe('456');
+    expect(wrapper.find('input').at(0).props().value).toBe(123);
+    expect(wrapper.find('input').at(1).props().value).toBe(456);
   });
 });

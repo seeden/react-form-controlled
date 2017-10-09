@@ -28,6 +28,6 @@ describe('Form', () => {
 
     expect(wrapper.find('form').length).toBe(1);
 
-    wrapper.find('[type="submit"]').get(0).click();
+    wrapper.find('[type="submit"]').at(0).click();
   });
 });

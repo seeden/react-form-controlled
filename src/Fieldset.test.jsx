@@ -31,7 +31,6 @@ describe('Fieldset', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').props().value).toBe(123);
-    expect(wrapper.find('input').get(0).value).toBe('123');
 
     wrapper.find('input').simulate('change', { target: {
       value: '222',
@@ -60,7 +59,6 @@ describe('Fieldset', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').props().value).toBe(123);
-    expect(wrapper.find('input').get(0).value).toBe('123');
 
     wrapper.find('input').simulate('change', { target: {
       value: '222',
@@ -91,7 +89,6 @@ describe('Fieldset', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').props().value).toBe(123);
-    expect(wrapper.find('input').get(0).value).toBe('123');
 
     wrapper.find('input').simulate('change', { target: {
       value: '222',
@@ -120,7 +117,6 @@ describe('Fieldset', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').props().value).toBe(123);
-    expect(wrapper.find('input').get(0).value).toBe('123');
 
     wrapper.find('input').simulate('change', { target: {
       value: '222',
@@ -149,7 +145,6 @@ describe('Fieldset', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').props().value).toBe(123);
-    expect(wrapper.find('input').get(0).value).toBe('123');
 
     wrapper.find('input').simulate('change', { target: {
       value: '222',
@@ -176,7 +171,6 @@ describe('Fieldset', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').props().value).toBe(123);
-    expect(wrapper.find('input').get(0).value).toBe('123');
 
     wrapper.find('input').simulate('change', { target: {
       value: '222',
@@ -206,12 +200,12 @@ describe('Fieldset', () => {
     ));
 
     expect(wrapper.find('form').length).toBe(1);
-    expect(wrapper.find('input').get(0).value).toBe('123');
-    expect(wrapper.find('input').get(1).value).toBe('222');
+    expect(wrapper.find('input').at(0).props().value).toBe(123);
+    expect(wrapper.find('input').at(1).props().value).toBe(222);
 
     wrapper.find('input').first().simulate('change', { target: {
       value: '333',
-    } });
+    }});
   });
 
   it('should be able to simplify array object with complex array', () => {
@@ -305,8 +299,8 @@ describe('Fieldset', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').length).toBe(2);
-    expect(wrapper.find('input').get(0).value).toBe('123');
-    expect(wrapper.find('input').get(1).value).toBe('222');
+    expect(wrapper.find('input').at(0).props().value).toBe('123');
+    expect(wrapper.find('input').at(1).props().value).toBe('222');
   });
 
   it('should be able to use provideIndex', (done) => {
@@ -378,7 +372,7 @@ describe('Fieldset', () => {
       if (count === 1) {
         expect(state.data[0].selected).toBe('222');
 
-        expect(wrapper.find('textarea').get(0).value).toBe('1');
+        expect(wrapper.find('textarea').at(0).props().value).toBe(1);
 
         wrapper.find('textarea').first().simulate('change', { target: {
           value: '33333',

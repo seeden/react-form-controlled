@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.20.3",
+  "version": "0.20.4",
   "description": "Intuitive react forms for building powerful applications",
   "author": {
     "name": "Zlatko Fedor",
@@ -39,16 +39,21 @@
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ./src"
   },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/setupJest.js"
+    ]
+  },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "diacritics": "^1.3.0",
     "lodash": "^4.17.4",
-    "prop-types": "^15.5.10",
-    "babel-runtime": "^6.26.0"
+    "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "^8.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-proto-to-assign": "^6.26.0",
@@ -57,21 +62,22 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
-    "eslint": "^4.6.1",
-    "eslint-config-airbnb": "^15.1.0",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^16.0.0",
     "eslint-loader": "^1.9.0",
-    "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
     "gulp-util": "^3.0.8",
-    "react": "^15.6.1",
-    "react-addons-test-utils": "^15.6.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "react-dom": "^15.6.1",
-    "jest": "^21.0.2",
-    "jest-cli": "^21.0.2",
-    "enzyme": "^2.9.1"
+    "jest": "^21.2.1",
+    "jest-cli": "^21.2.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-test-renderer": "^16.0.0"
   },
   "peerDependencies": {
     "react": "15.x || 16.x"

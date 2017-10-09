@@ -225,7 +225,15 @@ export default class Fieldset extends Element {
 
       let newValue = value;
       if (!isEmpty(subPath)) {
-        const currentValue = current.getValue();
+        let currentValue = current.getValue();
+
+        // current value can be null or undefined
+        if (!currentValue) {
+          const firstChar = subPath[0];
+          const isCharNumber = Number(firstChar).toString() === firstChar;
+          currentValue = isCharNumber ? [] : {};
+        }
+
         newValue = set(currentValue, subPath, value);
       }
 

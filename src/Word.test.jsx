@@ -23,10 +23,9 @@ describe('Word', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('input').props().value).toBe(123);
-    expect(wrapper.find('input').get(0).value).toBe('123');
 
     wrapper.find('input').simulate('change', { target: {
       value: '222 ľščťžý',
-    } });
+    }});
   });
 });
