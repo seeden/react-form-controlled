@@ -48,7 +48,7 @@ describe('Textarea', () => {
 
     expect(wrapper.find('form').length).toBe(1);
     expect(wrapper.find('textarea').props().value).toBe(123);
-    expect(wrapper.find('textarea').get(0).value).toBe('123');
+    expect(wrapper.find('textarea').at(0).value).toBe('123');
 
     wrapper.find('textarea').simulate('change', { target: {
       value: '222',

@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.20.4",
+  "version": "0.20.5",
   "description": "Intuitive react forms for building powerful applications",
   "author": {
     "name": "Zlatko Fedor",
@@ -33,9 +33,9 @@
   },
   "scripts": {
     "prepublish": "npm run build",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch",
+    "test": "jest ./src/",
+    "test:coverage": "jest --coverage ./src/",
+    "test:watch": "jest --watch ./src/",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ./src"
   },
@@ -63,11 +63,11 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.1",
-    "eslint": "^4.8.0",
-    "eslint-config-airbnb": "^16.0.0",
+    "enzyme-adapter-react-16": "^1.0.2",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-loader": "^1.9.0",
-    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "gulp": "^3.9.1",

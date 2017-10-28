@@ -8,7 +8,7 @@ export default class Form extends Fieldset {
     onChange: PropTypes.func,
     onError: PropTypes.func,
     skipReplace: PropTypes.bool,
-    value: PropTypes.object.isRequired,
+    value: PropTypes.any, // eslint-disable-line
     method: PropTypes.string,
     action: PropTypes.string,
     autoComplete: PropTypes.string,
@@ -17,12 +17,15 @@ export default class Form extends Fieldset {
     debounce: PropTypes.number,
     validate: PropTypes.func,
     sameChildren: PropTypes.bool,
+    defaultValue: PropTypes.any, // eslint-disable-line
+    enableReinitialize: PropTypes.bool,
   };
 
   static defaultProps = {
     autoComplete: 'off',
     tagName: 'form',
     debounce: 250,
+    enableReinitialize: false,
   };
 
   static childContextTypes = {
@@ -33,8 +36,30 @@ export default class Form extends Fieldset {
     fieldset: PropTypes.object,
   };
 
+  constructor(...args) {
+    super(...args);
+
+    this.defaultValue = this.props.defaultValue;
+  }
+
+  getCurrentValue(props) {
+    const { defaultValue } = this;
+    const { value } = props;
+
+    return defaultValue !== undefined
+      ? defaultValue
+      : value;
+  }
+
   componentWillReceiveProps(props) {
-    this.setValue(props.value, this, true);
+    // reinit default value
+    const { enableReinitialize, defaultValue } = props;
+    if (enableReinitialize && defaultValue !== this.props.defaultValue) {
+      this.defaultValue = defaultValue;
+    }
+
+    const value = this.getCurrentValue(props);
+    this.setValue(value, this, true);
   }
 
   getPath() {
@@ -42,7 +67,7 @@ export default class Form extends Fieldset {
   }
 
   getOriginalValue() {
-    return this.props.value;
+    return this.getCurrentValue(this.props);
   }
 
   getForm() {
@@ -102,7 +127,7 @@ export default class Form extends Fieldset {
       ? await validate(value)
       : [];
 
-    const errors = this.errors;
+    const { errors } = this;
 
     if (!errors.length && onSubmit) {
       await onSubmit(value);
@@ -134,7 +159,9 @@ export default class Form extends Fieldset {
   }
 
   render() {
-    const { autoComplete, tagName, children, method, action } = this.props;
+    const {
+      autoComplete, tagName, children, method, action,
+    } = this.props;
 
     const props = tagName === 'form' ? {
       autoComplete,
