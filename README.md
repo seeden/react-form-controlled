@@ -2,12 +2,10 @@
 
 Intuitive react forms for building powerful applications.
 
-
 All components are [controlled](https://facebook.github.io/react/docs/forms.html#why-controlled-components)
 That means form is always showing the current state and data are immutable.
 Each form has own internal state that means you can skip onChange event.
 If you will change the value prop of the form component it will change the state of the form immediately.
-Library is very fast and can handle thousands of elements.
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -23,7 +21,6 @@ Library is very fast and can handle thousands of elements.
 
 # Features
 
-- Blazing fast on big forms
 - Immutable data
 - Controlled behavior (support for "uncontrolled" behaviour)
 - Build on latest standards ES6 and promises

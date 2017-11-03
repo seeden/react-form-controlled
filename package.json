@@ -31,7 +31,7 @@
   "module": "./module/index.js",
   "esnext": "./src/index.js",
   "engines": {
-    "node": ">= 5.0.0"
+    "node": ">= 6.1"
   },
   "scripts": {
     "prepublish": "npm run build",

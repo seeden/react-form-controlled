@@ -1,10 +1,10 @@
 {
   "env": {
-    "production": {
+    "development": {
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "5.0"
+            "node": "6.1"
           }
         }],
         "stage-0",
@@ -19,11 +19,11 @@
         "transform-class-properties"
       ]
     },
-    "development": {
+    "test": {
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "5.0"
+            "node": "6.1"
           }
         }],
         "stage-0",
@@ -44,7 +44,8 @@
           "targets": {
             "browsers": "last 3 versions, > 1%"
           },
-          "modules": false
+          "modules": false,
+          "loose": true
         }],
         "stage-0",
         "react"
@@ -63,7 +64,7 @@
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "5.0"
+            "node": "6.1"
           },
           "modules": false
         }],
