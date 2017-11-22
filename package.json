@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.20.6",
+  "version": "0.20.7",
   "description": "Intuitive react forms for building powerful applications",
   "author": {
     "name": "Zlatko Fedor",
@@ -58,7 +58,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.1",
+    "babel-eslint": "^8.0.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-proto-to-assign": "^6.26.0",
@@ -68,19 +68,19 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "cross-env": "^5.1.1",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.3",
-    "eslint": "^4.10.0",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
+    "eslint": "^4.11.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.4.0",
+    "eslint-plugin-react": "^7.5.1",
     "jest": "^21.2.1",
     "jest-cli": "^21.2.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0"
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-test-renderer": "^16.1.1"
   },
   "peerDependencies": {
     "react": "15.x || 16.x"

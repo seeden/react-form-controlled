@@ -4,18 +4,14 @@
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "6.1"
+            "node": "5.0"
           }
         }],
         "stage-0",
         "react"
       ],
       "plugins": [
-        ["transform-runtime", {
-          "polyfill": false,
-          "regenerator": true
-        }],
-        "transform-decorators-legacy",
+        "transform-decorators",
         "transform-class-properties"
       ]
     },
@@ -23,18 +19,14 @@
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "6.1"
+            "node": "5.0"
           }
         }],
         "stage-0",
         "react"
       ],
       "plugins": [
-        ["transform-runtime", {
-          "polyfill": false,
-          "regenerator": true
-        }],
-        "transform-decorators-legacy",
+        "transform-decorators",
         "transform-class-properties"
       ]
     },
@@ -51,11 +43,7 @@
         "react"
       ],
       "plugins": [
-        ["transform-runtime", {
-          "polyfill": false,
-          "regenerator": true
-        }],
-        "transform-decorators-legacy",
+        "transform-decorators",
         "transform-class-properties",
         "transform-proto-to-assign"
       ]
@@ -64,7 +52,7 @@
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "6.1"
+            "node": "5.0"
           },
           "modules": false
         }],
@@ -72,11 +60,7 @@
         "react"
       ],
       "plugins": [
-        ["transform-runtime", {
-          "polyfill": false,
-          "regenerator": true
-        }],
-        "transform-decorators-legacy",
+        "transform-decorators",
         "transform-class-properties"
       ]
     }
