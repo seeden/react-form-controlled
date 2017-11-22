@@ -1,6 +1,6 @@
 {
   "name": "react-form-controlled",
-  "version": "0.20.8",
+  "version": "0.20.9",
   "description": "Intuitive react forms for building powerful applications",
   "author": {
     "name": "Zlatko Fedor",
@@ -31,7 +31,7 @@
   "module": "./module/index.js",
   "esnext": "./src/index.js",
   "engines": {
-    "node": ">= 6.1"
+    "node": ">= 6.10"
   },
   "scripts": {
     "prepublish": "npm run build",
