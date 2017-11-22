@@ -4,7 +4,7 @@
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "5.0"
+            "node": "6.1"
           }
         }],
         "stage-0",
@@ -19,7 +19,7 @@
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "5.0"
+            "node": "6.1"
           }
         }],
         "stage-0",
@@ -52,7 +52,7 @@
       "presets": [
         ["babel-preset-env", {
           "targets": {
-            "node": "5.0"
+            "node": "6.1"
           },
           "modules": false
         }],
