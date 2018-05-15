@@ -16,7 +16,6 @@ export default class Select extends Element {
     super(props, context);
 
     this.state = {
-    //   ...this.state,
       options: this.prepareOptions(props.options),
     };
   }

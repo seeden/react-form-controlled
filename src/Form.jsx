@@ -19,6 +19,7 @@ export default class Form extends Fieldset {
     sameChildren: PropTypes.bool,
     defaultValue: PropTypes.any, // eslint-disable-line
     enableReinitialize: PropTypes.bool,
+    ignoreParent: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -26,6 +27,7 @@ export default class Form extends Fieldset {
     tagName: 'form',
     debounce: 250,
     enableReinitialize: false,
+    ignoreParent: false,
   };
 
   static childContextTypes = {
@@ -71,6 +73,11 @@ export default class Form extends Fieldset {
   }
 
   getForm() {
+    const { ignoreParent } = this.props;
+    if (ignoreParent) {
+      return this;
+    }
+
     const parent = this.getParent();
     return parent
       ? parent.getForm()
