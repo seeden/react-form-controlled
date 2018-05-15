@@ -72,6 +72,15 @@ export default class Form extends Fieldset {
     return this.getCurrentValue(this.props);
   }
 
+  getParent() {
+    const { ignoreParent } = this.props;
+    if (ignoreParent) {
+      return undefined;
+    }
+
+    return super.getParent();
+  }
+
   getForm() {
     const { ignoreParent } = this.props;
     if (ignoreParent) {
