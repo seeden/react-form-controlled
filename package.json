@@ -34,7 +34,7 @@
     "node": ">= 6.10"
   },
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublish": "npm run snyk-protect && npm run build",
     "test": "jest ./src/",
     "test:coverage": "jest --coverage ./src/",
     "test:watch": "jest --watch ./src/",
@@ -42,7 +42,8 @@
     "build-module": "cross-env BABEL_ENV=module babel ./src --out-dir ./module --source-maps --copy-files",
     "build-node": "babel ./src --out-dir ./dist --source-maps --copy-files",
     "build": "npm run build-node && npm run build-browser && npm run build-module",
-    "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ./src"
+    "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ./src",
+    "snyk-protect": "snyk protect"
   },
   "jest": {
     "setupFiles": [
@@ -53,7 +54,8 @@
     "babel-runtime": "^6.26.0",
     "diacritics": "^1.3.0",
     "lodash": "^4.17.4",
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "snyk": "^1.317.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -85,5 +87,6 @@
   "peerDependencies": {
     "react": "15.x || 16.x"
   },
-  "typings": "react-form-controlled.d.ts"
+  "typings": "react-form-controlled.d.ts",
+  "snyk": true
 }
